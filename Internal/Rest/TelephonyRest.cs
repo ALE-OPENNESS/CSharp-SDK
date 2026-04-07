@@ -393,6 +393,18 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
+        public async Task<bool> DeleteCallbackAsync(string callbackId, string loginName)
+        {
+            Uri uriDelete = uri.Append("incomingCallbacks", AssertUtil.NotNullOrEmpty(callbackId, "callbackId"));
+            if (loginName != null)
+            {
+                uriDelete = uriDelete.AppendQuery("loginName", loginName);
+            }
+
+            HttpResponseMessage response = await httpClient.DeleteAsync(uriDelete);
+            return await IsSucceeded(response);
+        }
+
         public async Task<bool> DeskSharingLogOffAsync(string loginName)
         {
             Uri uriDelete = uri.Append("deskSharing");
@@ -764,6 +776,15 @@ namespace o2g.Internal.Rest
         }
 
 
+        public async Task<bool> ToggleInterphonyAsync(string deviceId)
+        {
+            Uri uriPut = uri.Append("devices", AssertUtil.NotNullOrEmpty(deviceId, "deviceId"), "ithmicro");
+
+            HttpResponseMessage response = await httpClient.PutAsync(uriPut, null);
+            return await IsSucceeded(response);
+        }
+
+
         public async Task<HuntingGroups> QueryHuntingGroupsAsync(string loginName)
         {
             Uri uriGet = uri.Append("huntingGroups");
@@ -975,12 +996,6 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer, string loginName)
-        {
-            return this.MakeCallAsync(deviceId, callee, autoAnswer, false, (string)null, null, loginName);
-        }
-
-
         public async Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer, bool inhibitProgressTone, string associatedData, string callingNumber, string loginName)
         {
             Uri uriPost = uri.Append("calls");
@@ -1031,7 +1046,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> MakePrivateCallAsync(string deviceId, string callee, string pin, string secretCode = null, string loginName = null)
+        public async Task<bool> MakePrivateCallAsync(string deviceId, string callee, string pin, bool autoAnswer = true, string secretCode = null, string loginName = null)
         {
             Uri uriPost = uri.Append("calls");
             if (loginName != null)
@@ -1043,6 +1058,7 @@ namespace o2g.Internal.Rest
             {
                 DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
                 Callee = AssertUtil.NotNullOrEmpty(callee, "callee"),
+                AutoAnswer = autoAnswer,
                 Pin = AssertUtil.NotNullOrEmpty(pin, "pin"),
                 SecretCode = secretCode
             };
@@ -1054,7 +1070,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> MakeBusinessCallAsync(string deviceId, string callee, string businessCode, string loginName = null)
+        public async Task<bool> MakeBusinessCallAsync(string deviceId, string callee, string businessCode, bool autoAnswer = true, string loginName = null)
         {
             Uri uriPost = uri.Append("calls");
             if (loginName != null)
@@ -1066,7 +1082,8 @@ namespace o2g.Internal.Rest
             {
                 DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
                 Callee = AssertUtil.NotNullOrEmpty(callee, "callee"),
-                BusinessCode = AssertUtil.NotNullOrEmpty(businessCode, "businessCode")
+                BusinessCode = AssertUtil.NotNullOrEmpty(businessCode, "businessCode"),
+                AutoAnswer = autoAnswer
             };
 
             var json = JsonSerializer.Serialize(req, serializeOptions);

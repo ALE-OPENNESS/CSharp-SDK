@@ -71,7 +71,16 @@ namespace o2g
         /// <param name="nodeIds">Specify a list of OXE nodes Id in which the query is done. This parameter is only valid for an administrator session.</param>
         /// <param name="onlyACD">Allows to select only the ACD operators (agents or supervisors) during the query. This parameter is only valid for an administrator session.</param>
         /// <returns>The list of users identified by their login. If <c>GetLogins</c> is used by a user session, it return only the user's login</returns>
+        [Obsolete("Please use GetLoginsAsync(int[] nodeIds = null, bool onlyACD = false) instead.")]
         Task<List<string>> GetLoginsAsync(string[] nodeIds=null, bool onlyACD=false);
+
+        /// <summary>
+        /// Retrieve a list of users login from the connected OXEs. 
+        /// </summary>
+        /// <param name="nodeIds">Specify a list of OXE nodes Id in which the query is done. This parameter is only valid for an administrator session.</param>
+        /// <param name="onlyACD">Allows to select only the ACD operators (agents or supervisors) during the query. This parameter is only valid for an administrator session.</param>
+        /// <returns>The list of users identified by their login. If <c>GetLogins</c> is used by a user session, it return only the user's login</returns>
+        Task<List<string>> GetLoginsAsync(int[] nodeIds = null, bool onlyACD = false);
 
         /// <summary>
         /// Returns an <c>User</c> object that represents the account information for the specified user.
@@ -104,6 +113,9 @@ namespace o2g
         /// <summary>
         /// Change the password of the user or the administrator that have opened the session
         /// </summary>
+        /// <remarks>
+        /// This action will be refused if the authentication is delegated to an external LDAP server.
+        /// </remarks>
         /// <param name="loginName">Login name of the user to retrieve the account information.</param>
         /// <param name="oldPassword">The old password to change</param>
         /// <param name="newPassword">The new password</param>

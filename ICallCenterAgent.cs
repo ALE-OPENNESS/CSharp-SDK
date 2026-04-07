@@ -50,6 +50,11 @@ namespace o2g
         public event System.EventHandler<O2GEventArgs<OnSupervisorHelpCancelledEvent>> SupervisorHelpCancelled;
 
         /// <summary>
+        /// Occurs when agent skills have changed.
+        /// </summary>
+        public event System.EventHandler<O2GEventArgs<OnAgentSkillChangedEvent>> AgentSkillChanged;
+
+        /// <summary>
         /// Get the operator configuration.
         /// </summary>
         /// <param name="loginName">The operator login name.</param>

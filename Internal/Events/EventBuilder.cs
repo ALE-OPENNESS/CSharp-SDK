@@ -18,6 +18,7 @@
 */
 using o2g.Events;
 using o2g.Events.CallCenterAgent;
+using o2g.Events.CallCenterPilot;
 using o2g.Events.CallCenterRsi;
 using o2g.Events.Common;
 using o2g.Events.CommunicationLog;
@@ -139,8 +140,14 @@ namespace o2g.Internal.Events
             EventRegistrar.RegisterEvent(typeof(OnEventSummaryUpdatedEvent));
 
             EventRegistrar.RegisterEvent(typeof(OnAgentStateChangedEvent));
+            EventRegistrar.RegisterEvent(typeof(OnAgentSkillChangedEvent));
+            EventRegistrar.RegisterAdapter(typeof(OnAgentSkillChangedEvent), EventAdapters.AgentSkillChangedAdapter, typeof(OnInternalAgentSkillChangedEvent));
             EventRegistrar.RegisterEvent(typeof(OnSupervisorHelpRequestedEvent));
             EventRegistrar.RegisterEvent(typeof(OnSupervisorHelpCancelledEvent));
+
+            EventRegistrar.RegisterEvent(typeof(OnPilotCallCreatedEvent));
+            EventRegistrar.RegisterEvent(typeof(OnPilotCallQueuedEvent));
+            EventRegistrar.RegisterEvent(typeof(OnPilotCallRemovedEvent));
 
             EventRegistrar.RegisterEvent(typeof(OnDigitCollectedEvent));
             EventRegistrar.RegisterEvent(typeof(OnRouteEndEvent));
@@ -148,7 +155,7 @@ namespace o2g.Internal.Events
             EventRegistrar.RegisterEvent(typeof(OnToneGeneratedStartEvent));
             EventRegistrar.RegisterEvent(typeof(OnToneGeneratedStopEvent));
 
-            EventRegistrar.RegisterEvent(typeof(OnComRecordCreatedEvent));
+            EventRegistrar.RegisterEvent(typeof(OnAgentRtiChangedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordModifiedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordsDeletedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordsAckEvent));

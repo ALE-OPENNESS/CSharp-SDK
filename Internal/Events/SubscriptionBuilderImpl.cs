@@ -42,6 +42,21 @@ namespace o2g.Internal.Events
             return this;
         }
 
+        IBuilder IBuilder.AddCallCenterPilotEvents(string[] ids)
+        {
+            if (ids == null)
+            {
+                _filter.Add(EventPackage.Pilot);
+            }
+            else
+            {
+                _filter.Add(ids, EventPackage.Pilot);
+            }
+            return this;
+        }
+
+
+        /*
         public IBuilder AddCallCenterRsiEvents(string[] ids)
         {
             if (ids == null)
@@ -54,6 +69,7 @@ namespace o2g.Internal.Events
             }
             return this;
         }
+        */
 
         public IBuilder AddCommunicationLogEvents(string[] ids)
         {

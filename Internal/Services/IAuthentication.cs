@@ -18,6 +18,7 @@
 */
 
 using o2g.Types;
+using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -31,6 +32,12 @@ namespace o2g.Internal.Services
 
         [JsonPropertyName("internalUrl")]
         public string PrivateUrl { get; set; }
+
+        // O2G 2.7.4
+        public string LoginName { get; set; }
+
+        // O2G 2.7.4
+        public bool Expired { get; set; }
     }
 
 

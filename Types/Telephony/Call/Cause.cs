@@ -77,6 +77,12 @@ namespace o2g.Types.TelephonyNS.CallNS
         DestinationNotObtainable,
 
         /// <summary>
+        /// The destination is in do not disturb.
+        /// </summary>
+        [EnumMember(Value = "DO_NOT_DISTURB")]
+        DoNotDisturb,
+
+        /// <summary>
         /// The call has been forwarded.
         /// </summary>
         [EnumMember(Value = "FORWARDED")]
@@ -89,16 +95,34 @@ namespace o2g.Types.TelephonyNS.CallNS
         PickedUp,
 
         /// <summary>
+        /// The call has been parked.
+        /// </summary>
+        [EnumMember(Value = "PARKED")]
+        Parked,
+
+        /// <summary>
         /// The call has been redirected.
         /// </summary>
         [EnumMember(Value = "REDIRECTED")]
         Redirected,
 
         /// <summary>
+        /// This call goes on overflow destination.
+        /// </summary>
+        [EnumMember(Value = "OVERFLOWN")]
+        Overflown,
+
+        /// <summary>
         /// This is a transferred call.
         /// </summary>
         [EnumMember(Value = "TRANSFERRED")]
         Transferred,
+
+        /// <summary>
+        /// The call has been put in wait..
+        /// </summary>
+        [EnumMember(Value = "CAMP_ON")]
+        CampOn,
 
         /// <summary>
         /// Unknown cause.
@@ -125,13 +149,25 @@ namespace o2g.Types.TelephonyNS.CallNS
         Recall,
 
         /// <summary>
-        /// CCD context: call distribution
+        /// CCD context: call distribution.
         /// </summary>
         [EnumMember(Value = "DISTRIBUTED")]
         Distributed,
 
         /// <summary>
-        /// CCD context: supervisor is listening the agent conversation
+        /// CCD context: call enters in distribution.
+        /// </summary>
+        [EnumMember(Value = "ACD_ENTER_DISTRIBUTION")]
+        AcdEnterDistribution,
+
+        /// <summary>
+        /// CCD context: pilot is not open.
+        /// </summary>
+        [EnumMember(Value = "RESOURCES_NOT_AVAILABLE")]
+        ResourcesNotAvailable,
+
+        /// <summary>
+        /// CCD context: supervisor is listening the agent conversation.
         /// </summary>
         [EnumMember(Value = "SUPERVISOR_LISTENING")]
         SupervisorListening,

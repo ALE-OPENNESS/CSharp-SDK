@@ -78,9 +78,16 @@ namespace o2g.Events
         public static EventPackage Agent { get { return new EventPackage("agent"); } }
 
         /// <summary>
+        /// The event package value to subscribe to call center pilot events.
+        /// </summary>
+        public static EventPackage Pilot { get { return new EventPackage("pilot"); } }
+
+        /*
+        /// <summary>
         /// The Event package value to subscribe to call center rsi events.
         /// </summary>
         public static EventPackage Rsi { get { return new EventPackage("rsi"); } }
+        */
 
         /// <summary>
         /// The event package value to subscribe to system events.

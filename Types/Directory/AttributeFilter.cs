@@ -28,17 +28,17 @@ namespace o2g.Types.DirectoryNS
         /// <summary>
         /// The last name.
         /// </summary>
-        LastName, 
+        LastName,
 
         /// <summary>
         /// The first name.
         /// </summary>
-        FirstName, 
+        FirstName,
 
         /// <summary>
         /// The phone number.
         /// </summary>
-        PhoneNumber, 
+        PhoneNumber,
 
         /// <summary>
         /// The login name.
@@ -46,3 +46,4 @@ namespace o2g.Types.DirectoryNS
         LoginName
     }
 }
+

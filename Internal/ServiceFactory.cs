@@ -59,8 +59,12 @@ namespace o2g.Internal
         public static O2GService CommunicationLog { get { return new O2GService("comlog"); } }
         public static O2GService PhoneSetProgramming { get { return new O2GService("phonesetprogramming"); } }
         public static O2GService CallCenterAgent { get { return new O2GService("acdagent"); } }
-        public static O2GService CallCenterRsi { get { return new O2GService("acdrsi"); } }
+        public static O2GService CallCenterPilot { get { return new O2GService("acdpilotmonitoring"); } }
+        public static O2GService CallCenterRealtime { get { return new O2GService("acdrealtime"); } }
+        //        public static O2GService CallCenterRsi { get { return new O2GService("acdrsi"); } }
         public static O2GService Analytics { get { return new O2GService("analytics"); } }
+        public static O2GService UserManagement { get { return new O2GService("usermanagement"); } }
+        public static O2GService Recording { get { return new O2GService("oxr recording"); } }
 
         public override bool Equals(Object obj)
         {
@@ -265,17 +269,42 @@ namespace o2g.Internal
         {
             return GetOrCreate<DirectoryRest>(O2GService.Directory);
         }
+
         internal CallCenterAgentRest GetCallCenterAgentService()
         {
             return GetOrCreate<CallCenterAgentRest>(O2GService.CallCenterAgent);
         }
+
+        internal CallCenterPilotRest GetCallCenterPilotService()
+        {
+            return GetOrCreate<CallCenterPilotRest>(O2GService.CallCenterPilot);
+        }
+
+        internal CallCenterRealtimeRest GetCallCenterRealtimeService()
+        {
+            return GetOrCreate<CallCenterRealtimeRest>(O2GService.CallCenterRealtime);
+        }
+
+        /*
         internal CallCenterRsiRest GetCallCenterRsiService()
         {
             return GetOrCreate<CallCenterRsiRest>(O2GService.CallCenterRsi);
         }
+        */
+
         internal AnalyticsRest GetAnalyticsService()
         {
             return GetOrCreate<AnalyticsRest>(O2GService.Analytics);
+        }
+
+        internal UserManagementRest GetUserManagementService()
+        {
+            return GetOrCreate<UserManagementRest>(O2GService.UserManagement);
+        }
+
+        internal RecordingRest GetRecordingService()
+        {
+            return GetOrCreate<RecordingRest>(O2GService.Recording);
         }
 
         private T GetOrCreate<T>(O2GService serviceName) where T : IService
@@ -368,6 +397,8 @@ namespace o2g.Internal
                     }
                 }
             }
+
+            servicesUri.Add(O2GService.UserManagement, new UriBuilder(baseUrl + "/usermanagement").Uri);
         }
     }
 }

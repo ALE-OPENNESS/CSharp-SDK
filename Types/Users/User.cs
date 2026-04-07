@@ -64,6 +64,14 @@ namespace o2g.Types.UsersNS
         public string LoginName { get; init; }
 
         /// <summary>
+        /// External login of the user if set.
+        /// </summary>
+        /// <value>
+        /// A <see langword="string"/> that represents the user external login.
+        /// </value>
+        public string ExternalLogin { get; init; }
+
+        /// <summary>
         /// The voice mail associated to this user.
         /// </summary>
         /// <value>

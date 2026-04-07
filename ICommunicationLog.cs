@@ -45,7 +45,7 @@ namespace o2g
         /// <summary>
         /// Occurs when a new comlog entry has been created.
         /// </summary>
-        public event EventHandler<O2GEventArgs<OnComRecordCreatedEvent>> ComRecordCreated;
+        public event EventHandler<O2GEventArgs<OnAgentRtiChangedEvent>> ComRecordCreated;
 
         /// <summary>
         /// Occurs when one or more records have been modified.

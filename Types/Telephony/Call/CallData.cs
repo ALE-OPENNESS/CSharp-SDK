@@ -19,7 +19,10 @@
 using o2g.Internal.Utility;
 using o2g.Types.CommonNS;
 using o2g.Types.TelephonyNS.CallNS.AcdNS;
+using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace o2g.Types.TelephonyNS.CallNS
 {
@@ -101,6 +104,27 @@ namespace o2g.Types.TelephonyNS.CallNS
         public string HexaBinaryAssociatedData { get; init; }
 
         /// <summary>
+        /// Return the correlator data associated to this call.
+        /// </summary>
+        /// <returns>A <see langword="byte[]"/> that is the associated correlator data.
+        /// </returns>
+        public byte[] AttachedData()
+        {
+            if (AssociatedData != null)
+            {
+                return Encoding.Default.GetBytes(AssociatedData);
+            }
+            else if (HexaBinaryAssociatedData != null) 
+            {
+                return HexaUtil.ToByteArray(HexaBinaryAssociatedData);
+            }
+            else
+            { 
+                return null; 
+            }
+        }
+
+        /// <summary>
         /// This property returns the account info associated to this call.
         /// </summary>
         /// <value>
@@ -115,16 +139,5 @@ namespace o2g.Types.TelephonyNS.CallNS
         /// A <see cref="AcdData"/> object that provide this call acd extension data.
         /// </value>
         public AcdData AcdCallData { get; init; }
-
-        /// <summary>
-        /// Return the correlator data as a byte array.
-        /// </summary>
-        /// <returns>
-        /// The array of bytes corresponding to the correlator data.
-        /// </returns>
-        public byte[] AssociatedDataAsByteArray()
-        {
-            return HexaUtil.ToByteArray(HexaBinaryAssociatedData);
-        }
     }
 }

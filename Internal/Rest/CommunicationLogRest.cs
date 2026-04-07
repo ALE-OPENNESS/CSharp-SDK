@@ -40,7 +40,7 @@ namespace o2g.Internal.Rest
         private readonly EventHandlers _eventHandlers;
 #pragma warning restore CS0067, CS0649
 
-        public event EventHandler<O2GEventArgs<OnComRecordCreatedEvent>> ComRecordCreated
+        public event EventHandler<O2GEventArgs<OnAgentRtiChangedEvent>> ComRecordCreated
         {
             add => _eventHandlers.ComRecordCreated += value;
             remove => _eventHandlers.ComRecordCreated -= value;

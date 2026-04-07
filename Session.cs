@@ -17,14 +17,19 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using o2g.Types;
 using System;
 using System.Threading.Tasks;
 
 namespace o2g
 {
+
     internal interface Session
     {
+        [Obsolete("Please use Account() instead.")]
         String LoginName { get; }
+
+        IAccount Account{ get; }
 
         bool Admin { get; }
 
@@ -41,6 +46,7 @@ namespace o2g
         IMessaging MessagingService { get; }
 
         IPbxManagement PbxManagementService { get; }
+
         IAnalytics AnalyticsService { get; }
 
         ICommunicationLog CommunicationLogService { get; }
@@ -50,7 +56,17 @@ namespace o2g
         IPhoneSetProgramming PhoneSetProgrammingService { get; }
 
         ICallCenterAgent CallCenterAgentService { get; }
-        ICallCenterRsi CallCenterRsiService { get; }
+
+        ICallCenterPilot CallCenterPilotService { get; }
+
+        ICallCenterRealtime CallCenterRealtimeService { get; }
+
+        //        ICallCenterRsi CallCenterRsiService { get; }
+
+        IUserManagement UserManagementService { get; }
+
+        IRecording RecordingService { get; }
+
 
         Task ListenEvents(Subscription subscription);
 

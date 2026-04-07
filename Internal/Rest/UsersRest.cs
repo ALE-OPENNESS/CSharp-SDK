@@ -131,8 +131,49 @@ namespace o2g.Internal.Rest
             return sb.ToString();
         }
 
+        private static string MakeNodeQuery(int[] nodeIds)
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < nodeIds.Length; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(';');
+                }
+                sb.Append(nodeIds[i]);
+            }
+
+            return sb.ToString();
+        }
+
 
         public async Task<List<string>> GetLoginsAsync(string[] nodeIds = null, bool onlyACD = false)
+        {
+            Uri uriGet = new(uri.AbsoluteUri.Replace("/users", "/logins"));
+
+            if (nodeIds != null)
+            {
+                uriGet = uriGet.AppendQuery("nodeIds", MakeNodeQuery(nodeIds));
+            }
+
+            if (onlyACD)
+            {
+                uriGet = uriGet.AppendQuery("onlyACD");
+            }
+
+            HttpResponseMessage response = await httpClient.GetAsync(uriGet);
+            LoginsResponse logins = await GetResult<LoginsResponse>(response);
+            if (logins == null)
+            {
+                return null;
+            }
+            else
+            {
+                return logins.LoginNames;
+            }
+        }
+
+        public async Task<List<string>> GetLoginsAsync(int[] nodeIds = null, bool onlyACD = false)
         {
             Uri uriGet = new(uri.AbsoluteUri.Replace("/users", "/logins"));
 

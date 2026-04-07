@@ -54,7 +54,7 @@ namespace o2g
         static O2G()
         {
             ApiVersion = "1.0";
-            SdkVersion = "2.3";
+            SdkVersion = "2.7.4";
         }
 
         /// <summary>
@@ -160,13 +160,9 @@ namespace o2g
             public string ApplicationName { get; init; }
 
             /// <summary>
-            /// Return the login name of the connected user.
+            /// Return the account corresponding to the connected user
             /// </summary>
-            /// <value>
-            /// A <see langword="string"/> value that represents the user login name.
-            /// </value>
-            public string LoginName => _session.LoginName;
-
+            public IAccount Account => _session.Account;
 
             /// <summary>
             /// Create a new O2G application with the specified name.
@@ -306,6 +302,7 @@ namespace o2g
             /// </value>
             public IEventSummary EventSummaryService => _session.EventSummaryService;
 
+            /*
             /// <summary>
             /// Return the cal center rsi service.
             /// </summary>
@@ -313,6 +310,7 @@ namespace o2g
             /// A <see cref="ICallCenterRsi"/> object that provides call center ris services.
             /// </value>
             public ICallCenterRsi CallCenterRsiService => _session.CallCenterRsiService;
+            */
 
             /// <summary>
             /// Return the messaging service.
@@ -370,6 +368,37 @@ namespace o2g
             /// </value>
             public ICallCenterAgent CallCenterAgentService => _session.CallCenterAgentService;
 
+            /// <summary>
+            /// Return the call center pilot service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="ICallCenterPilot"/> object that provides call center pilot services.
+            /// </value>
+            public ICallCenterPilot CallCenterPilotService => _session.CallCenterPilotService;
+
+            /// <summary>
+            /// Return the call center pilot service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="ICallCenterRealtime"/> object that provides call center real time services.
+            /// </value>
+            public ICallCenterRealtime CallCenterRealtimeService => _session.CallCenterRealtimeService;
+
+            /// <summary>
+            /// Return the user management service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="IUserManagement"/> object that provides user management services.
+            /// </value>
+            public IUserManagement UserManagementService => _session.UserManagementService;
+
+            /// <summary>
+            /// Return the recording service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="IRecording"/> object that provides recording services.
+            /// </value>
+            public IRecording RecordingService => _session.RecordingService;
         }
     }
 }

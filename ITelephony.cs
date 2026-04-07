@@ -127,28 +127,6 @@ namespace o2g
         Task<PbxCall> GetCallAsync(string callRef, string loginName = null);
 
         /// <summary>
-        /// Initiates a new call to another user (the callee), using the specified deviceId.
-        /// </summary>
-        /// <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
-        /// <param name="callee">Called phone number.</param>
-        /// <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
-        /// <param name="loginName">The user login name.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
-        /// <remarks>
-        /// <para>
-        /// Use the <c>MakeCallAsync</c> service to initiated a call from one of the devices of the logged user. First, the call server initiates a call on the user <paramref name="deviceId"/>. Then when the call is answered the call server starts the call to the <paramref name="callee"/>.
-        /// an <see cref="OnCallCreatedEvent"/> is raised.
-        /// </para>
-        /// <para>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
-        /// but it is mandatory if the session has been opened by an administrator.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="OnCallCreatedEvent"/><seealso cref="OnCallModifiedEvent"/>
-        /// 
-        Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer = true, string loginName = null);
-
-        /// <summary>
         /// Initiates a new call to another user (the callee), using the specified deviceId and options.
         /// </summary>
         /// <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
@@ -176,8 +154,8 @@ namespace o2g
         /// </para>
         /// </remarks>
         /// <seealso cref="OnCallCreatedEvent"/><seealso cref="OnCallModifiedEvent"/>
+        [Obsolete("use version with byte array associated data")]
         Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer = true, bool inhibitProgressTone = false, string associatedData = null, string callingNumber = null, string loginName = null);
-
 
         /// <summary>
         /// Initiates a new call to another user (the callee), using the specified deviceId and options.
@@ -215,12 +193,13 @@ namespace o2g
         /// <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
         /// <param name="callee">Called phone number.</param>
         /// <param name="pin">The PIN code to identify the caller.</param>
+        /// <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
         /// <param name="secretCode">The optional secret code used to confirm the PIN code.</param>
         /// <param name="loginName">The user login name.</param>
         /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
         /// <para>
-        /// The private call is a service which allows a user to specify that the external call made is personal and not professional.The charging for this
+        /// The private call is a service which allows a user to specify that the external call made is personal and not professional. The charging for this
         /// type of call can then be given specific processing.
         /// </para>
         /// <para>
@@ -238,7 +217,7 @@ namespace o2g
         /// </remarks>
         /// <seealso cref="OnCallCreatedEvent"/><seealso cref="OnCallModifiedEvent"/>
         /// <seealso cref="IPhoneSetProgramming.GetPinCodeAsync(string, string)"/>
-        Task<bool> MakePrivateCallAsync(string deviceId, string callee, string pin, string secretCode = null, string loginName = null);
+        Task<bool> MakePrivateCallAsync(string deviceId, string callee, string pin, bool autoAnswer = true, string secretCode = null, string loginName = null);
 
         /// <summary>
         /// Initiates a new business call to another user (the callee), using the specified business code.
@@ -246,6 +225,7 @@ namespace o2g
         /// <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
         /// <param name="callee">Called phone number.</param>
         /// <param name="businessCode">The cost center on which the call will be charged.</param>
+        /// <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
         /// <param name="loginName">The user login name.</param>
         /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
@@ -260,7 +240,7 @@ namespace o2g
         /// </para>
         /// </remarks>
         /// <seealso cref="OnCallCreatedEvent"/><seealso cref="OnCallModifiedEvent"/>
-        Task<bool> MakeBusinessCallAsync(string deviceId, string callee, string businessCode, string loginName = null);
+        Task<bool> MakeBusinessCallAsync(string deviceId, string callee, string businessCode, bool autoAnswer = true, string loginName = null);
 
         /// <summary>
         /// Initiates a call from a CCD agent to a supervisor.
@@ -384,6 +364,18 @@ namespace o2g
 
 
         /// <summary>
+        /// Release the specified call.
+        /// </summary>
+        /// <param name="callRef">The call reference.</param>
+        /// <param name="loginName">The user login name.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// but it is mandatory if the session has been opened by an administrator.
+        /// </remarks>
+        Task<bool> ReleaseCallAsync(string callRef, string loginName = null);
+
+        /// <summary>
         /// Puts on hold the specified active call and retrieve a call that has been previously put in hold.
         /// </summary>
         /// <param name="callRef">The active call reference.</param>
@@ -409,6 +401,7 @@ namespace o2g
         /// <remarks>
         /// Associates data can be encoded as clear string or binary encoded string. The associated data has a 32 bytes length.
         /// </remarks>
+        [Obsolete("use version with byte array associated data")]
         Task<bool> AttachDataAsync(string callRef, string deviceId, string associatedData);
 
         /// <summary>
@@ -478,7 +471,7 @@ namespace o2g
         /// <param name="loginName">The user login name.</param>
         /// <returns>
         /// A <see cref="Leg"/> that represents the leg with the given identifier in case of success; 
-        /// <see langword="null"/> in case of error or if there is no such leg associated to this call..
+        /// <see langword="null"/> in case of error or if there is no such leg associated to this call.
         /// </returns>
         /// <remarks>
         /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
@@ -547,22 +540,6 @@ namespace o2g
         Task<bool> OverflowToVoiceMailAsync(string callRef, string loginName = null);
 
         /// <summary>
-        /// Redirects an outgoing ringing call specified by its reference to the voice mail of the called user.
-        /// </summary>
-        /// <param name="loginName">The user login name.</param>
-        /// <returns>
-        /// A <see cref="TelephonicState"/> object that represents the telephonic state of the user in case of success; 
-        /// <see langword="null"/> otherwise.
-        /// </returns>
-        /// <remarks>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
-        /// but it is mandatory if the session has been opened by an administrator.
-        /// </remarks>
-        /// <see cref="RequestSnapshotAsync(string)"/>
-        /// 
-        Task<TelephonicState> GetStateAsync(string loginName = null);
-
-        /// <summary>
         /// Park the specified active call to a target device.
         /// </summary>
         /// <param name="callRef">The call reference.</param>
@@ -604,7 +581,7 @@ namespace o2g
         /// <param name="loginName">The user login name.</param>
         /// <returns>
         /// A <see cref="Participant"/> object that represents the requested participant, or <see langword="null"/> in case
-        /// of error or if there is no such paricipant associatde to this call.
+        /// of error or if there is no such paricipant associated to this call.
         /// </returns>
         /// <remarks>
         /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
@@ -795,17 +772,6 @@ namespace o2g
         Task<DeviceState> GetDeviceStateAsync(string deviceId, string loginName = null);
 
         /// <summary>
-        /// Picks up the specified incoming call to another user.
-        /// </summary>
-        /// <param name="deviceId">The device phone number from which the pickup is done. If the session is opened by a user, the device phone number must be one of the user.</param>
-        /// <param name="otherCallRef">Reference of the call to pickup (on the remote user).</param>
-        /// <param name="otherPhoneNumber">The phone number on which the call is ringing.</param>
-        /// <param name="autoAnswer">Automatic answer the call after the pickup. </param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
-        Task<bool> PickUpAsync(string deviceId, string otherCallRef, string otherPhoneNumber, bool autoAnswer = false);
-
-
-        /// <summary>
         /// Intrusion in the active call of a called user.
         /// </summary>
         /// <param name="deviceId">The device phone number.</param>
@@ -820,6 +786,28 @@ namespace o2g
         /// </remarks>
         Task<bool> IntrusionAsync(string deviceId);
 
+        /// <summary>
+        /// Toggle activation of interphony/hands free. Invoking this service is equivalent to press the corresponding key on a phon set.
+        /// </summary>
+        /// <param name="deviceId">The device phone number.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the device has an established call, it activates or deactivates the microphone (hands free mode). 
+        /// It the device is idle, it activates or deactivates the interphony. 
+        /// his operation is done in blind mode: no state event is provided on the push but when the device returns to idle after a call, 
+        /// the microphone comes back in the active state.
+        /// </remarks>
+        Task<bool> ToggleInterphonyAsync(string deviceId);
+
+        /// <summary>
+        /// Picks up the specified incoming call to another user.
+        /// </summary>
+        /// <param name="deviceId">The device phone number from which the pickup is done. If the session is opened by a user, the device phone number must be one of the user.</param>
+        /// <param name="otherCallRef">Reference of the call to pickup (on the remote user).</param>
+        /// <param name="otherPhoneNumber">The phone number on which the call is ringing.</param>
+        /// <param name="autoAnswer">Automatic answer the call after the pickup. </param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        Task<bool> PickUpAsync(string deviceId, string otherCallRef, string otherPhoneNumber, bool autoAnswer = false);
 
         /// <summary>
         /// UnPark a call from a target device.
@@ -964,6 +952,20 @@ namespace o2g
         Task<bool> DeleteCallbacksAsync(string loginName = null);
 
         /// <summary>
+        /// Delete a callback requests.
+        /// </summary>
+        /// <param name="callbackId">The callback ID as return by <c>GetCallbacksAsync</c>.</param>
+        /// <param name="loginName">The user login name.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// but it is mandatory if the session has been opened by an administrator.
+        /// </remarks>
+        /// <seealso cref="GetCallbacksAsync(string)"/>
+        /// <seealso cref="DeleteCallbacksAsync(string)"/>
+        Task<bool> DeleteCallbackAsync(string callbackId, string loginName = null);
+
+        /// <summary>
         /// Returns the current new message.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
@@ -1015,19 +1017,21 @@ namespace o2g
         /// <seealso cref="DeleteCallbacksAsync(string)"/>
         Task<bool> RequestCallbackAsync(string callee, string loginName = null);
 
-
         /// <summary>
-        /// Release the specified call.
+        /// Redirects an outgoing ringing call specified by its reference to the voice mail of the called user.
         /// </summary>
-        /// <param name="callRef">The call reference.</param>
         /// <param name="loginName">The user login name.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <returns>
+        /// A <see cref="TelephonicState"/> object that represents the telephonic state of the user in case of success; 
+        /// <see langword="null"/> otherwise.
+        /// </returns>
         /// <remarks>
         /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
         /// but it is mandatory if the session has been opened by an administrator.
         /// </remarks>
-        Task<bool> ReleaseCallAsync(string callRef, string loginName = null);
-
+        /// <see cref="RequestSnapshotAsync(string)"/>
+        /// 
+        Task<TelephonicState> GetStateAsync(string loginName = null);
 
         /// <summary>
         /// Ask a snapshot event to receive an <see cref="OnTelephonyStateEvent"/> event notification.

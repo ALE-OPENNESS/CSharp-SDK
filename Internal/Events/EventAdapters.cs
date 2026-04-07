@@ -17,11 +17,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using o2g.Events;
+using o2g.Events.CallCenterAgent;
 using o2g.Events.Maintenance;
 using o2g.Events.Management;
 using o2g.Events.Routing;
+using o2g.Internal.Types.CallCenterAgent;
 using o2g.Internal.Types.Routing;
+using o2g.Types.CallCenterAgentNS;
 using o2g.Types.ManagementNS;
+using System;
+using System.Collections.Generic;
 
 namespace o2g.Internal.Events
 {
@@ -46,6 +51,11 @@ namespace o2g.Internal.Events
         public PbxObjectDefinition Father { get; set; }
     }
 
+    internal class OnInternalAgentSkillChangedEvent : O2GEvent
+    {
+        public string LoginName { get; set; }
+        public O2GAgentSkills Skills { get; init; }
+    }
 
     internal class EventAdapters
     {
@@ -187,6 +197,36 @@ namespace o2g.Internal.Events
                     EventName = org.EventName,
                     NodeId = int.Parse(org.NodeId)
                 };
+            }
+            else
+            {
+                throw new O2GException(string.Format("Invalid translator exception {0}", ev.GetType().Name));
+            }
+        }
+
+        public static O2GEvent AgentSkillChangedAdapter(O2GEvent ev)
+        {
+            if (ev is OnInternalAgentSkillChangedEvent)
+            {
+                OnInternalAgentSkillChangedEvent org = (OnInternalAgentSkillChangedEvent)ev;
+
+                // Transform the AgentSkills to a SkillSet
+                Dictionary<int, AgentSkill> mapSkills = new();
+                if (org.Skills.Skills != null)
+                {
+                    org.Skills.Skills.ForEach(s => mapSkills.Add(s.Number, s));
+                }
+
+                return new OnAgentSkillChangedEvent()
+                {
+                    EventName = org.EventName,
+                    LoginName = org.LoginName,
+                    Skills = new()
+                    {
+                        Map = mapSkills
+                    }
+                };
+
             }
             else
             {

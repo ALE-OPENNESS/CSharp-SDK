@@ -4,6 +4,27 @@
         <name>o2g-sdk</name>
     </assembly>
     <members>
+        <member name="T:o2g.Events.CallCenterAgent.OnAgentSkillChangedEvent">
+            <summary>
+            This event is raised when an agent change the activation of one or several skills.
+            </summary>
+        </member>
+        <member name="P:o2g.Events.CallCenterAgent.OnAgentSkillChangedEvent.LoginName">
+            <summary>
+            Return the agent login name.
+            </summary>
+            <value>
+            A <see langword="string"/> value that represents the agent login name.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterAgent.OnAgentSkillChangedEvent.Skills">
+            <summary>
+            Return the agent skills.
+            </summary>
+            <value>
+            A <see cref="T:o2g.Types.CallCenterAgentNS.AgentSkillSet"/> object that represents the agent skills.
+            </value>
+        </member>
         <member name="T:o2g.Events.CallCenterAgent.OnAgentStateChangedEvent">
             <summary>
             This event is raised when the state of a CCD agent is changed.
@@ -77,6 +98,143 @@
             If the event is received by the supervisor, <c>OtherNumber</c> is the agent number. If this event is received by 
             the agent, <c>OtherNumber</c> is the supervisor number.
             </remarks>
+        </member>
+        <member name="T:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent">
+            <summary>
+            This event is raised when a new call arrive on a CCD pilot.
+            </summary>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent.Pilot">
+            <summary>
+            Return the pilot number on which the call arrived.
+            </summary>
+            <value>
+            A <see langword="string"/> value that represents the pilot directory number.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent.CallRef">
+            <summary>
+            Return the call reference.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the unique call identifier.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent.Cause">
+            <summary>
+            Return the cause of this call creation.
+            </summary>
+            <value>
+            A <see cref="P:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent.Cause"/> that give the reason of this call creation.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent.Caller">
+            <summary>
+            Return the caller number.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the caller number.
+            </value>
+        </member>
+        <member name="T:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent">
+            <summary>
+            This event is raised when a CCD call is routed in a queue.
+            </summary>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.Pilot">
+            <summary>
+            Return the pilot number on which the call arrived.
+            </summary>
+            <value>
+            A <see langword="string"/> value that represents the pilot directory number.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.CallRef">
+            <summary>
+            Return the call reference.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the unique call identifier.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.Cause">
+            <summary>
+            Return the cause of this call creation.
+            </summary>
+            <value>
+            A <see cref="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.Cause"/> that give the reason of this call creation.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.Caller">
+            <summary>
+            Return the caller number.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the caller number.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.Queue">
+            <summary>
+            Return the queue number on which the call is distributed.
+            </summary>
+            <value>
+            A <see langword="string"/> value that represents the queue directory number.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent.CallCount">
+            <summary>
+            Return the number of calls in the queue.
+            </summary>
+            <value>
+            A <see langword="int"/> value that represents the number of calls in the queue.
+            </value>
+        </member>
+        <member name="T:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent">
+            <summary>
+            This event is raised when a CCD call has been removed from the queue. 
+            Either being distributed or rerouted in case of queue overflow. 
+            </summary>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.Pilot">
+            <summary>
+            Return the pilot number on which the call arrived.
+            </summary>
+            <value>
+            A <see langword="string"/> value that represents the pilot directory number.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.CallRef">
+            <summary>
+            Return the call reference.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the unique call identifier.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.Cause">
+            <summary>
+            Return the cause of this call creation.
+            </summary>
+            <value>
+            A <see cref="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.Cause"/> that give the reason of this call creation.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.ReleasingDevice">
+            <summary>
+            Return the device that release the CCD call.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the device that release the CCD call.
+            </value>
+        </member>
+        <member name="P:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent.NewDestination">
+            <summary>
+            Return the new destination.it can be an agent if the call is distributed 
+            or a queue overflow destination if the call overflows.
+            </summary>
+            <value>
+            A <see langword="string"/> that is the new call destination.
+            </value>
         </member>
         <member name="T:o2g.Events.CallCenterRsi.OnDigitCollectedEvent">
             <summary>
@@ -390,9 +548,9 @@
             The event package value to subscribe to call center agent events.
             </summary>
         </member>
-        <member name="P:o2g.Events.EventPackage.Rsi">
+        <member name="P:o2g.Events.EventPackage.Pilot">
             <summary>
-            The Event package value to subscribe to call center rsi events.
+            The event package value to subscribe to call center pilot events.
             </summary>
         </member>
         <member name="P:o2g.Events.EventPackage.System">
@@ -1095,6 +1253,11 @@
             canceled by the agent or when the request is rejected by the supervisor.
             </summary>
         </member>
+        <member name="E:o2g.ICallCenterAgent.AgentSkillChanged">
+            <summary>
+            Occurs when agent skills have changed.
+            </summary>
+        </member>
         <member name="M:o2g.ICallCenterAgent.GetOperatorConfigurationAsync(System.String)">
             <summary>
             Get the operator configuration.
@@ -1400,6 +1563,104 @@
             If the session has been opened for a user, the <c>loginName</c> parameter is ignored, 
             but it is mandatory if the session has been opened by an administrator.
             </remarks>
+        </member>
+        <member name="T:o2g.ICallCenterPilot">
+            <summary>
+            <c>ICallCenterPilot</c> allows an administrator to monitor CCD pilots.
+            Using this service requires having a <b>CONTACTCENTER_SERVICE</b> license in CAPEX mode, or a minimum amount of 40 api-tel 
+            subscriptions available in OPEX mode (Purple On Demand Offer)
+            </summary>
+        </member>
+        <member name="E:o2g.ICallCenterPilot.PilotCallCreated">
+            <summary>
+            Occurs when a new call arrive on a CCD pilot.
+            </summary>
+        </member>
+        <member name="E:o2g.ICallCenterPilot.PilotCallQueued">
+            <summary>
+            Occurs when a CCD call is routed in a queue.
+            </summary>
+        </member>
+        <member name="E:o2g.ICallCenterPilot.PilotCallRemoved">
+            <summary>
+            Occurs when a CCD call has been removed from the queue. Either being distributed or rerouted in case of queue overflow. 
+            </summary>
+        </member>
+        <member name="M:o2g.ICallCenterPilot.monitorStart(System.Int32,System.String)">
+            <summary>
+            Start the monitoring on the specified pilot. 
+            </summary>
+            <param name="nodeId">The pro-acd device number.</param>
+            <param name="pilotNumber">The pilot number.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+            <seealso cref="M:o2g.ICallCenterPilot.monitorStop(System.Int32,System.String)"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent"/>
+        </member>
+        <member name="M:o2g.ICallCenterPilot.monitorStop(System.Int32,System.String)">
+            <summary>
+            Stop the monitoring on the specified pilot. 
+            </summary>
+            <param name="nodeId">The pro-acd device number.</param>
+            <param name="pilotNumber">The pilot number.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+            <seealso cref="M:o2g.ICallCenterPilot.monitorStart(System.Int32,System.String)"/>
+        </member>
+        <member name="M:o2g.ICallCenterPilot.monitorStart(System.String)">
+            <summary>
+            Start the monitoring on the specified pilot. 
+            </summary>
+            <param name="pilotNumber">The pilot number.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+            <seealso cref="M:o2g.ICallCenterPilot.monitorStop(System.String)"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent"/>
+            <seealso cref="T:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent"/>
+        </member>
+        <member name="M:o2g.ICallCenterPilot.monitorStop(System.String)">
+            <summary>
+            Stop the monitoring on the specified pilot. 
+            </summary>
+            <param name="pilotNumber">The pilot number.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+            <seealso cref="M:o2g.ICallCenterPilot.monitorStart(System.String)"/>
+        </member>
+        <member name="T:o2g.ICallCenterRealtime">
+            <summary>
+            Provides realtime information on a CCD through the <see cref="T:o2g.ICallCenterRealtime"/> service.
+            </summary>
+            <remarks>
+            Using this service requires a <c>CONTACTCENTER_SERVICES</c> license.
+            </remarks>
+        </member>
+        <member name="M:o2g.ICallCenterRealtime.GetRtiObjectsAsync">
+            <summary>
+            Gets the directory numbers of all CCD objects that provide realtime information.
+            </summary>
+            <returns>An <see cref="T:o2g.Types.CallCenterRealtimeNS.RtiObjects"/> instance containing the CCD objects.</returns>
+        </member>
+        <member name="M:o2g.ICallCenterRealtime.UpdateContextAsync(o2g.Types.CallCenterRealtimeNS.RtiContext)">
+            <summary>
+            Updates the RTI context associated with this administrator. 
+            If there is no associated RTI context, a new one is created.
+            </summary>
+            <param name="context">The RTI context to update.</param>
+            <returns>
+            <see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        </member>
+        <member name="M:o2g.ICallCenterRealtime.DeleteContextAsync">
+            <summary>
+            Deletes the RTI context associated with this administrator.
+            </summary>
+            <returns>
+            <see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        </member>
+        <member name="M:o2g.ICallCenterRealtime.GetContextAsync">
+            <summary>
+            Gets the RTI context associated with this administrator.
+            </summary>
+            <returns>The current <see cref="T:o2g.Types.CallCenterRealtimeNS.RtiContext"/> for this administrator, or <c>null</c> if none exists.</returns>
         </member>
         <member name="T:o2g.ICallCenterRsi">
             <summary>
@@ -2617,6 +2878,143 @@
             <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
             <seealso cref="M:o2g.IRouting.DeactivateRemoteExtensionAsync(System.String)"/>
         </member>
+        <member name="T:o2g.IRecording">
+             <summary>
+             The ROD OXR Recording service allows starting, pausing, or resuming voice recording
+             of an OXE device on one or more OXR recorders.
+             </summary>
+             <remarks>
+             All necessary permissions must be configured on the OXR side for the dedicated user
+             to perform start/pause/resume operations.
+            
+             If a device is configured in multiple OXRs, the request is sent to all relevant OXRs.
+             A successful action on any one OXR is considered a success for the overall request.
+            
+             Modifications on an OXR may require a restart of the OXR service. To apply such changes
+             immediately, O2G services must also be restarted; otherwise, the O2G server refreshes
+             automatically after a scheduled period (4 hours). After a new device is created on an
+             OXR, the O2G server is refreshed automatically for that device.
+            
+             This service does not provide real-time notifications of changes in recording state caused
+             by call evolutions (e.g., hold, retrieve, transfer, conference, intrusion). Applications
+             may deduce the recording state using call monitoring.
+            
+             Only two telephony call states are relevant for recording actions:
+             <list type="bullet">
+               <item>
+                 <description><b>HELD:</b> If a call was recording before hold, the recording state is memorized and actions are disabled.</description>
+               </item>
+               <item>
+                 <description><b>ACTIVE:</b>
+                   <list type="bullet">
+                     <item><description>New call without recording: "start" action possible.</description></item>
+                     <item><description>Call from transfer/conference: recording stopped, new "start" action possible.</description></item>
+                     <item><description>Hold retrieve: recording resumes previous state.</description></item>
+                     <item><description>Other cases: no change.</description></item>
+                   </list>
+                 </description>
+               </item>
+             </list>
+            
+             While the API allows inferring recording state from telephony events, it is recommended
+             to query the device to get the updated recording state. Typical event-to-state mappings:
+             <list type="bullet">
+               <item><description>ACTIVE -> HELD: recording stalled, no action possible</description></item>
+               <item><description>ACTIVE caused by TRANSFERRED/CONFERENCE: no recording in progress, "start" possible</description></item>
+               <item><description>HELD -> ACTIVE (not TRANSFERRED/CONFERENCE): previous recording resumes</description></item>
+               <item><description>ACTIVE -> ACTIVE (not TRANSFERRED/CONFERENCE): no change</description></item>
+               <item><description>Other -> ACTIVE (not TRANSFERRED/CONFERENCE): new "start" possible</description></item>
+               <item><description>New callref with state=ACTIVE: new "start" possible</description></item>
+             </list>
+            
+             <para>Since version 2.7.3</para>
+             </remarks>
+        </member>
+        <member name="M:o2g.IRecording.GetRecordedDevicesAsync">
+            <summary>
+            Get basic information about all devices (administrator only).
+            </summary>
+            <returns>A list of recorded device.</returns>
+        </member>
+        <member name="M:o2g.IRecording.GetDeviceRecordingInfoAsync(System.String,System.String)">
+            <summary>
+            Get the recording information about a device.
+            </summary>
+            <param name="deviceId">The device phone number for which the operation is done.</param>
+            <param name="loginName">The user login name.</param>
+            <returns>
+            A <see cref="T:Types.Recording.RecordedDevice"/> that represents the recorded device info in case of success; 
+            <see langword="null"/> in case of error.
+            </returns>
+            <remarks>
+            <para>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:o2g.IRecording.StartRecordingAsync(System.String,System.String,o2g.Types.RecordingNS.RecordingStartType,System.String)">
+            <summary>
+            Start a recording on the specified device
+            </summary>
+            <param name="deviceId">The device phone number for which the operation is done.</param>
+            <param name="callRef">The reference of the call for which the recording is requested.</param>
+            <param name="startType">Indicate the recording mode.</param>
+            <param name="loginName">The user login name.</param>
+            <returns>
+            A <see cref="T:Types.Recording.RecordedDevice"/> that represents the recorded device info in case of success; 
+            <see langword="null"/> in case of error.
+            </returns>
+            <remarks>
+            <para>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:o2g.IRecording.PauseRecordingAsync(System.String,System.String)">
+            <summary>
+            Pause a recording on the specified device
+            </summary>
+            <param name="deviceId">The device phone number for which the operation is done.</param>
+            <param name="loginName">The user login name.</param>
+            <returns>
+            A <see cref="T:Types.Recording.RecordedDevice"/> that represents the recorded device info in case of success; 
+            <see langword="null"/> in case of error.
+            </returns>
+            <remarks>
+            <para>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:o2g.IRecording.ResumeRecordingAsync(System.String,System.String)">
+            <summary>
+            Resume a recording on the specified device
+            </summary>
+            <param name="deviceId">The device phone number for which the operation is done.</param>
+            <param name="loginName">The user login name.</param>
+            <returns>
+            A <see cref="T:Types.Recording.RecordedDevice"/> that represents the recorded device info in case of success; 
+            <see langword="null"/> in case of error.
+            </returns>
+            <remarks>
+            <para>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:o2g.IRecording.GetRecordingStatusAsync">
+            <summary>
+            Return the status of the recording.
+            </summary>
+            <returns>
+            A <see cref="T:Types.Recording.RecordingStatus"/> object that represents the status of the configured recording service, or <see langword="null"/> in case
+            of error or if there is no such recording.
+            </returns>
+        </member>
         <member name="T:o2g.IRouting">
             <summary>
             The <c>IRouting</c> service allows a user to manage forward, overflow, Do Not Disturb and activation of his remote extension device (if any).
@@ -3002,28 +3400,6 @@
             but it is mandatory if the session has been opened by an administrator.
             </remarks>
         </member>
-        <member name="M:o2g.ITelephony.MakeCallAsync(System.String,System.String,System.Boolean,System.String)">
-            <summary>
-            Initiates a new call to another user (the callee), using the specified deviceId.
-            </summary>
-            <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
-            <param name="callee">Called phone number.</param>
-            <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
-            <param name="loginName">The user login name.</param>
-            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
-            <remarks>
-            <para>
-            Use the <c>MakeCallAsync</c> service to initiated a call from one of the devices of the logged user. First, the call server initiates a call on the user <paramref name="deviceId"/>. Then when the call is answered the call server starts the call to the <paramref name="callee"/>.
-            an <see cref="T:o2g.Events.Telephony.OnCallCreatedEvent"/> is raised.
-            </para>
-            <para>
-            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
-            but it is mandatory if the session has been opened by an administrator.
-            </para>
-            </remarks>
-            <seealso cref="T:o2g.Events.Telephony.OnCallCreatedEvent"/><seealso cref="T:o2g.Events.Telephony.OnCallModifiedEvent"/>
-            
-        </member>
         <member name="M:o2g.ITelephony.MakeCallAsync(System.String,System.String,System.Boolean,System.Boolean,System.String,System.String,System.String)">
             <summary>
             Initiates a new call to another user (the callee), using the specified deviceId and options.
@@ -3084,19 +3460,20 @@
             </remarks>
             <seealso cref="T:o2g.Events.Telephony.OnCallCreatedEvent"/><seealso cref="T:o2g.Events.Telephony.OnCallModifiedEvent"/>
         </member>
-        <member name="M:o2g.ITelephony.MakePrivateCallAsync(System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:o2g.ITelephony.MakePrivateCallAsync(System.String,System.String,System.String,System.Boolean,System.String,System.String)">
             <summary>
             Initiates a new private call to another user (the callee), using a pin code and an optional secret code.
             </summary>
             <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
             <param name="callee">Called phone number.</param>
             <param name="pin">The PIN code to identify the caller.</param>
+            <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
             <param name="secretCode">The optional secret code used to confirm the PIN code.</param>
             <param name="loginName">The user login name.</param>
             <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
             <remarks>
             <para>
-            The private call is a service which allows a user to specify that the external call made is personal and not professional.The charging for this
+            The private call is a service which allows a user to specify that the external call made is personal and not professional. The charging for this
             type of call can then be given specific processing.
             </para>
             <para>
@@ -3115,13 +3492,14 @@
             <seealso cref="T:o2g.Events.Telephony.OnCallCreatedEvent"/><seealso cref="T:o2g.Events.Telephony.OnCallModifiedEvent"/>
             <seealso cref="M:o2g.IPhoneSetProgramming.GetPinCodeAsync(System.String,System.String)"/>
         </member>
-        <member name="M:o2g.ITelephony.MakeBusinessCallAsync(System.String,System.String,System.String,System.String)">
+        <member name="M:o2g.ITelephony.MakeBusinessCallAsync(System.String,System.String,System.String,System.Boolean,System.String)">
             <summary>
             Initiates a new business call to another user (the callee), using the specified business code.
             </summary>
             <param name="deviceId">The device phone number from which the call is placed. If the session is opened by a user, the device phone number must be one of the user.</param>
             <param name="callee">Called phone number.</param>
             <param name="businessCode">The cost center on which the call will be charged.</param>
+            <param name="autoAnswer">Automatic answer on make call. If this parameter is set to <see langword="false"/> the device <paramref name="deviceId"/> is called before calling the callee, else callee is called immediately.</param>
             <param name="loginName">The user login name.</param>
             <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
             <remarks>
@@ -3255,6 +3633,18 @@
             </para>
             </remarks>
         </member>
+        <member name="M:o2g.ITelephony.ReleaseCallAsync(System.String,System.String)">
+            <summary>
+            Release the specified call.
+            </summary>
+            <param name="callRef">The call reference.</param>
+            <param name="loginName">The user login name.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+            <remarks>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </remarks>
+        </member>
         <member name="M:o2g.ITelephony.AlternateAsync(System.String,System.String)">
             <summary>
             Puts on hold the specified active call and retrieve a call that has been previously put in hold.
@@ -3351,7 +3741,7 @@
             <param name="loginName">The user login name.</param>
             <returns>
             A <see cref="T:o2g.Types.TelephonyNS.CallNS.Leg"/> that represents the leg with the given identifier in case of success; 
-            <see langword="null"/> in case of error or if there is no such leg associated to this call..
+            <see langword="null"/> in case of error or if there is no such leg associated to this call.
             </returns>
             <remarks>
             If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
@@ -3418,22 +3808,6 @@
             </remarks>
             
         </member>
-        <member name="M:o2g.ITelephony.GetStateAsync(System.String)">
-            <summary>
-            Redirects an outgoing ringing call specified by its reference to the voice mail of the called user.
-            </summary>
-            <param name="loginName">The user login name.</param>
-            <returns>
-            A <see cref="T:o2g.Types.TelephonyNS.TelephonicState"/> object that represents the telephonic state of the user in case of success; 
-            <see langword="null"/> otherwise.
-            </returns>
-            <remarks>
-            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
-            but it is mandatory if the session has been opened by an administrator.
-            </remarks>
-            <see cref="M:o2g.ITelephony.RequestSnapshotAsync(System.String)"/>
-            
-        </member>
         <member name="M:o2g.ITelephony.ParkAsync(System.String,System.String,System.String)">
             <summary>
             Park the specified active call to a target device.
@@ -3477,7 +3851,7 @@
             <param name="loginName">The user login name.</param>
             <returns>
             A <see cref="T:o2g.Types.TelephonyNS.CallNS.Participant"/> object that represents the requested participant, or <see langword="null"/> in case
-            of error or if there is no such paricipant associatde to this call.
+            of error or if there is no such paricipant associated to this call.
             </returns>
             <remarks>
             If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
@@ -3665,16 +4039,6 @@
             </remarks>
             <seealso cref="M:o2g.ITelephony.GetDevicesStateAsync(System.String)"/>
         </member>
-        <member name="M:o2g.ITelephony.PickUpAsync(System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            Picks up the specified incoming call to another user.
-            </summary>
-            <param name="deviceId">The device phone number from which the pickup is done. If the session is opened by a user, the device phone number must be one of the user.</param>
-            <param name="otherCallRef">Reference of the call to pickup (on the remote user).</param>
-            <param name="otherPhoneNumber">The phone number on which the call is ringing.</param>
-            <param name="autoAnswer">Automatic answer the call after the pickup. </param>
-            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
-        </member>
         <member name="M:o2g.ITelephony.IntrusionAsync(System.String)">
             <summary>
             Intrusion in the active call of a called user.
@@ -3689,6 +4053,29 @@
             </para>
             <para>Available from O2G 2.4</para>
             </remarks>
+        </member>
+        <member name="M:o2g.ITelephony.ToggleInterphonyAsync(System.String)">
+            <summary>
+            Toggle activation of interphony/hands free. Invoking this service is equivalent to press the corresponding key on a phon set.
+            </summary>
+            <param name="deviceId">The device phone number.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+            <remarks>
+            If the device has an established call, it activates or deactivates the microphone (hands free mode). 
+            It the device is idle, it activates or deactivates the interphony. 
+            his operation is done in blind mode: no state event is provided on the push but when the device returns to idle after a call, 
+            the microphone comes back in the active state.
+            </remarks>
+        </member>
+        <member name="M:o2g.ITelephony.PickUpAsync(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Picks up the specified incoming call to another user.
+            </summary>
+            <param name="deviceId">The device phone number from which the pickup is done. If the session is opened by a user, the device phone number must be one of the user.</param>
+            <param name="otherCallRef">Reference of the call to pickup (on the remote user).</param>
+            <param name="otherPhoneNumber">The phone number on which the call is ringing.</param>
+            <param name="autoAnswer">Automatic answer the call after the pickup. </param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         </member>
         <member name="M:o2g.ITelephony.UnParkAsync(System.String,System.String)">
             <summary>
@@ -3832,6 +4219,20 @@
             </remarks>
             <seealso cref="M:o2g.ITelephony.GetCallbacksAsync(System.String)"/>
         </member>
+        <member name="M:o2g.ITelephony.DeleteCallbackAsync(System.String,System.String)">
+            <summary>
+            Delete a callback requests.
+            </summary>
+            <param name="callbackId">The callback ID as return by <c>GetCallbacksAsync</c>.</param>
+            <param name="loginName">The user login name.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+            <remarks>
+            If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+            but it is mandatory if the session has been opened by an administrator.
+            </remarks>
+            <seealso cref="M:o2g.ITelephony.GetCallbacksAsync(System.String)"/>
+            <seealso cref="M:o2g.ITelephony.DeleteCallbacksAsync(System.String)"/>
+        </member>
         <member name="M:o2g.ITelephony.GetMiniMessageAsync(System.String)">
             <summary>
             Returns the current new message.
@@ -3884,17 +4285,21 @@
             <seealso cref="M:o2g.ITelephony.GetCallAsync(System.String,System.String)"/>
             <seealso cref="M:o2g.ITelephony.DeleteCallbacksAsync(System.String)"/>
         </member>
-        <member name="M:o2g.ITelephony.ReleaseCallAsync(System.String,System.String)">
+        <member name="M:o2g.ITelephony.GetStateAsync(System.String)">
             <summary>
-            Release the specified call.
+            Redirects an outgoing ringing call specified by its reference to the voice mail of the called user.
             </summary>
-            <param name="callRef">The call reference.</param>
             <param name="loginName">The user login name.</param>
-            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+            <returns>
+            A <see cref="T:o2g.Types.TelephonyNS.TelephonicState"/> object that represents the telephonic state of the user in case of success; 
+            <see langword="null"/> otherwise.
+            </returns>
             <remarks>
             If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
             but it is mandatory if the session has been opened by an administrator.
             </remarks>
+            <see cref="M:o2g.ITelephony.RequestSnapshotAsync(System.String)"/>
+            
         </member>
         <member name="M:o2g.ITelephony.RequestSnapshotAsync(System.String)">
             <summary>
@@ -3914,6 +4319,73 @@
             </remarks>
             <seealso cref="M:o2g.ITelephony.GetStateAsync(System.String)"/>
             <seealso cref="E:o2g.ITelephony.TelephonyState"/>
+        </member>
+        <member name="T:o2g.IUserManagement">
+            <summary>
+            <c>IUserManagement</c> service allows an administrator to create/delete/get the O2G users. .
+            <c>IUserManagement</c> service is available for an administrator, it doesn't require any specific license on the O2G server.
+            <para>
+            </para>
+            <remark>
+            Since O2G version 2.7.3
+            </remark>
+            </summary>
+        </member>
+        <member name="M:o2g.IUserManagement.GetLoginsAsync(System.Int32[])">
+            <summary>
+            Retrieve a list of users login from the specified OmniPCX Enterprise nodes.
+            </summary>
+            <param name="nodeIds">Specify a list of OXE nodes Id in which the query is done.</param>
+            <returns>The list of users identified by their O2G login.</returns>
+            <remarks>
+            if <c>NodeIds</c> is {@code null}, retrieves the O2G login of users from all the connected OmniPCX Enterprise nodes.
+            </remarks>
+        </member>
+        <member name="M:o2g.IUserManagement.GetLoginAsync(System.String)">
+            <summary>
+            Retrieves a user login from one of its phone directory number. 
+            </summary>
+            <param name="deviceNumber">The directory number of a device belonging to the user being searched for.</param>
+            <returns>
+            A <see langword="string"/> that represents the O2G login of the user in case of success; 
+            <see langword="null"/> in case of error or if there is no user with this device directory number.
+            </returns>
+        </member>
+        <member name="M:o2g.IUserManagement.GetUserAsync(System.String)">
+            <summary>
+            Get the O2G user with the specified O2G login.
+            </summary>
+            <param name="loginName">Login name of the user to retrieve.</param>
+            <returns>
+            A <see cref="T:o2g.Types.UsersNS.User"/> that represents the User with the given O2G login in case of success; 
+            <see langword="null"/> in case of error or if there is no such user with this O2G login.
+            </returns>
+        </member>
+        <member name="M:o2g.IUserManagement.CreateUsersAsync(System.Int32,System.String[])">
+            <summary>
+            Create and monitor the specified list of O2G users on the specified OmniPCX Enterprise node.
+            </summary>
+            <param name="nodeId">The OXE node on which the O2G users are created.</param>
+            <param name="deviceNumbers">The list of device number identifying the O2G users to creates.</param>
+            <returns>
+            A list of <see cref="T:o2g.Types.UsersNS.User"/> that represents created users in case of success; <see langword="null"/> otherwise.
+            </returns>
+        </member>
+        <member name="M:o2g.IUserManagement.CreateAllUsersAsync(System.Int32)">
+            <summary>
+            Create and monitor tall the O2G users on the specified OmniPCX Enterprise node.
+            </summary>
+            <param name="nodeId">The OXE node.</param>
+            <returns>
+            A list of <see cref="T:o2g.Types.UsersNS.User"/> that represents created users in case of success; <see langword="null"/> otherwise.
+            </returns>
+        </member>
+        <member name="M:o2g.IUserManagement.DeleteUserAsync(System.String)">
+            <summary>
+            Delete the specified <c>User</c>.
+            </summary>
+            <param name="loginName">Login name of the user to delete.</param>
+            <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         </member>
         <member name="T:o2g.IUsers">
             <summary>
@@ -3962,6 +4434,14 @@
             <param name="onlyACD">Allows to select only the ACD operators (agents or supervisors) during the query. This parameter is only valid for an administrator session.</param>
             <returns>The list of users identified by their login. If <c>GetLogins</c> is used by a user session, it return only the user's login</returns>
         </member>
+        <member name="M:o2g.IUsers.GetLoginsAsync(System.Int32[],System.Boolean)">
+            <summary>
+            Retrieve a list of users login from the connected OXEs. 
+            </summary>
+            <param name="nodeIds">Specify a list of OXE nodes Id in which the query is done. This parameter is only valid for an administrator session.</param>
+            <param name="onlyACD">Allows to select only the ACD operators (agents or supervisors) during the query. This parameter is only valid for an administrator session.</param>
+            <returns>The list of users identified by their login. If <c>GetLogins</c> is used by a user session, it return only the user's login</returns>
+        </member>
         <member name="M:o2g.IUsers.GetByLoginNameAsync(System.String)">
             <summary>
             Returns an <c>User</c> object that represents the account information for the specified user.
@@ -3994,6 +4474,9 @@
             <summary>
             Change the password of the user or the administrator that have opened the session
             </summary>
+            <remarks>
+            This action will be refused if the authentication is delegated to an external LDAP server.
+            </remarks>
             <param name="loginName">Login name of the user to retrieve the account information.</param>
             <param name="oldPassword">The old password to change</param>
             <param name="newPassword">The new password</param>
@@ -4114,6 +4597,11 @@
             A <see langword="string"/> value that represents the user login name.
             </value>
         </member>
+        <member name="P:o2g.O2G.Application.Account">
+            <summary>
+            Return the account corresponding to the connected user
+            </summary>
+        </member>
         <member name="M:o2g.O2G.Application.#ctor(System.String)">
             <summary>
             Create a new O2G application with the specified name.
@@ -4177,14 +4665,6 @@
             A <see cref="T:o2g.IEventSummary"/> object that provides event summary services.
             </value>
         </member>
-        <member name="P:o2g.O2G.Application.CallCenterRsiService">
-            <summary>
-            Return the cal center rsi service.
-            </summary>
-            <value>
-            A <see cref="T:o2g.ICallCenterRsi"/> object that provides call center ris services.
-            </value>
-        </member>
         <member name="P:o2g.O2G.Application.MessagingService">
             <summary>
             Return the messaging service.
@@ -4239,6 +4719,38 @@
             </summary>
             <value>
             A <see cref="T:o2g.ICallCenterAgent"/> object that provides call center agent services.
+            </value>
+        </member>
+        <member name="P:o2g.O2G.Application.CallCenterPilotService">
+            <summary>
+            Return the call center pilot service.
+            </summary>
+            <value>
+            A <see cref="T:o2g.ICallCenterPilot"/> object that provides call center pilot services.
+            </value>
+        </member>
+        <member name="P:o2g.O2G.Application.CallCenterRealtimeService">
+            <summary>
+            Return the call center pilot service.
+            </summary>
+            <value>
+            A <see cref="T:o2g.ICallCenterRealtime"/> object that provides call center real time services.
+            </value>
+        </member>
+        <member name="P:o2g.O2G.Application.UserManagementService">
+            <summary>
+            Return the user management service.
+            </summary>
+            <value>
+            A <see cref="T:o2g.IUserManagement"/> object that provides user management services.
+            </value>
+        </member>
+        <member name="P:o2g.O2G.Application.RecordingService">
+            <summary>
+            Return the recording service.
+            </summary>
+            <value>
+            A <see cref="T:o2g.IRecording"/> object that provides recording services.
             </value>
         </member>
         <member name="T:o2g.O2GAuthenticationException">
@@ -4415,30 +4927,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:o2g.Subscription.IBuilder.AddCallCenterRsiEvents(System.String[])">
-            <summary>
-            Add the rsi events to this subscription.
-            </summary>
-            <param name="ids">The Ids to filter events on.</param>
-            <returns>
-            The <see cref="T:o2g.Subscription.IBuilder"/> object to chain the build.
-            </returns>
-            <remarks>
-            <para>
-            The following event associated to the <see cref="T:o2g.ICallCenterRsi"/> service is added to the subscription:
-            <list type="bullet">
-            <item><description><see cref="T:o2g.Events.CallCenterRsi.OnDigitCollectedEvent"/></description></item>
-            <item><description><see cref="T:o2g.Events.CallCenterRsi.OnRouteEndEvent"/></description></item>
-            <item><description><see cref="T:o2g.Events.CallCenterRsi.OnRouteRequestEvent"/></description></item>
-            <item><description><see cref="T:o2g.Events.CallCenterRsi.OnToneGeneratedStartEvent"/></description></item>
-            <item><description><see cref="T:o2g.Events.CallCenterRsi.OnToneGeneratedStopEvent"/></description></item>
-            </list>
-            </para>
-            <para>
-            Subscribing to the rsi events requires having a <b>CONTACTCENTER_RSI</b> license.
-            </para>
-            </remarks>
-        </member>
         <member name="M:o2g.Subscription.IBuilder.AddTelephonyEvents(System.String[])">
             <summary>
             Add the telephony events to this subscription.
@@ -4457,6 +4945,7 @@
             <item><description><see cref="T:o2g.Events.Telephony.OnCallRemovedEvent"/></description></item>
             <item><description><see cref="T:o2g.Events.Telephony.OnDeviceStateModifiedEvent"/></description></item>
             <item><description><see cref="T:o2g.Events.Telephony.OnDynamicStateChangedEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.Telephony.OnUserStateModifiedEvent"/></description></item>
             </list>
             </para>
             <para>
@@ -4521,6 +5010,31 @@
             The following events associated to the <see cref="T:o2g.ICallCenterAgent"/> service are added to the subscription:
             <list type="bullet">
             <item><description><see cref="T:o2g.Events.CallCenterAgent.OnAgentStateChangedEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.CallCenterAgent.OnAgentSkillChangedEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.CallCenterAgent.OnSupervisorHelpCancelledEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.CallCenterAgent.OnSupervisorHelpRequestedEvent"/></description></item>
+            </list>
+            </para>
+            <para>
+            Subscribing to the call center agent events requires having a <b>CONTACTCENTER_AGENT</b> license.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:o2g.Subscription.IBuilder.AddCallCenterPilotEvents(System.String[])">
+            <summary>
+            Add the call center pilot events to this subscription.
+            </summary>
+            <param name="ids">The Ids to filter events on.</param>
+            <returns>
+            The <see cref="T:o2g.Subscription.IBuilder"/> object to chain the build.
+            </returns>
+            <remarks>
+            <para>
+            The following events associated to the <see cref="T:o2g.ICallCenterPilot"/> service are added to the subscription:
+            <list type="bullet">
+            <item><description><see cref="T:o2g.Events.CallCenterPilot.OnPilotCallCreatedEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.CallCenterPilot.OnPilotCallQueuedEvent"/></description></item>
+            <item><description><see cref="T:o2g.Events.CallCenterPilot.OnPilotCallRemovedEvent"/></description></item>
             </list>
             </para>
             <para>
@@ -4597,6 +5111,23 @@
             <returns>
             A <see cref="T:o2g.Subscription"/> object that represents the subscription built by this builder.
             </returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:o2g.Types.IAccount" -->
+        <member name="P:o2g.Types.IAccount.LoginName">
+            <summary>
+            This property is the Login name used for authentication. This is the login passed by the application in the <see cref="M:o2g.O2G.Application.LoginAsync(System.String,System.String)"/>.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.IAccount.O2GUserLoginName">
+            <summary>
+            This property is the OG2 user login corresponding to the LoginName. It has the form oxeXXXXX, where XXXXX is the OXE subscriber directory number.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.IAccount.IsGoingToExpired">
+            <summary>
+            This property indicates whether the password used to authenticate this account is foing to expired.
+            is about to expire and must be changed.
+            </summary>
         </member>
         <member name="T:o2g.Types.AnalyticsNS.CallType">
             <summary>
@@ -5446,6 +5977,603 @@
             <value>
             A <see langword="string"/> value that represents the withdraw reason.
             </value>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1">
+            <summary>
+            Represents an abstract RTI filter that can filter objects by numbers and attributes.
+            </summary>
+            <typeparam name="T">The type of the attributes in the filter.</typeparam>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1"/> class.
+            </summary>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1.GetNumbers">
+            <summary>
+            Returns the set of numbers in this filter.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.HashSet`1"/> containing the numbers.</returns>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1.GetAttributes">
+            <summary>
+            Returns the set of attributes in this filter.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.HashSet`1"/> containing the attributes.</returns>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1.AddNumbers(System.String[])">
+            <summary>
+            Adds an array of numbers to this filter.
+            </summary>
+            <param name="numbers">The directory numbers of the objects to add in the RTI filter.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.AbstractRtiFilter`1.AddAttributes(`0[])">
+            <summary>
+            Adds an array of attributes to this filter.
+            </summary>
+            <param name="attributes">The attributes to add in the RTI filter.</param>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.AgentAttributes">
+            <summary>
+            Represents the possible attributes for a CCD agent.
+            <para>
+            CallCenterRealtimeService can report realtime on each of these attributes.
+            </para>
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.AssociatedSet">
+            <summary>
+            Associated Set (pro acd).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.CurrentPG">
+            <summary>
+            Current processing group.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.PhoneState">
+            <summary>
+            Phone state (ringing, talking, ...).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.LogonDate">
+            <summary>
+            UTC logon date.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.PrivateCallsTotalDuration">
+            <summary>
+            Duration of all private calls (in seconds).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.ComDate">
+            <summary>
+            UTC date of entering communication.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.ComDuration">
+            <summary>
+            Duration of communication.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NBOfPrivateCalls">
+            <summary>
+            Number of private calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfServedACDCalls">
+            <summary>
+            Number of answered ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfRefusedACDCalls">
+            <summary>
+            Number of non-answered ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfTransferedACDCalls">
+            <summary>
+            Number of transferred ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfOutgoingACDCalls">
+            <summary>
+            Number of outgoing ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfInterceptedACDCalls">
+            <summary>
+            Number of picked-up ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.ServiceState">
+            <summary>
+            Agent service state (loggedIn, assigned, ...).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.NbOfWithdrawals">
+            <summary>
+            Number of withdrawals.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.WithdrawalsTotalDuration">
+            <summary>
+            Total duration of withdrawals.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.WithdrawReason">
+            <summary>
+            Last withdrawal reason.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.PilotName">
+            <summary>
+            Pilot name.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.QueueName">
+            <summary>
+            Queue name.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentAttributes.ALL">
+            <summary>
+            All attributes.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes">
+            <summary>
+            Represents the possible attributes for a CCD agent processing group.
+            <para>
+            CallCenterRealtimeService can report realtime on each of these attributes.
+            </para>
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.State">
+            <summary>
+            Service state (Open, blocked, ...).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfWithdrawnAgents">
+            <summary>
+            Number of withdrawn agents.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInPrivateCall">
+            <summary>
+            Number of agents in private call.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInACDCall">
+            <summary>
+            Number of agents in ACD call.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInACDRinging">
+            <summary>
+            Number of agents in ringing ACD call.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInACDConv">
+            <summary>
+            Number of agents in established ACD call.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInWrapupAndTransaction">
+            <summary>
+            Number of agents in wrap-up and in entering transaction code.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfAgentsInPause">
+            <summary>
+            Number of agents in pause.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfBusyAgents">
+            <summary>
+            Number of busy agents (ACD or private call).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfLoggedOnAgents">
+            <summary>
+            Number of logged agents.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfFreeAgents">
+            <summary>
+            Number of free agents (withdrawn or not).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfIdleAgents">
+            <summary>
+            Number of free agents (excluding withdrawn).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.NbOfLoggedOnAndNotWithdrawnAgents">
+            <summary>
+            Number of logged agents (excluding withdrawn and free).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.ConsolidatedQueuesWaitingTime">
+            <summary>
+            Current waiting time on the queues possibly serving this team.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.ConsolidatedQueuesNbOfWaitingCalls">
+            <summary>
+            Number of waiting calls on the queues possibly serving this team.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.ConsolidatedQueuesEWT">
+            <summary>
+            Expected waiting time on the queues possibly serving this team.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.ServiceLevel">
+            <summary>
+            Service level on all the pilots possibly serving this team (average/best/worst).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.Efficiency">
+            <summary>
+            Efficiency on all the pilots possibly serving this team (average/best/worst).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.IncomingTraffic">
+            <summary>
+            Number of incoming calls within the minute.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes.ALL">
+            <summary>
+            All attributes.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes">
+            <summary>
+            Represents the possible attributes for other processing groups (rerouting, forward, voiceguide, ...).
+            <para>
+            CallCenterRealtimeService can report realtime on each of these attributes.
+            </para>
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes.State">
+            <summary>
+            Service state (Open, blocked, ...).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes.NbOfACDCalls">
+            <summary>
+            Number of ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes.IncomingTraffic">
+            <summary>
+            Number of incoming calls during the last minute.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes.ALL">
+            <summary>
+            All attributes.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.PilotAttributes">
+            <summary>
+            Represents the possible attributes for a CCD pilot.
+            <para>
+            CallCenterRealtimeService can report realtime on each of these attributes.
+            </para>
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.State">
+            <summary>
+            Service state (Open, blocked, ...).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.ServiceLevel">
+            <summary>
+            Service level.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.CurrentRuleName">
+            <summary>
+            Current rule name.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfWaitingCalls">
+            <summary>
+            Number of waiting calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfMutualAidCalls">
+            <summary>
+            Number of calls rerouted for mutual aid.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfCallsInConversation">
+            <summary>
+            Number of calls in conversation.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfCallsInRemotePG">
+            <summary>
+            Number of calls being processed in a remote PG.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.AverageWaitingTime">
+            <summary>
+            Average waiting time before answering (in seconds).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfRunningCalls">
+            <summary>
+            Number of calls in progress.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfRingingACDCalls">
+            <summary>
+            Number of ringing ACD calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfDissuadedCalls">
+            <summary>
+            Number of dissuaded calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.NbOfCallsInGeneralForwarding">
+            <summary>
+            Number of calls in general forwarding.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.Efficiency">
+            <summary>
+            Efficiency (average/best/worst).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.IncomingTraffic">
+            <summary>
+            Number of incoming calls within the minute.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.PilotAttributes.ALL">
+            <summary>
+            All attributes.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.QueueAttributes">
+            <summary>
+            Represents the possible attributes for a CCD queue.
+            <para>
+            CallCenterRealtimeService can report realtime on each of these attributes.
+            </para>
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.State">
+            <summary>
+            Service state.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.NbOfAgentsInDistribution">
+            <summary>
+            Number of agents in the distribution of the waiting queue.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.IncomingTraffic">
+            <summary>
+            Number of incoming calls within the minute.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.OutgoingTraffic">
+            <summary>
+            Number of outgoing calls within the minute.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.NbOfWaitingCalls">
+            <summary>
+            Number of waiting calls.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.CurrentWaitingTime">
+            <summary>
+            Current waiting time.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.ExpectedWaitingTime">
+            <summary>
+            Expected waiting time.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.FillingRate">
+            <summary>
+            Filling rate.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.LongestWaitingTimeInList">
+            <summary>
+            Longest time among the queues of a super waiting queue.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.CallCenterRealtimeNS.QueueAttributes.ALL">
+            <summary>
+            All attributes.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.RtiContext">
+            <summary>
+            Represents the subscription to CCD realtime events provided by the 
+            <see cref="T:o2g.ICallCenterRealtime"/> service.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiContext.IsActive">
+            <summary>
+            Gets a value indicating whether this RTI context is currently active.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiContext.ObservationPeriod">
+            <summary>
+            Gets the observation period in number of minutes.
+            </summary>
+            <remarks>
+            Can be a value between 15 and 60 minutes. This defines the duration 
+            during which the RTI context will actively receive realtime events.
+            </remarks>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiContext.NotificationFrequency">
+            <summary>
+            Gets the notification frequency in number of seconds.
+            </summary>
+            <remarks>
+            This indicates how often events are delivered. The minimum value is 5 seconds.
+            </remarks>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiContext.Filter">
+            <summary>
+            Gets the RTI filter associated with this context.
+            </summary>
+            <remarks>
+            The filter defines which categories of CCD objects and their parameters 
+            should be included in the realtime eventing.
+            </remarks>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiContext.#ctor(System.Int32,System.Int32,o2g.Types.CallCenterRealtimeNS.RtiFilter)">
+            <summary>
+            Constructs a new <see cref="T:o2g.Types.CallCenterRealtimeNS.RtiContext"/> with the specified observation period, 
+            notification frequency, and RTI filter.
+            </summary>
+            <param name="observationPeriod">
+            The observation period in number of minutes (15–60 minutes).
+            </param>
+            <param name="notificationFrequency">
+            The notification frequency in seconds (minimum 5 seconds).
+            </param>
+            <param name="filter">
+            The RTI filter associated with this context.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="filter"/> is <c>null</c>.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Thrown if <paramref name="observationPeriod"/> is not between 15 and 60,
+            or if <paramref name="notificationFrequency"/> is less than 5.
+            </exception>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.RtiFilter">
+            <summary>
+            Specifies, for each category of CCD object, which objects should be included in realtime eventing
+            and which parameters of each object should be included.
+            </summary>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetAgentAttributes(o2g.Types.CallCenterRealtimeNS.AgentAttributes[])">
+            <summary>
+            Sets the specified set of <see cref="T:o2g.Types.CallCenterRealtimeNS.AgentAttributes"/> in this filter.
+            </summary>
+            <param name="attributes">The attributes to include for agents.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetAgentNumbers(System.String[])">
+            <summary>
+            Sets the specified list of agent directory numbers in this filter.
+            </summary>
+            <param name="numbers">The directory numbers of agents.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetPilotAttributes(o2g.Types.CallCenterRealtimeNS.PilotAttributes[])">
+            <summary>
+            Sets the specified set of <see cref="T:o2g.Types.CallCenterRealtimeNS.PilotAttributes"/> in this filter.
+            </summary>
+            <param name="attributes">The attributes to include for pilots.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetPilotNumbers(System.String[])">
+            <summary>
+            Sets the specified list of pilot directory numbers in this filter.
+            </summary>
+            <param name="numbers">The directory numbers of pilots.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetQueueAttributes(o2g.Types.CallCenterRealtimeNS.QueueAttributes[])">
+            <summary>
+            Sets the specified set of <see cref="T:o2g.Types.CallCenterRealtimeNS.QueueAttributes"/> in this filter.
+            </summary>
+            <param name="attributes">The attributes to include for queues.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetQueueNumbers(System.String[])">
+            <summary>
+            Sets the specified list of queue directory numbers in this filter.
+            </summary>
+            <param name="numbers">The directory numbers of queues.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetAgentProcessingGroupAttributes(o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes[])">
+            <summary>
+            Sets the specified set of <see cref="T:o2g.Types.CallCenterRealtimeNS.AgentProcessingGroupAttributes"/> in this filter.
+            </summary>
+            <param name="attributes">The attributes to include for agent processing groups.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetAgentProcessingGroupNumbers(System.String[])">
+            <summary>
+            Sets the specified list of agent processing group directory numbers in this filter.
+            </summary>
+            <param name="numbers">The directory numbers of agent processing groups.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetOtherProcessingGroupAttributes(o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes[])">
+            <summary>
+            Sets the specified set of <see cref="T:o2g.Types.CallCenterRealtimeNS.OtherProcessingGroupAttributes"/> in this filter.
+            </summary>
+            <param name="attributes">The attributes to include for other processing groups.</param>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiFilter.SetOtherProcessingGroupNumbers(System.String[])">
+            <summary>
+            Sets the specified list of other processing group directory numbers in this filter.
+            </summary>
+            <param name="numbers">The directory numbers of other processing groups.</param>
+        </member>
+        <member name="T:o2g.Types.CallCenterRealtimeNS.RtiObjects">
+            <summary>
+            <c>RtiObjects</c> represents the global configured object that can be monitoried by the CallCenterRealtime service.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiObjects.Agents">
+            <summary>
+            Return the list of CCD operators.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represents the configured CCD operators.
+            </value>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiObjects.Pilots">
+            <summary>
+            Return the list of CCD pilots.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represents the configured CCD pilots.
+            </value>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiObjects.Queues">
+            <summary>
+            Return the list of CCD queues.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represents the configured CCD queues.
+            </value>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiObjects.AgentProcessingGroups">
+            <summary>
+            Return the list of agent processing groups.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represents the configured agent processing groups.
+            </value>
+        </member>
+        <member name="P:o2g.Types.CallCenterRealtimeNS.RtiObjects.OtherProcessingGroups">
+            <summary>
+            Return the list of other processing groups.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represents the configured other processing groups.
+            </value>
+        </member>
+        <member name="M:o2g.Types.CallCenterRealtimeNS.RtiObjects.CreateFilter">
+            <summary>
+            Creates a new <see cref="T:o2g.Types.CallCenterRealtimeNS.RtiFilter"/> pre-populated with all CCD objects
+            available in this instance.
+            </summary>
+            <returns>A fully populated <see cref="T:o2g.Types.CallCenterRealtimeNS.RtiFilter"/> object.</returns>
         </member>
         <member name="T:o2g.Types.CallCenterRsiNS.AdditionalDigitCollectionCriteria">
             <summary>
@@ -8254,6 +9382,177 @@
             <c>SoftKey</c> class represents a software key on an OmniPcx Enterprise device.
             </summary>
         </member>
+        <member name="T:o2g.Types.RecordingNS.ActiveCall">
+            <summary>
+            Represent a call on a recordable device. A call is identified by its <see cref="P:o2g.Types.RecordingNS.ActiveCall.CallRef"/>, a unique <see langword="string"/> generated by the O2G server.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.ActiveCall.CallRef">
+            <summary>
+            This property is the reference of this call.
+            </summary>
+            <value>
+            The unique <see langword="string"/> value that identifies this call.
+            </value>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.ActiveCall.RecordingState">
+            <summary>
+            This property gives the recording state for this call.
+            </summary>
+            <value>
+            A <see cref="P:o2g.Types.RecordingNS.ActiveCall.RecordingState"/> that represents the recording state.
+            </value>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.ActiveCall.Action">
+            <summary>
+            Indicate which recording action can be done on the call.
+            </summary>
+            <value>
+            A <see cref="T:o2g.Types.RecordingNS.RecordingAction"/> that represents the possible recording action.
+            </value>
+        </member>
+        <member name="T:o2g.Types.RecordingNS.DeviceRecordingInfo">
+            <summary>
+            Represent a RecordedDevice.
+            </summary>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.DeviceRecordingInfo.Number">
+            <summary>
+            This property is the phone number of the Device.
+            </summary>
+            <value>
+            The <see langword="string"/> value that identifies this device.
+            </value>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.DeviceRecordingInfo.Recordable">
+            <summary>
+            Gets a value indicating whether this device can perform a record-on-demand request.
+            </summary>
+            <value>
+            <see langword="true"/> if the device can be recorded on demand; <see langword="false"/> otherwise.
+            </value>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.DeviceRecordingInfo.StartCapabilities">
+            <summary>
+            Start mode capability of the device. <see langword="null"/> if device is not recordable on demand.
+            </summary>
+            <value>
+            A <see cref="T:o2g.Types.RecordingNS.RecordingStartType"/> that represents the start recording capabilities.
+            </value>
+        </member>
+        <member name="P:o2g.Types.RecordingNS.DeviceRecordingInfo.ActiveCall">
+            <summary>
+            Gets the active call on this device, or <see langword="null"/> if there is no call in progress.
+            </summary>
+            <value>
+            A <see cref="P:o2g.Types.RecordingNS.DeviceRecordingInfo.ActiveCall"/> that represents the call in progress, or <see langword="null"/> if there is no call in progress.
+            </value>
+        </member>
+        <member name="T:o2g.Types.RecordingNS.RecordingAction">
+            <summary>
+            <c>RecordingAction</c> represents the possible recording actions.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingAction.StartRecording">
+            <summary>
+            Start the recording.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingAction.PauseRecording">
+            <summary>
+            Pause the recording.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingAction.ResumeRecording">
+            <summary>
+            Resume the recording.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingAction.Unknown">
+            <summary>
+            The RecordingStartType can not be retrieved.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.RecordingNS.RecordingErrorCode">
+            <summary>
+            <c>RecordingErrorCode</c> Lists the different error causes that can be returned.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingErrorCode.ConnectionError">
+            <summary>
+            Unable to connect to the recorder.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingErrorCode.ConfigurationError">
+            <summary>
+            Configuration issue (verify OXR parameters either in O2G or in OXR).
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingErrorCode.RecorderError">
+            <summary>
+            Incorrect response to a recorder request.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingErrorCode.RequestError">
+            <summary>
+            Incorrect parameter in request.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingErrorCode.UnexpectedError">
+            <summary>
+            Unexpected error.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.RecordingNS.RecordingStartType">
+            <summary>
+            <c>RecordingStartType</c> represents how a record on demand can be activated: entire call or from now.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingStartType.RecordFromNow">
+            <summary>
+            Record from now.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingStartType.RecordEntireCall">
+            <summary>
+            Record from Beginning.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingStartType.Unknown">
+            <summary>
+            The RecordingStartType can not be retrieve.
+            </summary>
+        </member>
+        <member name="T:o2g.Types.RecordingNS.RecordingState">
+            <summary>
+            <c>RecordingState</c> represents the recording state associated to a call on a recordable device.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingState.RecordingInProgress">
+            <summary>
+            Recording is in progress.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingState.RecordingInPause">
+            <summary>
+            Recording has been pause.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingState.RecordingBySystem">
+            <summary>
+            The Recording of the device is controlled by the system: no user action is possible.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingState.NoRecording">
+            <summary>
+            No recording in progress.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.RecordingNS.RecordingState.Unknown">
+            <summary>
+            The RecordingStartType can not be retrieved.
+            </summary>
+        </member>
         <member name="T:o2g.Types.RestErrorInfo">
             <summary>
             <c>ErrorInfo</c> gives the detail information on an error raised during a service invocation.
@@ -9439,6 +10738,13 @@
             A <see langword="string"/> that is the associated correlator data.
             </value>
         </member>
+        <member name="M:o2g.Types.TelephonyNS.CallNS.CallData.AttachedData">
+            <summary>
+            Return the correlator data associated to this call.
+            </summary>
+            <returns>A <see langword="byte[]"/> that is the associated correlator data.
+            </returns>
+        </member>
         <member name="P:o2g.Types.TelephonyNS.CallNS.CallData.AccountInfo">
             <summary>
             This property returns the account info associated to this call.
@@ -9454,14 +10760,6 @@
             <value>
             A <see cref="T:o2g.Types.TelephonyNS.CallNS.AcdNS.AcdData"/> object that provide this call acd extension data.
             </value>
-        </member>
-        <member name="M:o2g.Types.TelephonyNS.CallNS.CallData.AssociatedDataAsByteArray">
-            <summary>
-            Return the correlator data as a byte array.
-            </summary>
-            <returns>
-            The array of bytes corresponding to the correlator data.
-            </returns>
         </member>
         <member name="T:o2g.Types.TelephonyNS.CallNS.Cause">
             <summary>
@@ -9508,6 +10806,11 @@
             The destination cannot be reached.
             </summary>
         </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.DoNotDisturb">
+            <summary>
+            The destination is in do not disturb.
+            </summary>
+        </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Forwarded">
             <summary>
             The call has been forwarded.
@@ -9518,14 +10821,29 @@
             The call has been picked up.
             </summary>
         </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Parked">
+            <summary>
+            The call has been parked.
+            </summary>
+        </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Redirected">
             <summary>
             The call has been redirected.
             </summary>
         </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Overflown">
+            <summary>
+            This call goes on overflow destination.
+            </summary>
+        </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Transferred">
             <summary>
             This is a transferred call.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.CampOn">
+            <summary>
+            The call has been put in wait..
             </summary>
         </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Unknown">
@@ -9550,12 +10868,22 @@
         </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.Distributed">
             <summary>
-            CCD context: call distribution
+            CCD context: call distribution.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.AcdEnterDistribution">
+            <summary>
+            CCD context: call enters in distribution.
+            </summary>
+        </member>
+        <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.ResourcesNotAvailable">
+            <summary>
+            CCD context: pilot is not open.
             </summary>
         </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.SupervisorListening">
             <summary>
-            CCD context: supervisor is listening the agent conversation
+            CCD context: supervisor is listening the agent conversation.
             </summary>
         </member>
         <member name="F:o2g.Types.TelephonyNS.CallNS.Cause.SupervisorIntrusion">
@@ -10218,6 +11546,14 @@
             A <see langword="string"/> that represents the user login name.
             </value>
         </member>
+        <member name="P:o2g.Types.UsersNS.User.ExternalLogin">
+            <summary>
+            External login of the user if set.
+            </summary>
+            <value>
+            A <see langword="string"/> that represents the user external login.
+            </value>
+        </member>
         <member name="P:o2g.Types.UsersNS.User.Voicemail">
             <summary>
             The voice mail associated to this user.
@@ -10433,6 +11769,79 @@
             A generic string map objets
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Types.Recording.RecordedDevice">
+            <summary>
+            Represent a RecordedDevice.
+            </summary>
+        </member>
+        <member name="P:Types.Recording.RecordedDevice.Number">
+            <summary>
+            This property is the phone number of the Device.
+            </summary>
+            <value>
+            The <see langword="string"/> value that identifies this device.
+            </value>
+        </member>
+        <member name="P:Types.Recording.RecordedDevice.Recordable">
+            <summary>
+            Gets a value indicating whether this device can perform a record-on-demand request.
+            </summary>
+            <value>
+            <see langword="true"/> if the device can be recorded on demand; <see langword="false"/> otherwise.
+            </value>
+        </member>
+        <member name="P:Types.Recording.RecordedDevice.StartCapabilities">
+            <summary>
+            Start mode capability of the device. <see langword="null"/> if device is not recordable on demand.
+            </summary>
+            <value>
+            A <see cref="T:o2g.Types.RecordingNS.RecordingStartType"/> that represents the start recording capabilities.
+            </value>
+        </member>
+        <member name="P:Types.Recording.RecordedDevice.Recorders">
+            <summary>
+            Gets the list of recorder which manage the device.
+            </summary>
+            <value>
+            A list of <see langword="string"/> that represent recorders.
+            </value>
+        </member>
+        <member name="T:Types.Recording.RecorderInfo">
+            <summary>
+            Represent a recorder server.
+            </summary>
+        </member>
+        <member name="P:Types.Recording.RecorderInfo.Name">
+            <summary>
+            This property is the name of the recorder.
+            </summary>
+            <value>
+            The unique <see langword="string"/> value that identifies the recorder.
+            </value>
+        </member>
+        <member name="T:Types.Recording.RecordingStatus">
+            <summary>
+            Represent the global status of recording service.
+            </summary>
+        </member>
+        <member name="F:Types.Recording.RecordingStatus.Recorders">
+            <summary>
+            The list of configured recorders.
+            </summary>
+            <value>
+            A list of <see cref="T:Types.Recording.RecorderInfo"/> object that represents configured recorders, or <see langword="null"/> in case
+            of error or if there is no recorder configured.
+            </value>
+        </member>
+        <member name="F:Types.Recording.RecordingStatus.Devices">
+            <summary>
+            The list of recorded devices.
+            </summary>
+            <value>
+            A list of <see cref="T:Types.Recording.RecordedDevice"/> object that represents recorded devices, or <see langword="null"/> in case
+            of error or if there is no device recorded.
+            </value>
         </member>
     </members>
 </doc>

@@ -62,7 +62,7 @@ namespace o2g.Internal
             logger.Debug("Session opened: TimeToLive = {timeToLive}", sessionInfo.TimeToLive);
 
             // Create the session
-            SessionImpl session = new(serviceFactory, sessionInfo, credential.Login);
+            SessionImpl session = new(serviceFactory, sessionInfo, credential.Login, authenticateResult.Expired);
 
             // OK, create the session
             return session;

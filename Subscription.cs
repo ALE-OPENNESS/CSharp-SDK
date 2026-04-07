@@ -18,7 +18,7 @@
 */
 using o2g.Events;
 using o2g.Events.CallCenterAgent;
-using o2g.Events.CallCenterRsi;
+using o2g.Events.CallCenterPilot;
 using o2g.Events.CommunicationLog;
 using o2g.Events.EventSummary;
 using o2g.Events.Maintenance;
@@ -262,6 +262,7 @@ namespace o2g
             /// </remarks>
             IBuilder AddRoutingEvents(string[] ids = null);
 
+            /*
             /// <summary>
             /// Add the rsi events to this subscription.
             /// </summary>
@@ -285,6 +286,7 @@ namespace o2g
             /// </para>
             /// </remarks>
             IBuilder AddCallCenterRsiEvents(string[] ids = null);
+            */
 
             /// <summary>
             /// Add the telephony events to this subscription.
@@ -303,6 +305,7 @@ namespace o2g
             /// <item><description><see cref="OnCallRemovedEvent"/></description></item>
             /// <item><description><see cref="OnDeviceStateModifiedEvent"/></description></item>
             /// <item><description><see cref="OnDynamicStateChangedEvent"/></description></item>
+            /// <item><description><see cref="OnUserStateModifiedEvent"/></description></item>
             /// </list>
             /// </para>
             /// <para>
@@ -342,7 +345,7 @@ namespace o2g
             /// <para>
             /// The following events associated to the <see cref="ICommunicationLog"/> service are added to the subscription:
             /// <list type="bullet">
-            /// <item><description><see cref="OnComRecordCreatedEvent"/></description></item>
+            /// <item><description><see cref="OnAgentRtiChangedEvent"/></description></item>
             /// <item><description><see cref="OnComRecordModifiedEvent"/></description></item>
             /// <item><description><see cref="OnComRecordsDeletedEvent"/></description></item>
             /// <item><description><see cref="OnComRecordsAckEvent"/></description></item>
@@ -354,7 +357,6 @@ namespace o2g
             /// </para>
             /// </remarks>
             IBuilder AddCommunicationLogEvents(string[] ids = null);
-
 
             /// <summary>
             /// Add the call center agent events to this subscription.
@@ -368,6 +370,9 @@ namespace o2g
             /// The following events associated to the <see cref="ICallCenterAgent"/> service are added to the subscription:
             /// <list type="bullet">
             /// <item><description><see cref="OnAgentStateChangedEvent"/></description></item>
+            /// <item><description><see cref="OnAgentSkillChangedEvent"/></description></item>
+            /// <item><description><see cref="OnSupervisorHelpCancelledEvent"/></description></item>
+            /// <item><description><see cref="OnSupervisorHelpRequestedEvent"/></description></item>
             /// </list>
             /// </para>
             /// <para>
@@ -375,6 +380,28 @@ namespace o2g
             /// </para>
             /// </remarks>
             IBuilder AddCallCenterAgentEvents(string[] ids = null);
+
+            /// <summary>
+            /// Add the call center pilot events to this subscription.
+            /// </summary>
+            /// <param name="ids">The Ids to filter events on.</param>
+            /// <returns>
+            /// The <see cref="IBuilder"/> object to chain the build.
+            /// </returns>
+            /// <remarks>
+            /// <para>
+            /// The following events associated to the <see cref="ICallCenterPilot"/> service are added to the subscription:
+            /// <list type="bullet">
+            /// <item><description><see cref="OnPilotCallCreatedEvent"/></description></item>
+            /// <item><description><see cref="OnPilotCallQueuedEvent"/></description></item>
+            /// <item><description><see cref="OnPilotCallRemovedEvent"/></description></item>
+            /// </list>
+            /// </para>
+            /// <para>
+            /// Subscribing to the call center agent events requires having a <b>CONTACTCENTER_AGENT</b> license.
+            /// </para>
+            /// </remarks>
+            IBuilder AddCallCenterPilotEvents(string[] ids = null);
 
             /// <summary>
             /// Add the pbx management events to this subscription.

@@ -21,6 +21,7 @@ using o2g.Internal.Events;
 using o2g.Internal.Services;
 using o2g.Internal.Types;
 using o2g.Internal.Utility;
+using o2g.Types;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,11 +38,22 @@ namespace o2g.Internal
     internal class SessionInfo
     {
         public bool Admin { get; set; }
+        public string Login { get; set; }
         public int TimeToLive { get; set; }
         public string PublicBaseUrl { get; set; }
         public string PrivateBaseUrl { get; set; }
+        public string CreationDate { get; set; }
         public List<Service> Services { get; set; }
         public string ExpirationDate { get; set; }
+    }
+
+    internal class SessionAccount : IAccount
+    {
+        public string LoginName { get; set; }
+
+        public string O2GUserLoginName { get; set; }
+
+        public bool IsGoingToExpired { get; set; }
     }
 
     class KeepAlive : CancelableTask
@@ -89,6 +101,9 @@ namespace o2g.Internal
 
         public bool Admin => Info.Admin;
 
+        public SessionAccount _account = null;
+        public IAccount Account => _account;
+
         public ITelephony TelephonyService => serviceFactory.GetTelephonyService();
         public IUsers UsersService => serviceFactory.GetUsersService();
         public IRouting RoutingService => serviceFactory.GetRoutingService();
@@ -100,16 +115,34 @@ namespace o2g.Internal
         public ICommunicationLog CommunicationLogService => serviceFactory.GetCommunicationLogService();
         public IPhoneSetProgramming PhoneSetProgrammingService => serviceFactory.GetPhoneSetProgrammingService();
         public ICallCenterAgent CallCenterAgentService => serviceFactory.GetCallCenterAgentService();
-        public ICallCenterRsi CallCenterRsiService => serviceFactory.GetCallCenterRsiService();
+        public ICallCenterPilot CallCenterPilotService => serviceFactory.GetCallCenterPilotService();
+        public ICallCenterRealtime CallCenterRealtimeService => serviceFactory.GetCallCenterRealtimeService();
+
+        //        public ICallCenterRsi CallCenterRsiService => serviceFactory.GetCallCenterRsiService();
         public IAnalytics AnalyticsService => serviceFactory.GetAnalyticsService();
+        public IUserManagement UserManagementService => serviceFactory.GetUserManagementService();
+        public IRecording RecordingService => serviceFactory.GetRecordingService();
 
-
-
-        internal SessionImpl(ServiceFactory serviceFactory, SessionInfo info, string loginName)
+        internal SessionImpl(ServiceFactory serviceFactory, SessionInfo info, string loginName, bool passwordIsGoingToExpire)
         {
             this.serviceFactory = serviceFactory;
             Info = info;
-            LoginName = loginName;
+
+            // From O2G 2.7.4 external login can be used, so application must access real O2G login
+            _account = new();
+            _account.LoginName = loginName;
+            _account.IsGoingToExpired = passwordIsGoingToExpire;
+
+            if (info.Login != null)
+            {
+                LoginName = info.Login;
+                _account.O2GUserLoginName = info.Login;
+            }
+            else
+            {
+                LoginName = loginName;
+                _account.O2GUserLoginName = loginName;
+            }
 
             StartKeepAlive();
         }

@@ -19,6 +19,8 @@
 
 using o2g.Events;
 using o2g.Events.CallCenterAgent;
+using o2g.Events.CallCenterPilot;
+using o2g.Events.CallCenterRealtimeNS;
 using o2g.Events.CallCenterRsi;
 using o2g.Events.Common;
 using o2g.Events.CommunicationLog;
@@ -63,6 +65,12 @@ namespace o2g.Internal.Events
         public event System.EventHandler<O2GEventArgs<OnAgentStateChangedEvent>> AgentStateChanged;
         public event System.EventHandler<O2GEventArgs<OnSupervisorHelpRequestedEvent>> SupervisorHelpRequested;
         public event System.EventHandler<O2GEventArgs<OnSupervisorHelpCancelledEvent>> SupervisorHelpCancelled;
+        public event System.EventHandler<O2GEventArgs<OnAgentSkillChangedEvent>> AgentSkillChanged;
+
+        // Call center pilot
+        public event System.EventHandler<O2GEventArgs<OnPilotCallCreatedEvent>> PilotCallCreated;
+        public event System.EventHandler<O2GEventArgs<OnPilotCallQueuedEvent>> PilotCallQueued;
+        public event System.EventHandler<O2GEventArgs<OnPilotCallRemovedEvent>> PilotCallRemoved;
 
         // call center Rsi
         public event EventHandler<O2GEventArgs<OnDigitCollectedEvent>> DigitCollected;
@@ -88,6 +96,14 @@ namespace o2g.Internal.Events
         public event EventHandler<O2GEventArgs<OnComRecordsDeletedEvent>> ComRecordsDeleted;
         public event EventHandler<O2GEventArgs<OnComRecordsAckEvent>> ComRecordsAck;
         public event EventHandler<O2GEventArgs<OnComRecordsUnAckEvent>> ComRecordsUnAck;
+
+        // Call center realtime
+        public event EventHandler<O2GEventArgs<OnAgentRtiChangedEvent>> AgentRtiChanged;
+        public event EventHandler<O2GEventArgs<OnPilotRtiChangedEvent>> PilotRtiChanged;
+        public event EventHandler<O2GEventArgs<OnQueueRtiChangedEvent>> QueueRtiChanged;
+        public event EventHandler<O2GEventArgs<OnPGAgentRtiChangedEvent>> PGAgentRtiChanged;
+        public event EventHandler<O2GEventArgs<OnPGOtherRtiChangedEvent>> PGOtherRtiChanged;
+
 #pragma warning restore CS0067
 
 

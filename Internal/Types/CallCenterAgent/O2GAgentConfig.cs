@@ -20,6 +20,7 @@
 using o2g.Types.CallCenterAgentNS;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace o2g.Internal.Types.CallCenterAgent
 {
@@ -38,11 +39,8 @@ namespace o2g.Internal.Types.CallCenterAgent
         internal OperatorConfiguration ToOperatorConfiguration()
         {
             // Transform the AgentSkills to a SkillSet
-            Dictionary<int, AgentSkill> mapSkills = new();
-            if (Skills.Skills != null)
-            {
-                Skills.Skills.ForEach(s => mapSkills.Add(s.Number, s));
-            }
+            var mapSkills = Skills?.Skills?.ToDictionary(s => s.Number)
+                            ?? new Dictionary<int, AgentSkill>();
 
             return new()
             {

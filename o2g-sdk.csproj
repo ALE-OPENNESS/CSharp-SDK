@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
     <PackageId>o2g-sdk</PackageId>
     <Authors>ALE International</Authors>
     <Description>This assembly is a SDK for OpenTouch Open Gateway API.</Description>
-    <Copyright>Copyright © ALE International 2022</Copyright>
+    <Copyright>Copyright © ALE International 2024</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>o2g.png</PackageIcon>
     <PackageIconUrl />
-    <Version>1.2.1</Version>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <Version>1.6.1</Version>
+    <AssemblyVersion>1.6.1.0</AssemblyVersion>
+    <FileVersion>1.6.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
