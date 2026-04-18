@@ -20,16 +20,25 @@
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>DndState</c> represents the Do Not Disturb state of the user.
+    /// Represents the Do Not Disturb (DND) state of a user.
+    /// <para>
+    /// When Do Not Disturb is active, incoming calls are not presented to the user.
+    /// Use <see cref="IRouting.ActivateDndAsync(string)"/> to activate and
+    /// <see cref="IRouting.CancelDndAsync(string)"/> to deactivate.
+    /// </para>
     /// </summary>
     /// <seealso cref="IRouting.GetDndStateAsync(string)"/>
+    /// <seealso cref="IRouting.ActivateDndAsync(string)"/>
+    /// <seealso cref="IRouting.CancelDndAsync(string)"/>
+    /// <seealso cref="RoutingState.DndState"/>
     public class DndState
     {
         /// <summary>
-        /// Return whether the Do Not Dsturb is activated.
+        /// Whether Do Not Disturb is currently activated.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the DND is activated; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if DND is active and calls are not presented to the user;
+        /// <see langword="false"/> otherwise.
         /// </value>
         public bool Activate { get; init; }
     }

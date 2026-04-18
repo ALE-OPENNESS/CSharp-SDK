@@ -20,30 +20,32 @@
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>Destination</c> represents a forward or an overflow destination.
+    /// Represents the destination of a forward or overflow.
+    /// <para>
+    /// The destination indicates where incoming calls are redirected when a
+    /// <see cref="Forward"/> or <see cref="Overflow"/> is active.
+    /// </para>
     /// </summary>
-    /// <seealso cref="Overflow"/>
     /// <seealso cref="Forward"/>
+    /// <seealso cref="Overflow"/>
     public enum Destination
     {
-        // <summary>
-        // The destination is the user associate. This destination can be used only to configure an overflow.
-        // </summary>
-        // 
-//        Associate, 
         /// <summary>
-        /// The destination is the user voice mail.
+        /// The destination is the user's voice mail.
         /// </summary>
-        /// 
         VoiceMail,
 
         /// <summary>
-        /// The destination is another phone number. This destination can be used only to configure a forward.
+        /// The destination is another phone number.
+        /// <para>
+        /// This destination can only be used to configure a <see cref="Forward"/>.
+        /// When active, the associated number is available via <see cref="Forward.Number"/>.
+        /// </para>
         /// </summary>
-        Number, 
+        Number,
 
         /// <summary>
-        /// None destination.
+        /// No destination — indicates that no forward or overflow is currently configured.
         /// </summary>
         None
     }

@@ -25,10 +25,12 @@ using o2g.Types.TelephonyNS;
 using o2g.Types.TelephonyNS.CallNS;
 using o2g.Types.TelephonyNS.CallNS.AcdNS;
 using o2g.Types.TelephonyNS.DeviceNS;
+using o2g.Types.UsersNS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -49,7 +51,7 @@ namespace o2g.Internal.Rest
 
     class CallsList
     {
-        public List<PbxCall> Calls { get; set; }
+        public List<Call> Calls { get; set; }
     }
 
     class LegsList
@@ -81,7 +83,7 @@ namespace o2g.Internal.Rest
     class SendAssociatedDataRequest
     {
         public string DeviceId { get; set; }
-        public string AssociatedData { get; set; }
+        public string AssociateData { get; set; }
         public string HexaBinaryAssociatedData { get; set; }
     }
 
@@ -143,12 +145,18 @@ namespace o2g.Internal.Rest
         public string Message { get; set; }
     }
 
-
     class ACRSkills
     {
-        public List<AcrSkill> Skills { get; set; }
+        public List<CallProfile.Skill> Skills { get; set; }
     }
 
+    class PilotQueryParam
+    {
+        public string AgentNumber { get; set; }
+        public ACRSkills Skills { get; set; }
+        public bool? PriorityTransfer { get; set; }
+        public bool? SupervisedTransfer { get; set; }
+    }
 
     class AcdCallParam
     {
@@ -222,7 +230,7 @@ namespace o2g.Internal.Rest
         {
         }
 
-        public async Task<bool> AddHuntingGroupMemberAsync(string hgNumber, string loginName)
+        public async Task<bool> AddMeToHuntingGroupAsync(string hgNumber, string loginName)
         {
             Uri uriPost = uri.Append("huntingGroupMember", AssertUtil.NotNullOrEmpty(hgNumber, "hgNumber"));
             if (loginName != null)
@@ -263,27 +271,12 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<bool> AttachDataAsync(string callRef, string deviceId, string associatedData)
+        public async Task<bool> AttachDataAsync(string callRef, string deviceId, CorrelatorData correlatorData)
         {
             SendAssociatedDataRequest req = new()
             {
                 DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
-                AssociatedData = AssertUtil.NotNullOrEmpty(associatedData, "associatedData")
-            };
-
-            var json = JsonSerializer.Serialize(req, serializeOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await httpClient.PostAsync(uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"), "attachdata"), content);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> AttachDataAsync(string callRef, string deviceId, byte[] associatedData)
-        {
-            SendAssociatedDataRequest req = new()
-            {
-                DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
-                HexaBinaryAssociatedData = HexaUtil.FromByteArray(AssertUtil.NotNull<byte[]>(associatedData, "associatedData"))
+                HexaBinaryAssociatedData = HexaUtil.FromByteArray(AssertUtil.NotNull(correlatorData, "correlatorData").AsByteArray())
             };
 
             var json = JsonSerializer.Serialize(req, serializeOptions);
@@ -369,7 +362,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> DeleteHuntingGroupMemberAsync(string hgNumber, string loginName)
+        public async Task<bool> RemoveMeFromHuntingGroupAsync(string hgNumber, string loginName)
         {
             Uri uriDelete = uri.Append("huntingGroupMember", AssertUtil.NotNullOrEmpty(hgNumber, "hgNumber"));
             if (loginName != null)
@@ -465,7 +458,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<PbxCall> GetCallAsync(string callRef, string loginName)
+        public async Task<Call> GetCallAsync(string callRef, string loginName)
         {
             Uri uriGet = uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"));
             if (loginName != null)
@@ -474,10 +467,10 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            return await GetResult<PbxCall>(response);
+            return await GetResult<Call>(response);
         }
 
-        public async Task<List<PbxCall>> GetCallsAsync(string loginName)
+        public async Task<IReadOnlyList<Call>> GetCallsAsync(string loginName)
         {
             Uri uriGet = uri.Append("calls");
             if (loginName != null)
@@ -486,18 +479,10 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            CallsList calls = await GetResult<CallsList>(response);
-            if (calls == null)
-            {
-                return null;
-            }
-            else
-            {
-                return calls.Calls;
-            }
+            return (await GetResult<CallsList>(response))?.Calls?.AsReadOnly();
         }
 
-        public async Task<Leg> GetDeviceLegAsync(string callRef, string legId, string loginName)
+        public async Task<Leg> GetLegAsync(string callRef, string legId, string loginName)
         {
             Uri uriGet = uri.Append(
                 "calls", 
@@ -514,7 +499,7 @@ namespace o2g.Internal.Rest
             return await GetResult<Leg>(response);
         }
 
-        public async Task<List<Leg>> GetDeviceLegsAsync(string callRef, string loginName)
+        public async Task<IReadOnlyList<Leg>> GetLegsAsync(string callRef, string loginName)
         {
             Uri uriGet = uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"), "deviceLegs");
             if (loginName != null)
@@ -523,18 +508,10 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            LegsList legs = await GetResult<LegsList>(response);
-            if (legs == null)
-            {
-                return null;
-            }
-            else
-            {
-                return legs.Legs;
-            }
+            return (await GetResult<LegsList>(response))?.Legs?.AsReadOnly();
         }
 
-        public async Task<List<DeviceState>> GetDevicesStateAsync(string loginName)
+        public async Task<IReadOnlyList<DeviceState>> GetDevicesStateAsync(string loginName)
         {
             Uri uriGet = uri.Append("devices");
             if (loginName != null)
@@ -543,15 +520,7 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            DeviceStatesList states = await GetResult<DeviceStatesList>(response);
-            if (states == null)
-            {
-                return null;
-            }
-            else
-            {
-                return states.DeviceStates;
-            }
+            return (await GetResult<DeviceStatesList>(response))?.DeviceStates?.AsReadOnly();
         }
 
         public async Task<DeviceState> GetDeviceStateAsync(string deviceId, string loginName)
@@ -566,7 +535,7 @@ namespace o2g.Internal.Rest
             return await GetResult<DeviceState>(response);
         }
 
-        public async Task<List<Callback>> GetCallbacksAsync(string loginName)
+        public async Task<IReadOnlyList<Callback>> GetCallbacksAsync(string loginName)
         {
             Uri uriGet = uri.Append("incomingCallbacks");
             if (loginName != null)
@@ -575,15 +544,7 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            CallbacksList callbacks = await GetResult<CallbacksList>(response);
-            if (callbacks == null)
-            {
-                return null;
-            }
-            else
-            {
-                return callbacks.Callbacks;
-            }
+            return (await GetResult<CallbacksList>(response))?.Callbacks?.AsReadOnly();
         }
 
         public async Task<MiniMessage> GetMiniMessageAsync(string loginName)
@@ -630,6 +591,10 @@ namespace o2g.Internal.Rest
         public async Task<bool> HoldAsync(string callRef, string deviceId, string loginName)
         {
             Uri postUri = uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"), "hold");
+            if (loginName != null)
+            {
+                postUri = postUri.AppendQuery("loginName", loginName);
+            }
 
             DeviceIdRequest req = new()
             {
@@ -676,11 +641,7 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-
-            response.EnsureSuccessStatusCode();
-            string jsonCode = await response.Content.ReadAsStringAsync();
-
-            return JsonSerializer.Deserialize<HuntingGroupStatus>(jsonCode, serializeOptions);
+            return await GetResult<HuntingGroupStatus>(response);
         }
 
         public async Task<bool> MergeAsync(string callRef, string heldCallRef, string loginName)
@@ -736,13 +697,13 @@ namespace o2g.Internal.Rest
                 uriPost = uriPost.AppendQuery("loginName", loginName);
             }
 
-            ParkRequest req = new()
+            HttpContent content = null;
+            if (parkTo != null)
             {
-                ParkTo = AssertUtil.NotNullOrEmpty(parkTo, "parkTo")
-            };
-
-            var json = JsonSerializer.Serialize(req, serializeOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                ParkRequest req = new() { ParkTo = parkTo };
+                var json = JsonSerializer.Serialize(req, serializeOptions);
+                content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
 
             HttpResponseMessage response = await httpClient.PostAsync(uriPost, content);
             return await IsSucceeded(response);
@@ -818,7 +779,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> RecordingAsync(string callRef, RecordingAction action, string loginName)
+        public async Task<bool> DoRecordActionAsync(string callRef, RecordingAction action, string loginName)
         {
             Uri uriPost = uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"), "recording");
             if (loginName != null)
@@ -996,7 +957,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer, bool inhibitProgressTone, string associatedData, string callingNumber, string loginName)
+        public async Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer, bool inhibitProgressTone, CorrelatorData correlatorData, string callingNumber, string loginName)
         {
             Uri uriPost = uri.Append("calls");
             if (loginName != null)
@@ -1010,32 +971,7 @@ namespace o2g.Internal.Rest
                 Callee = AssertUtil.NotNullOrEmpty(callee, "callee"),
                 AutoAnswer = autoAnswer,
                 InhibitProgressTone = inhibitProgressTone,
-                AssociatedData = associatedData,
-                CallingNumber = callingNumber
-            };
-
-            var json = JsonSerializer.Serialize(req, serializeOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await httpClient.PostAsync(uriPost, content);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> MakeCallAsync(string deviceId, string callee, bool autoAnswer, bool inhibitProgressTone, byte[] associatedData, string callingNumber, string loginName)
-        {
-            Uri uriPost = uri.Append("calls");
-            if (loginName != null)
-            {
-                uriPost = uriPost.AppendQuery("loginName", loginName);
-            }
-
-            MakeCallRequest req = new()
-            {
-                DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
-                Callee = AssertUtil.NotNullOrEmpty(callee, "callee"),
-                AutoAnswer = autoAnswer,
-                InhibitProgressTone = inhibitProgressTone,
-                HexaBinaryAssociatedData = HexaUtil.FromByteArray(associatedData),
+                HexaBinaryAssociatedData = HexaUtil.FromByteArray(correlatorData?.AsByteArray()),
                 CallingNumber = callingNumber
             };
 
@@ -1118,7 +1054,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> MakePilotOrRSISupervisedTransferCallAsync(string deviceId, string pilot, string associatedData = null, List<AcrSkill> callProfile = null, string loginName = null)
+        public async Task<bool> MakePilotOrRSISupervisedTransferCallAsync(string deviceId, string pilot, CorrelatorData correlatorData = null, CallProfile callProfile = null, string loginName = null)
         {
             Uri uriPost = uri.Append("calls");
             if (loginName != null)
@@ -1131,7 +1067,7 @@ namespace o2g.Internal.Rest
             {
                 acrSkills = new()
                 {
-                    Skills = callProfile
+                    Skills = callProfile.ToList()
                 };
             }
 
@@ -1139,7 +1075,7 @@ namespace o2g.Internal.Rest
             {
                 DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
                 Callee = AssertUtil.NotNullOrEmpty(pilot, "pilot"),
-                AssociatedData = associatedData,
+                HexaBinaryAssociatedData = HexaUtil.FromByteArray(correlatorData?.AsByteArray()),
                 AcdCall = new()
                 {
                     SupervisedTransfer = true,
@@ -1155,7 +1091,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<bool> MakePilotOrRSISupervisedTransferCallAsync(string deviceId, string pilot, byte[] associatedData = null, List<AcrSkill> callProfile = null, string loginName = null)
+        public async Task<bool> MakePilotOrRSICallAsync(string deviceId, string pilot, bool autoAnswer = true, CorrelatorData correlatorData = null, CallProfile callProfile = null, string loginName = null)
         {
             Uri uriPost = uri.Append("calls");
             if (loginName != null)
@@ -1168,43 +1104,7 @@ namespace o2g.Internal.Rest
             {
                 acrSkills = new()
                 {
-                    Skills = callProfile
-                };
-            }
-
-            MakeCallRequest req = new()
-            {
-                DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
-                Callee = AssertUtil.NotNullOrEmpty(pilot, "pilot"),
-                HexaBinaryAssociatedData = HexaUtil.FromByteArray(associatedData),
-                AcdCall = new()
-                {
-                    SupervisedTransfer = true,
-                    Skills = acrSkills
-                }
-            };
-
-            var json = JsonSerializer.Serialize(req, serializeOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await httpClient.PostAsync(uriPost, content);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> MakePilotOrRSICallAsync(string deviceId, string pilot, bool autoAnswer = true, string associatedData = null, List<AcrSkill> callProfile = null, string loginName = null)
-        {
-            Uri uriPost = uri.Append("calls");
-            if (loginName != null)
-            {
-                uriPost = uriPost.AppendQuery("loginName", loginName);
-            }
-
-            ACRSkills acrSkills = null;
-            if (callProfile != null)
-            {
-                acrSkills = new()
-                {
-                    Skills = callProfile
+                    Skills = callProfile.ToList()
                 };
             }
 
@@ -1213,43 +1113,7 @@ namespace o2g.Internal.Rest
                 DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
                 Callee = AssertUtil.NotNullOrEmpty(pilot, "pilot"),
                 AutoAnswer = autoAnswer,
-                AssociatedData = associatedData,
-                AcdCall = new()
-                {
-                    Skills = acrSkills
-                }
-            };
-
-            var json = JsonSerializer.Serialize(req, serializeOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await httpClient.PostAsync(uriPost, content);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> MakePilotOrRSICallAsync(string deviceId, string pilot, bool autoAnswer = true, byte[] associatedData = null, List<AcrSkill> callProfile = null, string loginName = null)
-        {
-            Uri uriPost = uri.Append("calls");
-            if (loginName != null)
-            {
-                uriPost = uriPost.AppendQuery("loginName", loginName);
-            }
-
-            ACRSkills acrSkills = null;
-            if (callProfile != null)
-            {
-                acrSkills = new()
-                {
-                    Skills = callProfile
-                };
-            }
-
-            MakeCallRequest req = new()
-            {
-                DeviceId = AssertUtil.NotNullOrEmpty(deviceId, "deviceId"),
-                Callee = AssertUtil.NotNullOrEmpty(pilot, "pilot"),
-                AutoAnswer = autoAnswer,
-                HexaBinaryAssociatedData = HexaUtil.FromByteArray(associatedData),
+                HexaBinaryAssociatedData = HexaUtil.FromByteArray(correlatorData?.AsByteArray()),
                 AcdCall = new()
                 {
                     Skills = acrSkills
@@ -1264,7 +1128,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<List<Participant>> GetParticipantsAsync(string callRef, string loginName = null)
+        public async Task<IReadOnlyList<Participant>> GetParticipantsAsync(string callRef, string loginName = null)
         {
             Uri uriGet = uri.Append("calls", AssertUtil.NotNullOrEmpty(callRef, "callRef"), "participants");
             if (loginName != null)
@@ -1273,15 +1137,62 @@ namespace o2g.Internal.Rest
             }
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            ParticipantsList participants = await GetResult<ParticipantsList>(response);
-            if (participants == null)
+            return (await GetResult<ParticipantsList>(response))?.Participants?.AsReadOnly();
+        }
+
+        public async Task<PilotInfo> GetPilotInfoAsync(int nodeId, string pilotNumber, PilotTransferQueryParameters pilotTransferQueryParameters, string loginName)
+        {
+            Uri uriPost = uri.Append(
+                "pilots",
+                AssertUtil.AssertPositive(nodeId, "nodeId").ToString(),
+                AssertUtil.NotNullOrEmpty(pilotNumber, "pilotNumber"),
+                "transferInfo");
+
+            if (loginName != null)
             {
-                return null;
+                uriPost = uriPost.AppendQuery("loginName", loginName);
+            }
+
+            HttpResponseMessage response = null;
+
+            if (pilotTransferQueryParameters != null)
+            {
+                ACRSkills acrSkills = null;
+                if (pilotTransferQueryParameters.HasCallProfile)
+                {
+                    acrSkills = new()
+                    {
+                        Skills = pilotTransferQueryParameters.CallProfile.ToList()
+                    };
+                }
+
+                PilotQueryParam req = new()
+                {
+                    AgentNumber = pilotTransferQueryParameters.HasAgentNumber
+                    ? pilotTransferQueryParameters.AgentNumber
+                    : null,
+                    
+                    PriorityTransfer = pilotTransferQueryParameters.HasPriorityTransferCriteria
+                    ? pilotTransferQueryParameters.PriorityTransfer
+                    : null,
+
+                    SupervisedTransfer = pilotTransferQueryParameters.HasSupervisedTransferCriteria
+                    ? pilotTransferQueryParameters.SupervisedTransfer
+                    : null,
+
+                    Skills = acrSkills
+                };
+                var json = JsonSerializer.Serialize(req, serializeOptions);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                response = await httpClient.PostAsync(uriPost, content);
             }
             else
             {
-                return participants.Participants;
+                response = await httpClient.PostAsync(uriPost, null);
             }
+
+            return await GetResult<PilotInfo>(response);
         }
     }
 }

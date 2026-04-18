@@ -20,58 +20,74 @@
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>Forwar</c> represents a forward the user has activated.
+    /// Represents the forward currently configured for a user.
+    /// <para>
+    /// A forward redirects incoming calls to a target destination — either the user's
+    /// voice mail or another phone number — subject to an optional condition.
+    /// Use <see cref="IRouting.ForwardOnNumberAsync(string, Forward.ForwardCondition, string)"/>
+    /// or <see cref="IRouting.ForwardOnVoiceMailAsync(Forward.ForwardCondition, string)"/>
+    /// to activate a forward, and <see cref="IRouting.CancelForwardAsync(string)"/> to cancel it.
+    /// </para>
     /// </summary>
     /// <seealso cref="IRouting.GetForwardAsync(string)"/>
+    /// <seealso cref="IRouting.ForwardOnNumberAsync(string, Forward.ForwardCondition, string)"/>
+    /// <seealso cref="IRouting.ForwardOnVoiceMailAsync(Forward.ForwardCondition, string)"/>
+    /// <seealso cref="IRouting.CancelForwardAsync(string)"/>
     public class Forward
     {
         /// <summary>
-        /// <c>ForwardCondition</c> represents the possible condition a user can associate to a forward.
+        /// Represents the condition under which a forward is triggered.
         /// </summary>
         public enum ForwardCondition
         {
             /// <summary>
-            /// Incoming calls are immediately forwarded on the target.
+            /// All incoming calls are immediately forwarded to the target,
+            /// regardless of the user's availability.
             /// </summary>
             Immediate,
+
             /// <summary>
-            /// Incoming calls are forwarded on the target if the user is busy.
+            /// Incoming calls are forwarded to the target only if the user is busy.
             /// </summary>
             Busy,
+
             /// <summary>
-            /// Incoming calls are forwarded on the target if the user does not answer the call.
+            /// Incoming calls are forwarded to the target only if the user does not answer.
             /// </summary>
             NoAnswer,
+
             /// <summary>
-            /// Incoming calls are forwarded on the target if the user is busy or if the user does not answer the call.
+            /// Incoming calls are forwarded to the target if the user is busy
+            /// or does not answer.
             /// </summary>
             BusyOrNoAnswer
         }
 
-
         /// <summary>
-        /// Return the destination of this forward.
+        /// The destination to which calls are forwarded.
         /// </summary>
         /// <value>
-        /// A <see cref="Destination"/> that represent the forward destination.
+        /// A <see cref="Destination"/> value indicating where calls are redirected.
+        /// <see cref="Destination.None"/> indicates no forward is configured.
         /// </value>
         public Destination Destination { get; set; }
 
         /// <summary>
-        /// Return the condition associated to this forward.
+        /// The condition under which this forward is triggered.
         /// </summary>
         /// <value>
-        /// An optional <see cref="ForwardCondition"/> that represents the associated condition or an unset value when there 
-        /// is no forward configured. (<c>Destination.Node</c>
+        /// A <see cref="ForwardCondition"/> value, or <see langword="null"/> if
+        /// no forward is configured (i.e. <see cref="Destination"/> is <see cref="Destination.None"/>).
         /// </value>
         public ForwardCondition? Condition { get; set; }
 
         /// <summary>
-        /// Return the number on which teh user is forwarded.
+        /// The phone number to which calls are forwarded.
         /// </summary>
         /// <value>
-        /// A <see langword="string"/> that is the extension number on which the user is forwarded, or <see langword="null"/> 
-        /// if there is no forward activated or if the forward is activated on the user voice mail.
+        /// A <see langword="string"/> that is the target extension number,
+        /// or <see langword="null"/> if no forward is active or if the forward
+        /// destination is the voice mail rather than a number.
         /// </value>
         public string Number { get; set; }
     }

@@ -30,8 +30,8 @@ namespace o2g.Types.CallCenterAgentNS
         /// <summary>
         /// <c>OperatorMainState</c> represents the login, logoff status of a CCD operator.
         /// </summary>
-        /// <seealso cref="ICallCenterAgent.LogonOperatorAsync(string, string, bool, string)"/>
-        /// <seealso cref="ICallCenterAgent.LogoffOperatorAsync(string)"/>
+        /// <seealso cref="ICallCenterAgent.LogonAsync(string, string, bool, string)"/>
+        /// <seealso cref="ICallCenterAgent.LogoffAsync(string)"/>
         [JsonStringEnumMemberConverterOptions(deserializationFailureFallbackValue: OperatorMainState.Unknown)]
         public enum OperatorMainState
         {
@@ -146,56 +146,64 @@ namespace o2g.Types.CallCenterAgentNS
         }
 
         /// <summary>
-        /// Return the operator main state.
+        /// The static login/logoff state of this operator.
         /// </summary>
         /// <value>
-        /// A <see cref="OperatorMainState"/> object that represents this operator main state.
+        /// An <see cref="OperatorMainState"/> value indicating whether the operator
+        /// is logged on, logged off, or in error state.
         /// </value>
+        /// <seealso cref="ICallCenterAgent.LogonAsync(string, string, bool, string)"/>
+        /// <seealso cref="ICallCenterAgent.LogoffAsync(string)"/>
         public OperatorMainState MainState { get; init; }
 
         /// <summary>
-        /// Return the operator dynamic state.
+        /// The dynamic activity state of this operator.
         /// </summary>
         /// <value>
-        /// A <see cref="OperatorDynamicState"/> object that represent the operator dynamic state, or a <see langword="null"/>
-        /// value if the operator is logged off.
+        /// An <see cref="OperatorDynamicState"/> value indicating the operator's current
+        /// activity (ready, busy, wrapup, pause, etc.), or <see langword="null"/> if the
+        /// operator is logged off.
         /// </value>
         public OperatorDynamicState? SubState { get; init; }
 
         /// <summary>
-        /// Return the pro-acd this operator is logged on.
+        /// The pro-ACD station extension number this operator is logged on.
         /// </summary>
         /// <value>
-        /// A <see langword="string"/> value that represents the pro-acd set extension number if the operator is logged on, or 
-        /// a <see langword="null"/> value if the operator is logged off.
+        /// A <see langword="string"/> that is the pro-ACD device extension number,
+        /// or <see langword="null"/> if the operator is logged off.
         /// </value>
         public string ProAcdDeviceNumber { get; init; }
 
         /// <summary>
-        /// Return the agent group this operator is logged in.
+        /// The processing group this operator is currently entered in.
         /// </summary>
         /// <value>
-        /// A <see langword="string"/> value that represents the agent group this operator is logged in, or
-        /// a <see langword="null"/> value if the operator is not entered in an agent group.
+        /// A <see langword="string"/> that is the processing group number,
+        /// or <see langword="null"/> if the operator is not entered in any group.
         /// </value>
         public string PgNumber { get; init; }
 
         /// <summary>
-        /// Return the withdraw reason.
+        /// The index of the withdraw reason currently applied to this operator.
         /// </summary>
         /// <value>
-        /// An <see langword="int"/> value that represents the withdraw reason index in the withdraw reasons managed
-        /// in an agent group, or a <see langword="null"/> value if the operator in not in withdraw state.
+        /// An <see langword="int"/> that is the withdraw reason index within the
+        /// agent group's configured withdraw reasons, or <see langword="null"/> if
+        /// the operator is not in withdraw state.
         /// </value>
         /// <seealso cref="ICallCenterAgent.GetWithdrawReasonsAsync(string, string)"/>
+        /// <seealso cref="ICallCenterAgent.SetWithdrawAsync(WithdrawReason, string)"/>
         public int? WithdrawReason { get; init; }
 
         /// <summary>
-        /// Return whether the operator is in withdraw state.
+        /// Whether the operator is currently withdrawn from call distribution.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the operator is in withdraw state; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the operator is in withdraw state;
+        /// <see langword="false"/> otherwise.
         /// </value>
+        /// <seealso cref="ICallCenterAgent.SetWithdrawAsync(WithdrawReason, string)"/>
         public bool Withdraw { get; init; }
     }
 }

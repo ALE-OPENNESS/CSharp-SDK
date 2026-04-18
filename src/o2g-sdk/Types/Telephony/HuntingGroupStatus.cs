@@ -32,6 +32,6 @@ namespace o2g.Types.TelephonyNS
         /// A <see langword="bool"/> value that indicates whether the user is logged.
         /// </value>
         [JsonPropertyName("Logon")]
-        public bool LogonOn { get; init; }
+        public bool LoggedOn { get; init; }
     }
 }

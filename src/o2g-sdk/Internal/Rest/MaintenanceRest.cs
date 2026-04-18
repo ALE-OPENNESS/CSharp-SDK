@@ -54,6 +54,42 @@ namespace o2g.Internal.Rest
             remove => _eventHandlers.PbxLoaded -= value;
         }
 
+        public event EventHandler<O2GEventArgs<OnPbxLinkDownEvent>> PbxLinkDown
+        {
+            add => _eventHandlers.PbxLinkDown += value;
+            remove => _eventHandlers.PbxLinkDown -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnPbxLinkUpEvent>> PbxLinkUp
+        {
+            add => _eventHandlers.PbxLinkUp += value;
+            remove => _eventHandlers.PbxLinkUp -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkDownEvent>> RemoteServerLinkDown
+        {
+            add => _eventHandlers.RemoteServerLinkDown += value;
+            remove => _eventHandlers.RemoteServerLinkDown -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkUpEvent>> RemoteServerLinkUp
+        {
+            add => _eventHandlers.RemoteServerLinkUp += value;
+            remove => _eventHandlers.RemoteServerLinkUp -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnServerStartEvent>> ServerStart
+        {
+            add => _eventHandlers.ServerStart += value;
+            remove => _eventHandlers.ServerStart -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnLicenseExpirationEvent>> LicenseExpiration
+        {
+            add => _eventHandlers.LicenseExpiration += value;
+            remove => _eventHandlers.LicenseExpiration -= value;
+        }
+
 
         public MaintenanceRest(Uri uri) : base(uri)
         {
@@ -76,15 +112,20 @@ namespace o2g.Internal.Rest
                 return new SystemStatus()
                 {
                     LogicalAddress = systemStatus.LogicalAddress,
+                    SystemResources = systemStatus.SystemResources,
                     StartDate = systemStatus.StartDate,
-                    HaMode = systemStatus.Ha,
+                    Ha = systemStatus.Ha,
                     Primary = systemStatus.Primary,
                     PrimaryVersion = systemStatus.PrimaryVersion,
+                    PrimaryServicesStatus = systemStatus.PrimaryServicesStatus,
                     Secondary = systemStatus.Secondary,
                     SecondaryVersion = systemStatus.SecondaryVersion,
+                    SecondaryServicesStatus = systemStatus.SecondaryServicesStatus,
                     Pbxs = systemStatus.Pbxs,
-                    Licenses = systemStatus.License.lics,
-                    ConfigurationType = systemStatus.ConfigurationType
+                    License = systemStatus.License,
+                    ConfigurationType = systemStatus.ConfigurationType,
+                    ApplicationId = systemStatus.ApplicationId,
+                    SubscriberFilter = systemStatus.SubscriberFilter
                 };
             }
         }

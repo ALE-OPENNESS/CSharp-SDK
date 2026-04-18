@@ -24,7 +24,7 @@ namespace o2g.Types.AnalyticsNS
     /// <c>ChargingResult</c> class represents the result of a query to the OmniPCX Enterprise.
     /// </summary>
     /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-    /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+    /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
     public class ChargingResult
     {
         /// <summary>
@@ -41,7 +41,7 @@ namespace o2g.Types.AnalyticsNS
         /// <value>
         /// A <see cref="Range"/> object that represents the range used to query this result, or null if the range was not specified.
         /// </value>
-        public TimeRange Range { get; init; }
+        public DateRange Range { get; init; }
 
         /// <summary>
         /// Return the number of analysed charging files in the OmniPCX Enterprise.

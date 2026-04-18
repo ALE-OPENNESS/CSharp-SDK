@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "sNh0/0I+6mw=",
+  "success": true,
+  "projectFilePath": "C:\\Developpement\\O2G-REPOSITORY\\CSharp-SDK\\samples\\o2g-sdk.Sample\\o2g-sdk.Sample.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\d3mabil\\.nuget\\packages\\macross.json.extensions\\3.0.0\\macross.json.extensions.3.0.0.nupkg.sha512",
+    "C:\\Users\\d3mabil\\.nuget\\packages\\nlog\\5.0.1\\nlog.5.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

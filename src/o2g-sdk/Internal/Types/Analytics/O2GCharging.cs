@@ -57,7 +57,9 @@ namespace o2g.Internal.Types.Analytics
                 CallNumber = CallNumber,
                 ChargingUnits = ChargingUnits,
                 Cost = Cost,
-                StartDate = DateTime.ParseExact(StartDate, "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture),
+                StartDate = StartDate != null
+                        ? DateTime.ParseExact(StartDate, "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture)
+                        : null,
                 Duration = Duration,
                 CallType = CallType,
                 EffectiveCallDuration = EffectiveCallDuration,

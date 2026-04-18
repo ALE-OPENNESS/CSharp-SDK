@@ -61,11 +61,15 @@ namespace o2g
 
         ICallCenterRealtime CallCenterRealtimeService { get; }
 
-        //        ICallCenterRsi CallCenterRsiService { get; }
+        ICallCenterManagement CallCenterManagementService { get; }
+
+        //        IRsi RsiService { get; }
 
         IUserManagement UserManagementService { get; }
 
         IRecording RecordingService { get; }
+
+        ICallCenterStatistics CallCenterStatisticsService { get; }
 
 
         Task ListenEvents(Subscription subscription);

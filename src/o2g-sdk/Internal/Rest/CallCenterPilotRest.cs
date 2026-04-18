@@ -57,27 +57,7 @@ namespace o2g.Internal.Rest
         {
         }
 
-        public async Task<bool> monitorStart(int nodeId, string pilotNumber)
-        {
-            Uri uriPost = uri
-                .Append(AssertUtil.AssertPositive(nodeId, "nodeId").ToString())
-                .Append(AssertUtil.NotNullOrEmpty(pilotNumber, "pilotNumber"));
-
-            HttpResponseMessage response = await httpClient.PostAsync(uriPost, null);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> monitorStop(int nodeId, string pilotNumber)
-        {
-            Uri uriDelete = uri
-                .Append(AssertUtil.AssertPositive(nodeId, "nodeId").ToString())
-                .Append(AssertUtil.NotNullOrEmpty(pilotNumber, "pilotNumber"));
-
-            HttpResponseMessage response = await httpClient.DeleteAsync(uriDelete);
-            return await IsSucceeded(response);
-        }
-
-        public async Task<bool> monitorStart(string pilotNumber)
+        public async Task<bool> MonitorStartAsync(string pilotNumber)
         {
             Uri uriPost = uri.Append(AssertUtil.NotNullOrEmpty(pilotNumber, "pilotNumber"));
 
@@ -85,7 +65,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> monitorStop(string pilotNumber)
+        public async Task<bool> MonitorStopAsync(string pilotNumber)
         {
             Uri uriDelete = uri.Append(AssertUtil.NotNullOrEmpty(pilotNumber, "pilotNumber"));
 

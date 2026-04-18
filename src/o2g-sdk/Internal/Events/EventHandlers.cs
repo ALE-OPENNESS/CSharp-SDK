@@ -21,7 +21,7 @@ using o2g.Events;
 using o2g.Events.CallCenterAgent;
 using o2g.Events.CallCenterPilot;
 using o2g.Events.CallCenterRealtimeNS;
-using o2g.Events.CallCenterRsi;
+using o2g.Events.Rsi;
 using o2g.Events.Common;
 using o2g.Events.CommunicationLog;
 using o2g.Events.EventSummary;
@@ -83,7 +83,12 @@ namespace o2g.Internal.Events
         public event EventHandler<O2GEventArgs<OnCtiLinkDownEvent>> CtiLinkDown;
         public event EventHandler<O2GEventArgs<OnCtiLinkUpEvent>> CtiLinkUp;
         public event EventHandler<O2GEventArgs<OnPbxLoadedEvent>> PbxLoaded;
-
+        public event EventHandler<O2GEventArgs<OnPbxLinkDownEvent>> PbxLinkDown;
+        public event EventHandler<O2GEventArgs<OnPbxLinkUpEvent>> PbxLinkUp;
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkDownEvent>> RemoteServerLinkDown;
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkUpEvent>> RemoteServerLinkUp;
+        public event EventHandler<O2GEventArgs<OnServerStartEvent>> ServerStart;
+        public event EventHandler<O2GEventArgs<OnLicenseExpirationEvent>> LicenseExpiration;
 
         // pbx management
         public event EventHandler<O2GEventArgs<OnPbxObjectInstanceCreatedEvent>> PbxObjectInstanceCreated;
@@ -103,6 +108,9 @@ namespace o2g.Internal.Events
         public event EventHandler<O2GEventArgs<OnQueueRtiChangedEvent>> QueueRtiChanged;
         public event EventHandler<O2GEventArgs<OnPGAgentRtiChangedEvent>> PGAgentRtiChanged;
         public event EventHandler<O2GEventArgs<OnPGOtherRtiChangedEvent>> PGOtherRtiChanged;
+
+        // Call center statistics
+        public event EventHandler<O2GEventArgs<OnAcdStatsProgressEvent>> AcdStatsProgress;
 
 #pragma warning restore CS0067
 

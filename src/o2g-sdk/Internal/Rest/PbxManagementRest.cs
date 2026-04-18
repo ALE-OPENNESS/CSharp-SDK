@@ -112,7 +112,7 @@ namespace o2g.Internal.Rest
             }
         }
 
-        public async Task<PbxObject> GetObjectAsync(int nodeId, string objectInstanceDefinition, string objectId, string attributes)
+        public async Task<PbxObject> GetObjectAsync(int nodeId, string objectInstanceDefinition, string objectId, string? attributes)
         {
             Uri uriGet = uri.Append(
                 AssertUtil.AssertPositive(nodeId, "nodeId").ToString(),
@@ -160,7 +160,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<List<string>> GetObjectInstancesAsync(int nodeId, string objectInstanceDefinition, string filter)
+        public async Task<List<string>> GetObjectInstancesAsync(int nodeId, string objectInstanceDefinition, string? filter)
         {
             Uri uriGet = uri.Append(
                 AssertUtil.AssertPositive(nodeId, "nodeId").ToString(),
@@ -262,7 +262,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> DeleteObjectAsync(int nodeId, string objectInstanceDefinition, string objectId, bool forceDelete)
+        public async Task<bool> DeleteObjectAsync(int nodeId, string objectInstanceDefinition, string objectId, bool forceDelete = false)
         {
             Uri uriDelete = uri.Append(
                 AssertUtil.AssertPositive(nodeId, "nodeId").ToString(),

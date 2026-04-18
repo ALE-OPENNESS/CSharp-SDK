@@ -114,7 +114,7 @@ namespace o2g.Internal.Rest
         {
         }
 
-        public async Task<OperatorState> GetOperatorStateAsync(string loginName)
+        public async Task<OperatorState> GetStateAsync(string loginName)
         {
             Uri uriGet = uri.Append("state");
             if (loginName != null)
@@ -126,7 +126,7 @@ namespace o2g.Internal.Rest
             return await GetResult<OperatorState>(response);
         }
 
-        public async Task<OperatorConfiguration> GetOperatorConfigurationAsync(string loginName)
+        public async Task<OperatorConfiguration> GetConfigurationAsync(string loginName)
         {
             Uri uriGet = uri.Append("config");
             if (loginName != null)
@@ -146,7 +146,7 @@ namespace o2g.Internal.Rest
             }
         }
 
-        public async Task<bool> LogonOperatorAsync(string proAcdNumber, string pgNumber, bool headset, string loginName)
+        public async Task<bool> LogonAsync(string proAcdNumber, string pgNumber, bool headset, string loginName)
         {
             Uri uriPost = uri.Append("logon");
             if (loginName != null)
@@ -168,7 +168,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> LogoffOperatorAsync(string loginName)
+        public async Task<bool> LogoffAsync(string loginName)
         {
             Uri uriPost = uri.Append("logoff");
             if (loginName != null)
@@ -180,7 +180,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> EnterAgentGroupAsync(string pgNumber, string loginName)
+        public async Task<bool> EnterAsync(string pgNumber, string loginName)
         {
             Uri uriPost = uri.Append("enterPG");
             if (loginName != null)
@@ -201,10 +201,10 @@ namespace o2g.Internal.Rest
         }
 
         // Exit agent group need a call to GetOperatorState to retrieve the agent group
-        public async Task<bool> ExitAgentGroupAsync(string loginName)
+        public async Task<bool> ExitAsync(string loginName)
         {
             // First get the operator state to get the processing group
-            OperatorState operatorState = await this.GetOperatorStateAsync(loginName);
+            OperatorState operatorState = await this.GetStateAsync(loginName);
             if (operatorState.PgNumber == null)
             {
                 // The supervisor is NOT in a group return an error
@@ -322,6 +322,18 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
+        public async Task<bool> CancelPermanentListeningAsync(string loginName = null)
+        {
+            Uri uriDelete = uri.Append("permanentListening");
+            if (loginName != null)
+            {
+                uriDelete = uriDelete.AppendQuery("loginName", loginName);
+            }
+
+            HttpResponseMessage response = await httpClient.DeleteAsync(uriDelete);
+            return await IsSucceeded(response);
+        }
+
         public async Task<bool> RequestIntrusionAsync(string agentNumber, IntrusionMode intrusionMode, string loginName)
         {
             Uri uriPost = uri.Append("intrusion");
@@ -406,7 +418,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> ActivateSkillAsync(List<int> skillNumbers, string loginName = null)
+        public async Task<bool> ActivateSkillsAsync(List<int> skillNumbers, string loginName = null)
         {
             Uri uriPost = uri.Append("config/skills/activate");
             if (loginName != null)
@@ -426,7 +438,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> DeactivateSkillAsync(List<int> skillNumbers, string loginName = null)
+        public async Task<bool> DeactivateSkillsAsync(List<int> skillNumbers, string loginName = null)
         {
             Uri uriPost = uri.Append("config/skills/deactivate");
             if (loginName != null)

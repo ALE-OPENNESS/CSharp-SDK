@@ -16,6 +16,9 @@
 * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using o2g.Events;
+using o2g.Events.Users;
+using o2g.Internal.Events;
 using o2g.Internal.Utility;
 using o2g.Types.UsersNS;
 using System;
@@ -44,6 +47,29 @@ namespace o2g.Internal.Rest
 
     internal class UserManagementRest : AbstractRESTService, IUserManagement
     {
+#pragma warning disable CS0067, CS0649
+        [Injection]
+        private readonly EventHandlers _eventHandlers;
+#pragma warning restore CS0067, CS0649
+
+        public event EventHandler<O2GEventArgs<OnUserCreatedEvent>> UserCreated
+        {
+            add => _eventHandlers.UserCreated += value;
+            remove => _eventHandlers.UserCreated -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnUserDeletedEvent>> UserDeleted
+        {
+            add => _eventHandlers.UserDeleted += value;
+            remove => _eventHandlers.UserDeleted -= value;
+        }
+
+        public event EventHandler<O2GEventArgs<OnUserInfoChangedEvent>> UserInfoChanged
+        {
+            add => _eventHandlers.UserInfoChanged += value;
+            remove => _eventHandlers.UserInfoChanged -= value;
+        }
+
         public UserManagementRest(Uri uri) : base(uri)
         {
 

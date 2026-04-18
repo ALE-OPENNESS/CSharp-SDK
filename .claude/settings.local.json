@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(grep -n \"enum Service\\\\|CallCenterStatistics\\\\s*[,{]\" C:/Developpement/O2G-REPOSITORY/Java-SDK/src/main/java/com/ale/o2g/internal/ServiceFactory.java)",
+      "Bash(dotnet build:*)",
+      "Bash(xargs wc:*)",
+      "Bash(grep \"Service.java$\")",
+      "Bash(cat)",
+      "Bash(bash /tmp/analyze_csharp_sdk.sh)",
+      "Bash(dotnet test:*)",
+      "Bash(ls -la /c/Developpement/O2G-REPOSITORY/*/src/main/java/com/ale/o2g/internal/rest/)",
+      "Bash(find:*)",
+      "Bash(npm run:*)",
+      "Bash(./gradlew jreleaserDeploy --stacktrace)",
+      "Bash(./gradlew jreleaserDeploy --info)"
+    ]
+  }
+}

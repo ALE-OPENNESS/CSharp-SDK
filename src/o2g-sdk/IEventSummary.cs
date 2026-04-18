@@ -26,29 +26,26 @@ using System.Threading.Tasks;
 namespace o2g
 {
     /// <summary>
-    /// The <c>EventSummary</c> service allows a user to get its new message indicators (missed call, voice mails, callback request, fax). 
-    /// IEventSummary service is available from a connected application, it requires <b>TELEPHONY_ADVANCED</b> license.
+    /// The <c>IEventSummary</c> service allows a user to retrieve new message indicators such as missed calls, voice mails, callback requests, and faxes.
+    /// Using this service requires a <b>TELEPHONY_ADVANCED</b> license.
     /// </summary>
-    /// <example>
-    /// <code>
-    /// // Get the EventSummary service from a connected application
-    /// IEventSummary eventSummaryService = myApp.EventSummaryService.
-    /// </code>
-    /// </example>
-    /// <seealso cref="O2G.Application.LoginAsync(string, string)"/>
     public interface IEventSummary : IService
     {
         /// <summary>
-        /// <c>EventSummaryUpdated</c> event is raised each time the user's counters have changed.
+        /// Occurs each time the user's event counters have changed.
         /// </summary>
         public event EventHandler<O2GEventArgs<OnEventSummaryUpdatedEvent>> EventSummaryUpdated;
 
-
         /// <summary>
-        /// Retrieve the <c>EventSummary</c> that gives the user's event counters.
+        /// Retrieves the main event counters for the specified user.
         /// </summary>
-        /// <param name="loginName">Login name of the user for whom the request is invoked. This parameter is mandatory for an administrator session.</param>
-        /// <returns>The <see cref="EventSummary"/> object that gives the user's event counters on success, or <c>null</c> in case of error.</returns>
+        /// <param name="loginName">The login name of the user for whom the request is invoked.</param>
+        /// <returns>
+        /// The <see cref="EventSummary"/> object containing the event counters on success, or <see langword="null"/> in case of error.
+        /// </returns>
+        /// <remarks>
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, but it is mandatory if the session has been opened by an administrator.
+        /// </remarks>
         Task<EventSummary> GetAsync(string loginName = null);
     }
 }

@@ -111,6 +111,12 @@ namespace o2g.Internal.Utility
         }
 
         internal static T Resolve<T>(T anObject) => GetInstance()._Resolve(anObject);
-        internal static void Reset() => _instance = null;
+        internal static void Reset()
+        {
+            if (_instance != null)
+            {
+                _instance.singletons.Clear();
+            }
+        }
     }
 }

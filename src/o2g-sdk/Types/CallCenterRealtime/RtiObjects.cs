@@ -18,6 +18,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace o2g.Types.CallCenterRealtimeNS
@@ -33,7 +34,7 @@ namespace o2g.Types.CallCenterRealtimeNS
         /// <value>
         /// A list of <see langword="string"/> that represents the configured CCD operators.
         /// </value>
-        public List<string> Agents { get; init; }
+        public List<RtiObjectIdentifier> Agents { get; init; }
 
         /// <summary>
         /// Return the list of CCD pilots.
@@ -41,7 +42,7 @@ namespace o2g.Types.CallCenterRealtimeNS
         /// <value>
         /// A list of <see langword="string"/> that represents the configured CCD pilots.
         /// </value>
-        public List<string> Pilots { get; init; }
+        public List<RtiObjectIdentifier> Pilots { get; init; }
 
         /// <summary>
         /// Return the list of CCD queues.
@@ -49,7 +50,7 @@ namespace o2g.Types.CallCenterRealtimeNS
         /// <value>
         /// A list of <see langword="string"/> that represents the configured CCD queues.
         /// </value>
-        public List<string> Queues { get; init; }
+        public List<RtiObjectIdentifier> Queues { get; init; }
 
         /// <summary>
         /// Return the list of agent processing groups.
@@ -57,7 +58,8 @@ namespace o2g.Types.CallCenterRealtimeNS
         /// <value>
         /// A list of <see langword="string"/> that represents the configured agent processing groups.
         /// </value>
-        public List<string> AgentProcessingGroups { get; init; }
+        [JsonPropertyName("pgAgents")]
+        public List<RtiObjectIdentifier> AgentProcessingGroups { get; init; }
 
         /// <summary>
         /// Return the list of other processing groups.
@@ -65,7 +67,8 @@ namespace o2g.Types.CallCenterRealtimeNS
         /// <value>
         /// A list of <see langword="string"/> that represents the configured other processing groups.
         /// </value>
-        public List<string> OtherProcessingGroups { get; init; }
+        [JsonPropertyName("pgOthers")]
+        public List<RtiObjectIdentifier> OtherProcessingGroups { get; init; }
 
         /// <summary>
         /// Creates a new <see cref="RtiFilter"/> pre-populated with all CCD objects
@@ -78,31 +81,31 @@ namespace o2g.Types.CallCenterRealtimeNS
 
             if (Agents?.Count > 0)
             {
-                filter.SetAgentNumbers(Agents.ToArray());
+                filter.SetAgentNumbers(Agents.Select(a => a.Number).ToArray());
                 filter.SetAgentAttributes(AgentAttributes.ALL);
             }
 
             if (Pilots?.Count > 0)
             {
-                filter.SetPilotNumbers(Pilots.ToArray());
+                filter.SetPilotNumbers(Pilots.Select(a => a.Number).ToArray());
                 filter.SetPilotAttributes(PilotAttributes.ALL);
             }
 
             if (Queues?.Count > 0)
             {
-                filter.SetQueueNumbers(Queues.ToArray());
+                filter.SetQueueNumbers(Queues.Select(a => a.Number).ToArray());
                 filter.SetQueueAttributes(QueueAttributes.ALL);
             }
 
             if (AgentProcessingGroups?.Count > 0)
             {
-                filter.SetAgentProcessingGroupNumbers(AgentProcessingGroups.ToArray());
+                filter.SetAgentProcessingGroupNumbers(AgentProcessingGroups.Select(a => a.Number).ToArray());
                 filter.SetAgentProcessingGroupAttributes(AgentProcessingGroupAttributes.ALL);
             }
 
             if (OtherProcessingGroups?.Count > 0)
             {
-                filter.SetOtherProcessingGroupNumbers(OtherProcessingGroups.ToArray());
+                filter.SetOtherProcessingGroupNumbers(OtherProcessingGroups.Select(a => a.Number).ToArray());
                 filter.SetOtherProcessingGroupAttributes(OtherProcessingGroupAttributes.ALL);
             }
 

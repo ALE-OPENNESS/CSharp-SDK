@@ -53,7 +53,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public string Called { get; init; }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public string InitialDialedNumber { get; init; }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public int CallNumber { get; init; }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public int ChargingUnits { get; init; }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public float Cost { get; init; }
 
         /// <summary>
@@ -118,8 +118,8 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
-        public DateTime StartDate { get; init; }
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
+        public DateTime? StartDate { get; init; }
 
         /// <summary>
         /// Return the call duration.
@@ -139,7 +139,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public CallType CallType { get; init; }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public List<TelFacility> InternalFacilities { get; init; }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace o2g.Types.AnalyticsNS
         /// This information is provided only if the query has been done with the <c>all</c> option.
         /// </remarks>
         /// <seealso cref="IAnalytics.GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        /// <seealso cref="IAnalytics.GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="IAnalytics.GetChargingsAsync(int, DateRange, int?, bool)"/>
         public List<TelFacility> ExternalFacilities { get; init; }
     }
 }

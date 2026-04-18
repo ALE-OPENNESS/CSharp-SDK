@@ -61,10 +61,12 @@ namespace o2g.Internal
         public static O2GService CallCenterAgent { get { return new O2GService("acdagent"); } }
         public static O2GService CallCenterPilot { get { return new O2GService("acdpilotmonitoring"); } }
         public static O2GService CallCenterRealtime { get { return new O2GService("acdrealtime"); } }
-        //        public static O2GService CallCenterRsi { get { return new O2GService("acdrsi"); } }
+        public static O2GService CallCenterManagement { get { return new O2GService("acdmanagement"); } }
+        //        public static O2GService Rsi { get { return new O2GService("acdrsi"); } }
         public static O2GService Analytics { get { return new O2GService("analytics"); } }
         public static O2GService UserManagement { get { return new O2GService("usermanagement"); } }
         public static O2GService Recording { get { return new O2GService("oxr recording"); } }
+        public static O2GService CallCenterStatistics { get { return new O2GService("acdstatistics"); } }
 
         public override bool Equals(Object obj)
         {
@@ -285,10 +287,15 @@ namespace o2g.Internal
             return GetOrCreate<CallCenterRealtimeRest>(O2GService.CallCenterRealtime);
         }
 
-        /*
-        internal CallCenterRsiRest GetCallCenterRsiService()
+        internal CallCenterManagementRest GetCallCenterManagementService()
         {
-            return GetOrCreate<CallCenterRsiRest>(O2GService.CallCenterRsi);
+            return GetOrCreate<CallCenterManagementRest>(O2GService.CallCenterManagement);
+        }
+
+        /*
+        internal RsiRest GetRsiService()
+        {
+            return GetOrCreate<RsiRest>(O2GService.Rsi);
         }
         */
 
@@ -305,6 +312,11 @@ namespace o2g.Internal
         internal RecordingRest GetRecordingService()
         {
             return GetOrCreate<RecordingRest>(O2GService.Recording);
+        }
+
+        internal CallCenterStatisticsRest GetCallCenterStatisticsService()
+        {
+            return GetOrCreate<CallCenterStatisticsRest>(O2GService.CallCenterStatistics);
         }
 
         private T GetOrCreate<T>(O2GService serviceName) where T : IService
@@ -397,8 +409,6 @@ namespace o2g.Internal
                     }
                 }
             }
-
-            servicesUri.Add(O2GService.UserManagement, new UriBuilder(baseUrl + "/usermanagement").Uri);
         }
     }
 }

@@ -23,6 +23,6 @@ namespace o2g
 {
     internal interface ServiceEndPoint
     {
-        public Task<Session> OpenSession(Credential credential, string applicationName);
+        public Task<Session> OpenSession(Credential credential, string applicationName, SessionMonitoringPolicy policy);
     }
 }

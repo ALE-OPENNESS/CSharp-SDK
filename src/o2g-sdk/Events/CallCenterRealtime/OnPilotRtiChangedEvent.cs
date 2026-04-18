@@ -18,6 +18,8 @@
 */
 
 
+using o2g.Types.CommonNS;
+
 namespace o2g.Events.CallCenterRealtimeNS
 {
     /// <summary>

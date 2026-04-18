@@ -16,6 +16,7 @@
 * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using o2g.Types.CommonNS;
 using o2g.Types.TelephonyNS.CallNS;
 using o2g.Types.TelephonyNS.DeviceNS;
 using System.Collections.Generic;
@@ -136,6 +137,6 @@ namespace o2g.Events.Telephony
         /// <value>
         /// A list of <see cref="DeviceCapabilities"/>. 
         /// </value>
-        public List<DeviceCapabilities> DeviceCapabilities { get; init; }
+        public List<Device.Capabilities> DeviceCapabilities { get; init; }
     }
 }

@@ -25,83 +25,83 @@ using System.Threading.Tasks;
 namespace o2g
 {
     /// <summary>
-    /// The <c>IAnalytics</c> service allows to retrieve OmniPCX entreprise charging information and incidents.
-    /// Using this service requires having a <b>ANALYTICS</b> license. This service requires an administrative login.
+    /// The <c>IAnalytics</c> service provides access to OmniPCX Enterprise charging information and incident reports.
+    /// Using this service requires an <b>ANALYTICS</b> license and an administrative login.
     /// </summary>
     /// <remarks>
-    /// O2G uses SSH to get the information from an OmniPCX Enterprise node. So <b>SSH must be enabled</b> on the OmniPCX Enterprise node to use this service.
+    /// O2G uses SSH to collect information from an OmniPCX Enterprise node, so <b>SSH must be enabled</b> on the node.
     /// </remarks>
     public interface IAnalytics : IService
     {
         /// <summary>
-        /// Return a list of incident from the specified OmniPCX Enterprise node.
+        /// Retrieves a list of incidents from the specified OmniPCX Enterprise node.
         /// </summary>
-        /// <param name="nodeId">The OmniPCX Enterprise node id.</param>
-        /// <param name="last">An optional parameter to limit te query to the N latest incident.</param>
+        /// <param name="nodeId">The OmniPCX Enterprise node identifier.</param>
+        /// <param name="last">An optional parameter that limits the query to the N most recent incidents. Pass <c>0</c> to retrieve all incidents currently in progress.</param>
         /// <returns>
-        /// A list of <see cref="Incident"/> that represents the incidents raised on the specified OmniPCX Enterprise node, or <see langword="null"/> in case of error.
+        /// A list of <see cref="Incident"/> objects representing the incidents on the specified node, or <see langword="null"/> in case of error.
         /// </returns>
         Task<List<Incident>> GetIncidentsAsync(int nodeId, int last = 0);
 
         /// <summary>
-        /// Get the list of charging files on the specified node.
+        /// Retrieves the list of charging files available on the specified node.
         /// </summary>
-        /// <param name="nodeId">The OmniPCX Enterprise node id.</param>
-        /// <param name="filter">An optional time range filter.</param>
+        /// <param name="nodeId">The OmniPCX Enterprise node identifier.</param>
+        /// <param name="filter">An optional date range filter. When omitted, all available charging files are returned.</param>
         /// <returns>
-        /// The list of <see cref="ChargingFile"/> that represents the charging files.
+        /// A list of <see cref="ChargingFile"/> objects representing the charging files available on the node, or <see langword="null"/> in case of error.
         /// </returns>
         /// <seealso cref="GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        Task<List<ChargingFile>> GetChargingFilesAsync(int nodeId, TimeRange filter = null);
+        Task<List<ChargingFile>> GetChargingFilesAsync(int nodeId, DateRange filter = null);
 
         /// <summary>
-        /// Query the charging information for the specified node, using the specified options.
+        /// Queries the charging information for the specified node using a date range filter and the given options.
         /// </summary>
-        /// <param name="nodeId">The OmniPCX Enterprise node id.</param>
-        /// <param name="filter">An optional time range filter.</param>
-        /// <param name="topResults">An optional filter used to return only the 'top N' tickets.</param>
-        /// <param name="all">Optional filter, <see langword="true"/> to include tickets with a 0 cost.</param>
+        /// <param name="nodeId">The OmniPCX Enterprise node identifier.</param>
+        /// <param name="filter">An optional date range filter.</param>
+        /// <param name="topResults">An optional limit to return only the top N tickets.</param>
+        /// <param name="all"><see langword="true"/> to include tickets with a 0 cost; <see langword="false"/> to return aggregated totals per user.</param>
         /// <returns>
-        /// A <see cref="ChargingResult"/> object that represents the result of the query or <see langword="null"/> in case of error or if the specified filter does not return any result.
+        /// A <see cref="ChargingResult"/> object representing the result of the query, or <see langword="null"/> in case of error or if the filter yields no results.
         /// </returns>
         /// <remarks>
         /// <para>
-        /// If <c>all</c> option is <see langword="true"/>, all the tickets are returned, including the zero cost ticket, and with the called party; 
-        /// If <c>all</c> option is <see langword="false"/> or omitted, the total of charging info is returned for each user, the call number giving 
-        /// the number of calls with non null charging cost.
+        /// If <c>all</c> is <see langword="true"/>, all tickets are returned, including zero-cost tickets and the called party.
+        /// If <c>all</c> is <see langword="false"/>, the total charging information is returned per user, with the call count
+        /// reflecting only calls that have a non-null charging cost.
         /// </para>
         /// <para>
-        /// The request processes charging files on the OmniPCX Enterprise. The processing is limited to a maximum of 100 files for performance reason. If the range filter is too large and 
-        /// the number of file to process is greater than 100, the method fails and returns <see langword="null"/>. In this case, a smaller range must be specified.
+        /// Processing is limited to a maximum of 100 charging files for performance reasons. If the date range filter is too
+        /// wide and the number of files to process exceeds 100, the method fails and returns <see langword="null"/>.
+        /// In that case, a narrower date range must be specified.
         /// </para>
         /// </remarks>
         /// <seealso cref="GetChargingsAsync(int, List{ChargingFile}, int?, bool)"/>
-        Task<ChargingResult> GetChargingsAsync(int nodeId, TimeRange filter = null, int? topResults = null, bool all = false);
-
+        Task<ChargingResult> GetChargingsAsync(int nodeId, DateRange filter = null, int? topResults = null, bool all = false);
 
         /// <summary>
-        /// Query the charging information for the specified node, using the specified options.
+        /// Queries the charging information for the specified node, processing the given charging files with the specified options.
         /// </summary>
-        /// <param name="nodeId">The OmniPCX Enterprise node id.</param>
-        /// <param name="files">The list of file to process.</param>
-        /// <param name="topResults">An optional filter used to return only the 'top N' tickets.</param>
-        /// <param name="all">Optional filter, <see langword="true"/> to include tickets with a 0 cost.</param>
+        /// <param name="nodeId">The OmniPCX Enterprise node identifier.</param>
+        /// <param name="files">The list of charging files to process. Use <see cref="GetChargingFilesAsync(int, DateRange)"/> to obtain the available files.</param>
+        /// <param name="topResults">An optional limit to return only the top N tickets.</param>
+        /// <param name="all"><see langword="true"/> to include tickets with a 0 cost; <see langword="false"/> to return aggregated totals per user.</param>
         /// <returns>
-        /// A <see cref="ChargingResult"/> object that represents the result of the query or <see langword="null"/> in case of error or if the specified filter does not return any result.
+        /// A <see cref="ChargingResult"/> object representing the result of the query, or <see langword="null"/> in case of error or if the specified files yield no results.
         /// </returns>
         /// <remarks>
         /// <para>
-        /// If <c>all</c> option is <see langword="true"/>, all the tickets are returned, including the zero cost ticket, and with the called party; 
-        /// If <c>all</c> option is <see langword="false"/> or omitted, the total of charging info is returned for each user, the call number giving 
-        /// the number of calls with non null charging cost.
+        /// If <c>all</c> is <see langword="true"/>, all tickets are returned, including zero-cost tickets and the called party.
+        /// If <c>all</c> is <see langword="false"/>, the total charging information is returned per user, with the call count
+        /// reflecting only calls that have a non-null charging cost.
         /// </para>
         /// <para>
-        /// This method allows to better control the processign of the request by spefifying the ist of charging files to consider. The list size must be lower than 100.
-        /// If the number of file to process is greater than 100, the method fails and returns <see langword="null"/>.
+        /// This method gives finer control over the request by letting the caller specify the exact list of charging files to
+        /// process. The list size must not exceed 100 files; if it does, the method fails and returns <see langword="null"/>.
         /// </para>
         /// </remarks>
-        /// <see cref="GetChargingFilesAsync(int, TimeRange)"/>
-        /// <seealso cref="GetChargingsAsync(int, TimeRange, int?, bool)"/>
+        /// <seealso cref="GetChargingFilesAsync(int, DateRange)"/>
+        /// <seealso cref="GetChargingsAsync(int, DateRange, int?, bool)"/>
         Task<ChargingResult> GetChargingsAsync(int nodeId, List<ChargingFile> files, int? topResults = null, bool all = false);
     }
 }

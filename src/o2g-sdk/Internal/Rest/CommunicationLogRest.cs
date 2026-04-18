@@ -40,7 +40,7 @@ namespace o2g.Internal.Rest
         private readonly EventHandlers _eventHandlers;
 #pragma warning restore CS0067, CS0649
 
-        public event EventHandler<O2GEventArgs<OnAgentRtiChangedEvent>> ComRecordCreated
+        public event EventHandler<O2GEventArgs<OnComRecordCreatedEvent>> ComRecordCreated
         {
             add => _eventHandlers.ComRecordCreated += value;
             remove => _eventHandlers.ComRecordCreated -= value;
@@ -138,7 +138,7 @@ namespace o2g.Internal.Rest
             return await GetResult<ComRecord>(response);
         }
 
-        public async Task<QueryResult> GetComRecordsAsync(QueryFilter filter, Page page, bool optimized, string loginName)
+        public async Task<QueryResult> GetComRecordsAsync(QueryFilter filter = null, Page page = null, bool optimized = false, string loginName = null)
         {
             Uri uriGet = uri;
             if (loginName != null)
@@ -216,7 +216,7 @@ namespace o2g.Internal.Rest
             return await GetResult<QueryResult>(response);
         }
 
-        public async Task<bool> DeleteComRecordsAsync(QueryFilter filter, string loginName)
+        public async Task<bool> DeleteComRecordsAsync(QueryFilter? filter = null, string loginName = null)
         {
             Uri uriDelete = uri;
             if (loginName != null)

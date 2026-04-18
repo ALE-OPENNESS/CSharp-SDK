@@ -38,7 +38,7 @@ namespace o2g.Internal.Utility
                 }
                 else
                 {
-                    return new Uri(String.Format("{0}&{1}={2}", uri.AbsoluteUri, queryName, queryValue));
+                    return new Uri(String.Format("{0}&{1}={2}", uri.AbsoluteUri, queryName, Uri.EscapeDataString(queryValue)));
                 }
             }
             else
@@ -49,7 +49,7 @@ namespace o2g.Internal.Utility
                 }
                 else
                 {
-                    return new Uri(String.Format("{0}?{1}={2}", uri.AbsoluteUri, queryName, queryValue));
+                    return new Uri(String.Format("{0}?{1}={2}", uri.AbsoluteUri, queryName, Uri.EscapeDataString(queryValue)));
                 }
             }
         }

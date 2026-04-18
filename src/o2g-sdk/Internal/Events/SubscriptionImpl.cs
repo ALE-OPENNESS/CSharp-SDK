@@ -24,10 +24,7 @@ namespace o2g.Internal.Events
         private string version;
         private int timeout;
         private EventFilter filter;
-#pragma warning disable IDE0044 // Add readonly modifier
-        //Webhook not supported in this version
-        private string webHookUrl;
-#pragma warning restore IDE0044 // Add readonly modifier
+        private IWebHook _webHook;
 
         public void SetVersion(string version)
         {
@@ -44,12 +41,19 @@ namespace o2g.Internal.Events
             this.filter = filter;
         }
 
+        public void SetWebHook(IWebHook webHook)
+        {
+            this._webHook = webHook;
+        }
+
         public override string Version => version;
 
         public override int Timeout => timeout;
 
         public override EventFilter Filter => filter;
 
-        public override string WebHookUrl => webHookUrl;
+        public override string WebHookUrl => _webHook?.Url;
+
+        internal IWebHook WebHook => _webHook;
     }
 }

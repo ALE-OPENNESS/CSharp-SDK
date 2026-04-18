@@ -204,6 +204,42 @@ namespace o2g.Internal.Events
             }
         }
 
+        public static O2GEvent PbxLinkDownAdapter(O2GEvent ev)
+        {
+            if (ev is OnInternalStringNodeIdEvent)
+            {
+                OnInternalStringNodeIdEvent org = (OnInternalStringNodeIdEvent)ev;
+
+                return new OnPbxLinkDownEvent()
+                {
+                    EventName = org.EventName,
+                    NodeId = int.Parse(org.NodeId)
+                };
+            }
+            else
+            {
+                throw new O2GException(string.Format("Invalid translator exception {0}", ev.GetType().Name));
+            }
+        }
+
+        public static O2GEvent PbxLinkUpAdapter(O2GEvent ev)
+        {
+            if (ev is OnInternalStringNodeIdEvent)
+            {
+                OnInternalStringNodeIdEvent org = (OnInternalStringNodeIdEvent)ev;
+
+                return new OnPbxLinkUpEvent()
+                {
+                    EventName = org.EventName,
+                    NodeId = int.Parse(org.NodeId)
+                };
+            }
+            else
+            {
+                throw new O2GException(string.Format("Invalid translator exception {0}", ev.GetType().Name));
+            }
+        }
+
         public static O2GEvent AgentSkillChangedAdapter(O2GEvent ev)
         {
             if (ev is OnInternalAgentSkillChangedEvent)

@@ -19,47 +19,69 @@
 
 using System.Text.Json.Serialization;
 
+using System.Text.Json.Serialization;
+
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>RoutingCapability</c> represents the routing capability of a user.
+    /// Represents the routing capabilities available to a user.
+    /// <para>
+    /// Capabilities indicate which routing features the user is allowed to configure,
+    /// based on their OmniPCX Enterprise profile and license. Query capabilities
+    /// before attempting to activate routing features to avoid unnecessary errors.
+    /// </para>
     /// </summary>
+    /// <seealso cref="IRouting.GetCapabilitiesAsync(string)"/>
     public class RoutingCapabilities
     {
         /// <summary>
-        /// Return whether the user can manage the remote extension.
+        /// Whether the user can manage their remote extension activation.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the user can manage the remote extension; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the user can activate or deactivate their
+        /// remote extension; <see langword="false"/> otherwise.
         /// </value>
+        /// <seealso cref="IRouting.ActivateRemoteExtensionAsync(string)"/>
+        /// <seealso cref="IRouting.DeactivateRemoteExtensionAsync(string)"/>
         [JsonPropertyName("presentationRoute")]
         public bool CanManageRemoteExtension { get; set; }
 
         /// <summary>
-        /// Return whether the user can manage the forward.
+        /// Whether the user can configure a forward.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the user can manage the forward; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the user can activate, modify, or cancel
+        /// a forward; <see langword="false"/> otherwise.
         /// </value>
+        /// <seealso cref="IRouting.ForwardOnNumberAsync(string, Forward.ForwardCondition, string)"/>
+        /// <seealso cref="IRouting.ForwardOnVoiceMailAsync(Forward.ForwardCondition, string)"/>
+        /// <seealso cref="IRouting.CancelForwardAsync(string)"/>
         [JsonPropertyName("forwardRoute")]
         public bool CanManageForward { get; set; }
 
         /// <summary>
-        /// Return whether the user can manage the overflow.
+        /// Whether the user can configure an overflow.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the user can manage the overflow; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the user can activate, modify, or cancel
+        /// an overflow; <see langword="false"/> otherwise.
         /// </value>
+        /// <seealso cref="IRouting.OverflowOnVoiceMailAsync(Overflow.OverflowCondition, string)"/>
+        /// <seealso cref="IRouting.CancelOverflowAsync(string)"/>
         [JsonPropertyName("overflowRoute")]
         public bool CanManageOverflow { get; set; }
 
         /// <summary>
-        /// Return whether the user can manage the do not disturb.
+        /// Whether the user can manage Do Not Disturb.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the user can manage the do not disturb; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the user can activate or cancel
+        /// Do Not Disturb; <see langword="false"/> otherwise.
         /// </value>
-        [JsonPropertyName("dnd")] 
+        /// <seealso cref="IRouting.ActivateDndAsync(string)"/>
+        /// <seealso cref="IRouting.CancelDndAsync(string)"/>
+        [JsonPropertyName("dnd")]
         public bool CanManageDnd { get; set; }
     }
 }
+

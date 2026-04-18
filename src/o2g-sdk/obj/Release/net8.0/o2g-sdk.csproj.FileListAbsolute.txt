@@ -1,0 +1,14 @@
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\bin\Release\net8.0\o2g-sdk.deps.json
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\bin\Release\net8.0\o2g-sdk.dll
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\bin\Release\net8.0\o2g-sdk.pdb
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\bin\Release\net8.0\o2g-sdk.xml
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.csproj.AssemblyReference.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.AssemblyInfoInputs.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.AssemblyInfo.cs
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.csproj.CoreCompileInputs.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.sourcelink.json
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.dll
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\refint\o2g-sdk.dll
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\o2g-sdk.pdb
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Release\net8.0\ref\o2g-sdk.dll

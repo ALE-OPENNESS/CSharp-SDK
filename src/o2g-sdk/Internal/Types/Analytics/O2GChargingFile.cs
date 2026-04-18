@@ -28,8 +28,13 @@ namespace o2g.Internal.Types.Analytics
         public string Date { get; set; }
         public string Time { get; set; }
 
-        internal DateTime GetTimeStamp()
+        internal DateTime? GetTimeStamp()
         {
+            if ((Date == null) || (Time == null))
+            {
+                return null;
+            }
+
             return DateTime.ParseExact(string.Format("{0}-{1}", Date, Time), "MM/dd/y-HH:mm:ss", CultureInfo.InvariantCulture); ;
         }
     }

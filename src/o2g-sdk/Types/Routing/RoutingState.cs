@@ -20,47 +20,88 @@
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>RoutingState</c> represente a user routing state. 
-    /// <para>A routing state is composed of four elements</para>
+    /// Represents the complete routing state of a user.
+    /// <para>
+    /// The routing state aggregates four independent routing features:
+    /// </para>
     /// <list type="table">
-    /// <item><term>Remote extension activation</term><description>When the user is configured with a remote extension, he has the possibility to activate or deactivate this remote extension. when the remote extension is de-activated, call are not presented on the mobile device.</description></item>
-    /// <item><term>Forward</term><description>The user can configure a forward, on his voice mail if any or on any other number (depending on the cOmniPCX Enterprise configuration).</description></item>
-    /// <item><term>Overflow</term><description>The user can configure an overflow on his asociate or on his voce mail. If a forward is configured, it is considered prio the overflow.</description></item>
-    /// <item><term>Do Not Disturb</term><description>When Do Not Disturb (DND) is activated, call are not presented to the user.</description></item>
+    /// <listheader><term>Feature</term><description>Description</description></listheader>
+    /// <item>
+    ///   <term>Remote extension</term>
+    ///   <description>
+    ///   When configured, a remote extension (e.g. a mobile device) can be activated or
+    ///   deactivated. When deactivated, the device does not ring on incoming calls but can
+    ///   still be used to place outgoing calls.
+    ///   </description>
+    /// </item>
+    /// <item>
+    ///   <term>Forward</term>
+    ///   <description>
+    ///   Redirects incoming calls to the user's voice mail or to another number,
+    ///   subject to an optional condition. Takes priority over overflow.
+    ///   </description>
+    /// </item>
+    /// <item>
+    ///   <term>Overflow</term>
+    ///   <description>
+    ///   Redirects incoming calls to the user's voice mail when the user is busy
+    ///   or does not answer. Only applies when no forward is active.
+    ///   </description>
+    /// </item>
+    /// <item>
+    ///   <term>Do Not Disturb</term>
+    ///   <description>
+    ///   When active, no calls are presented to the user.
+    ///   </description>
+    /// </item>
     /// </list>
     /// </summary>
+    /// <seealso cref="IRouting.GetRoutingStateAsync(string)"/>
     public class RoutingState
     {
         /// <summary>
-        /// Return whether the remote extension is activated.
+        /// Whether the user's remote extension is currently activated.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the remote extension is activated; <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the remote extension is activated and will ring
+        /// on incoming calls; <see langword="false"/> if it is deactivated;
+        /// <see langword="null"/> if the user has no remote extension configured.
         /// </value>
+        /// <seealso cref="IRouting.ActivateRemoteExtensionAsync(string)"/>
+        /// <seealso cref="IRouting.DeactivateRemoteExtensionAsync(string)"/>
         public bool? RemoteExtensionActivated { get; set; }
 
         /// <summary>
-        /// Return the forward.
+        /// The forward currently configured for the user.
         /// </summary>
         /// <value>
-        /// A <see cref="Forward"/> object that represents the forward state.
+        /// A <see cref="Forward"/> object describing the active forward,
+        /// or a <see cref="Forward"/> with <see cref="Destination.None"/> if
+        /// no forward is configured.
         /// </value>
+        /// <seealso cref="IRouting.GetForwardAsync(string)"/>
         public Forward Forward { get; set; }
 
         /// <summary>
-        /// Return the Overflow.
+        /// The overflow currently configured for the user.
         /// </summary>
         /// <value>
-        /// A <see cref="Overflow"/> object that represents the overflow state.
+        /// An <see cref="Overflow"/> object describing the active overflow,
+        /// or an <see cref="Overflow"/> with <see cref="Destination.None"/> if
+        /// no overflow is configured.
         /// </value>
+        /// <seealso cref="IRouting.GetOverflowAsync(string)"/>
         public Overflow Overflow { get; set; }
 
         /// <summary>
-        /// Return the Do not Disturb state.
+        /// The current Do Not Disturb state of the user.
         /// </summary>
         /// <value>
-        /// A <see cref="DndState"/> object that represents the do not disturb state.
+        /// A <see cref="DndState"/> object indicating whether DND is active,
+        /// or <see langword="null"/> if the DND state is not available.
         /// </value>
+        /// <seealso cref="IRouting.GetDndStateAsync(string)"/>
         public DndState DndState { get; set; }
     }
 }
+

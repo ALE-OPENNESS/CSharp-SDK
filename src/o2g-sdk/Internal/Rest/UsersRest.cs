@@ -147,32 +147,6 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<List<string>> GetLoginsAsync(string[] nodeIds = null, bool onlyACD = false)
-        {
-            Uri uriGet = new(uri.AbsoluteUri.Replace("/users", "/logins"));
-
-            if (nodeIds != null)
-            {
-                uriGet = uriGet.AppendQuery("nodeIds", MakeNodeQuery(nodeIds));
-            }
-
-            if (onlyACD)
-            {
-                uriGet = uriGet.AppendQuery("onlyACD");
-            }
-
-            HttpResponseMessage response = await httpClient.GetAsync(uriGet);
-            LoginsResponse logins = await GetResult<LoginsResponse>(response);
-            if (logins == null)
-            {
-                return null;
-            }
-            else
-            {
-                return logins.LoginNames;
-            }
-        }
-
         public async Task<List<string>> GetLoginsAsync(int[] nodeIds = null, bool onlyACD = false)
         {
             Uri uriGet = new(uri.AbsoluteUri.Replace("/users", "/logins"));

@@ -38,7 +38,7 @@ namespace o2g.Internal
             ServerInfo = serverInfo;
         }
 
-        async Task<Session> ServiceEndPoint.OpenSession(Credential credential, string applicationName)
+        async Task<Session> ServiceEndPoint.OpenSession(Credential credential, string applicationName, SessionMonitoringPolicy policy)
         {
             AssertUtil.NotNullOrEmpty(credential.Login, "Login");
             AssertUtil.NotNullOrEmpty(credential.Password, "Password");
@@ -62,7 +62,7 @@ namespace o2g.Internal
             logger.Debug("Session opened: TimeToLive = {timeToLive}", sessionInfo.TimeToLive);
 
             // Create the session
-            SessionImpl session = new(serviceFactory, sessionInfo, credential.Login, authenticateResult.Expired);
+            SessionImpl session = new(serviceFactory, sessionInfo, credential.Login, authenticateResult.Expired, policy);
 
             // OK, create the session
             return session;

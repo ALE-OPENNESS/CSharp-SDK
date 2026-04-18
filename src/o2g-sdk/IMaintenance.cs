@@ -27,40 +27,69 @@ using System.Threading.Tasks;
 namespace o2g
 {
     /// <summary>
-    /// <c>IMaintenance</c> service is used to retrieve information about the system state, in particular, information on the 
-    /// OmniPCX Enterprise nodes and their connection state.
-    /// <c>IMaintenance</c> service doesn't require any specific license on the O2G server.
-    /// <para>
-    /// It also provides informations about licenses: total allocated licenses, numbers of current used and expiration date.
-    /// </para>
+    /// The <c>IMaintenance</c> service provides information about the system state, in particular information on the
+    /// OmniPCX Enterprise nodes and their connection state. Information about licenses is also provided per item:
+    /// total allocated licenses, number currently in use, and expiration date.
     /// </summary>
+    /// <remarks>
+    /// This service does not require any specific license on the O2G server.
+    /// </remarks>
     public interface IMaintenance : IService
     {
         /// <summary>
-        /// Occurs when a CTI link is down. 
+        /// Occurs when a CTI link is down.
         /// </summary>
         public event EventHandler<O2GEventArgs<OnCtiLinkDownEvent>> CtiLinkDown;
 
         /// <summary>
-        /// Occurs when a CTI link is up. 
+        /// Occurs when a CTI link is up.
         /// </summary>
         public event EventHandler<O2GEventArgs<OnCtiLinkUpEvent>> CtiLinkUp;
 
         /// <summary>
-        /// Occurs when datas are fully loaded from an OmniPCX Enterprise node. 
+        /// Occurs when data is fully loaded from an OmniPCX Enterprise node.
         /// </summary>
         public event EventHandler<O2GEventArgs<OnPbxLoadedEvent>> PbxLoaded;
 
         /// <summary>
-        /// Get information about system status. 
-        /// <para>
-        /// This operation provides information about the system state, and the total number of each license available 
-        /// for the system. This operation is restricted to an admininistrator only.
-        /// </para>
+        /// Occurs when the CMIS link to an OmniPCX Enterprise node goes down.
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnPbxLinkDownEvent>> PbxLinkDown;
+
+        /// <summary>
+        /// Occurs when the CMIS link to an OmniPCX Enterprise node is re-established.
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnPbxLinkUpEvent>> PbxLinkUp;
+
+        /// <summary>
+        /// Occurs when the connection to the remote twin O2G server is lost.
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkDownEvent>> RemoteServerLinkDown;
+
+        /// <summary>
+        /// Occurs when the connection to the remote twin O2G server is recovered.
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnRemoteServerLinkUpEvent>> RemoteServerLinkUp;
+
+        /// <summary>
+        /// Occurs when the O2G server has started (all OmniPCX Enterprise nodes are connected and loaded).
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnServerStartEvent>> ServerStart;
+
+        /// <summary>
+        /// Occurs when a license is about to expire or has expired.
+        /// </summary>
+        public event EventHandler<O2GEventArgs<OnLicenseExpirationEvent>> LicenseExpiration;
+
+        /// <summary>
+        /// Retrieves information about the system state and the total number of each license type available for the system.
         /// </summary>
         /// <returns>
-        /// A <see cref="SystemStatus"/> objects containing system information.
+        /// A <see cref="SystemStatus"/> object on success, or <see langword="null"/> in case of error.
         /// </returns>
+        /// <remarks>
+        /// This operation is restricted to an administrator session only.
+        /// </remarks>
         Task<SystemStatus> GetSystemStatusAsync();
     }
 }

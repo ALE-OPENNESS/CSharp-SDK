@@ -32,7 +32,7 @@ namespace o2g.Types.UsersNS
         /// <value>
         /// The list <see langword="string"/> that represents the supported languages.
         /// </value>
-        [JsonPropertyName("SupportedLanguages")]
+        [JsonPropertyName("supportedLanguages")]
         public List<string> Languages { get; init; }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace o2g.Types.UsersNS
         /// <value>
         /// The list <see langword="string"/> that represents the supported GUI languages.
         /// </value>
-        [JsonPropertyName("SupportedGuiLanguages")]
+        [JsonPropertyName("supportedGuiLanguages")]
         public List<string> GuiLanguages { get; init; }
     }
 }

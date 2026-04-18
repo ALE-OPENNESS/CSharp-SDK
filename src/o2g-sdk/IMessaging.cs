@@ -25,24 +25,25 @@ using System.Threading.Tasks;
 namespace o2g
 {
     /// <summary>
-    /// <c>IMessaging</c> service provides access to user's voice mail box. It's possible using this service to connect 
+    /// <c>IMessaging</c> service provides access to user's voice mail box. It's possible using this service to connect
     /// to the voice mail box, retrieve the information and the list of voice mails and manage the mail box.
     /// Using this service requires having a <b>TELEPHONY_ADVANCED</b> license.
     /// <para>
-    /// It's possible to download the voice mail as a wav file and to delete an existing messages.
+    /// It's possible to download a voice mail as a wav file, acknowledge (mark as read) a voice mail,
+    /// and delete existing messages.
     /// </para>
     /// </summary>
     public interface IMessaging : IService
     {
         /// <summary>
-        /// Get the specified user's mailboxes. This is the logical first step to access further operation on voice mail feature. 
+        /// Get the specified user's mailboxes. This is the logical first step to access further operations on the voice mail feature.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
         /// <returns>
-        /// A list of <see cref="MailBox"/>.
+        /// A list of <see cref="MailBox"/> objects in case of success; <see langword="null"/> otherwise.
         /// </returns>
         /// <remarks>
-        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
         /// </remarks>
         Task<List<MailBox>> GetMailboxesAsync(string loginName = null);
@@ -58,29 +59,29 @@ namespace o2g
         /// </returns>
         /// <remarks>
         /// <para>
-        /// The <c>password</c> is optional. if not set, the user password is used to connect on the voicemail. 
-        /// This is only possible if the OmniPCX Enterprise administrator has managed the same pasword for the user and his mailbox.
+        /// The <c>password</c> is optional. If not set, the user password is used to connect to the voicemail.
+        /// This is only possible if the OmniPCX Enterprise administrator has configured the same password for the user and their mailbox.
         /// </para>
         /// <para>
-        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
         /// </para>
         /// </remarks>
         Task<MailBoxInfo> GetMailboxInfoAsync(string mailboxId, string password = null, string loginName = null);
 
         /// <summary>
-        /// Get the list of voice mail in this voice mail box.
+        /// Get the list of voice messages in the specified mailbox.
         /// </summary>
         /// <param name="mailboxId">The mailbox identifier.</param>
-        /// <param name="newOnly">Filter only unread voicemail if set to <see langword="true"/> (Default value is <see langword="false"/>)</param>
-        /// <param name="offset">The offset from which to start retrieving the voicemail list (Default value is 0).</param>
-        /// <param name="limit">The maximum number of items to return (Default value is -1: no limit).</param>
+        /// <param name="newOnly">Filter only unread voice messages if set to <see langword="true"/>. Default is <see langword="false"/>.</param>
+        /// <param name="offset">The offset from which to start retrieving the voice message list. Default is <see langword="null"/> (from the beginning).</param>
+        /// <param name="limit">The maximum number of items to return. Default is <see langword="null"/> (no limit).</param>
         /// <param name="loginName">The user login name.</param>
         /// <returns>
-        /// The list of <see cref="VoiceMessage"/> objects that represents the voice messages.
+        /// A list of <see cref="VoiceMessage"/> objects in case of success; <see langword="null"/> otherwise.
         /// </returns>
         /// <remarks>
-        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
         /// </remarks>
         Task<List<VoiceMessage>> GetVoiceMessagesAsync(string mailboxId, bool newOnly = false, int? offset = null, int? limit = null, string loginName = null);
@@ -89,36 +90,60 @@ namespace o2g
         /// Delete the specified voice message.
         /// </summary>
         /// <param name="mailboxId">The mailbox identifier.</param>
-        /// <param name="voicemailId">The voice message to delete.</param>
+        /// <param name="voicemailId">The voice message identifier.</param>
         /// <param name="loginName">The user login name.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
+        /// but it is mandatory if the session has been opened by an administrator.
+        /// </remarks>
         Task<bool> DeleteVoiceMessageAsync(string mailboxId, string voicemailId, string loginName = null);
 
         /// <summary>
         /// Delete the specified list of voice messages.
         /// </summary>
         /// <param name="mailboxId">The mailbox identifier.</param>
-        /// <param name="msgIds">The voice messages to delete.</param>
+        /// <param name="msgIds">The list of voice message identifiers to delete.</param>
         /// <param name="loginName">The user login name.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If some of the specified voice message ids are not valid, they are ignored and this method will succeed.
+        /// <para>
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
+        /// but it is mandatory if the session has been opened by an administrator.
+        /// </para>
+        /// </remarks>
         Task<bool> DeleteVoiceMessagesAsync(string mailboxId, List<string> msgIds, string loginName = null);
 
         /// <summary>
-        /// Download a voice mail as a wav file.
+        /// Acknowledges the specified voice message, marking it as read.
         /// </summary>
         /// <param name="mailboxId">The mailbox identifier.</param>
-        /// <param name="voicemailId">The voice mail identifier.</param>
-        /// <param name="wavPath">An optional destination file name.</param>
+        /// <param name="voicemailId">The voice message identifier.</param>
+        /// <param name="loginName">The user login name.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
+        /// but it is mandatory if the session has been opened by an administrator.
+        /// </remarks>
+        Task<bool> AcknowledgeVoiceMessageAsync(string mailboxId, string voicemailId, string loginName = null);
+
+        /// <summary>
+        /// Download the specified voice message as a wav file.
+        /// </summary>
+        /// <param name="mailboxId">The mailbox identifier.</param>
+        /// <param name="voicemailId">The voice message identifier.</param>
+        /// <param name="wavPath">An optional destination file path for the downloaded wav file.</param>
         /// <param name="loginName">The user login name.</param>
         /// <returns>
-        /// Return a <see langword="true"/> that is the path to the downloaded wav file.
+        /// The path to the downloaded wav file in case of success; <see langword="null"/> otherwise.
         /// </returns>
         /// <remarks>
         /// <para>
-        /// If the <c>wavPath</c> is not set, the wav file is downloaded in the default system <c>download</c> folder.
+        /// If <c>wavPath</c> is not set, the wav file is downloaded to the default system <c>Downloads</c> folder.
         /// </para>
         /// <para>
-        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
         /// </para>
         /// </remarks>

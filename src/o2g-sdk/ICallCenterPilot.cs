@@ -27,64 +27,52 @@ namespace o2g
 {
     /// <summary>
     /// <c>ICallCenterPilot</c> allows an administrator to monitor CCD pilots.
-    /// Using this service requires having a <b>CONTACTCENTER_SERVICE</b> license in CAPEX mode, or a minimum amount of 40 api-tel 
-    /// subscriptions available in OPEX mode (Purple On Demand Offer)
     /// </summary>
+    /// <remarks>
+    /// Monitoring a pilot consists of starting the monitoring with <see cref="MonitorStartAsync(string)"/>,
+    /// then receiving events on calls arriving on the pilot, calls being queued, and calls being removed
+    /// from the queue. When monitoring is no longer needed, stop it with <see cref="MonitorStopAsync(string)"/>.
+    /// <para>
+    /// Using this service requires having a <b>CONTACTCENTER_SERVICE</b> license in CAPEX mode,
+    /// or 40 api-tel-f subscriptions in OPEX mode (Purple On Demand).
+    /// </para>
+    /// </remarks>
     public interface ICallCenterPilot : IService
     {
         /// <summary>
-        /// Occurs when a new call arrive on a CCD pilot.
+        /// Occurs when a new call arrives on a CCD pilot.
         /// </summary>
         public event System.EventHandler<O2GEventArgs<OnPilotCallCreatedEvent>> PilotCallCreated;
 
         /// <summary>
-        /// Occurs when a CCD call is routed in a queue.
+        /// Occurs when a CCD call is routed into a queue.
         /// </summary>
         public event System.EventHandler<O2GEventArgs<OnPilotCallQueuedEvent>> PilotCallQueued;
 
         /// <summary>
-        /// Occurs when a CCD call has been removed from the queue. Either being distributed or rerouted in case of queue overflow. 
+        /// Occurs when a CCD call has been removed from the queue, either by distribution, cancellation, or overflow.
         /// </summary>
         public event System.EventHandler<O2GEventArgs<OnPilotCallRemovedEvent>> PilotCallRemoved;
 
         /// <summary>
-        /// Start the monitoring on the specified pilot. 
+        /// Starts the monitoring of the specified pilot.
         /// </summary>
-        /// <param name="nodeId">The pro-acd device number.</param>
         /// <param name="pilotNumber">The pilot number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <seealso cref="monitorStop(int, string)"/>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>If the pilot is already being monitored, no error is returned.</remarks>
+        /// <seealso cref="MonitorStopAsync(string)"/>
         /// <seealso cref="OnPilotCallCreatedEvent"/>
         /// <seealso cref="OnPilotCallQueuedEvent"/>
         /// <seealso cref="OnPilotCallRemovedEvent"/>
-        Task<bool> monitorStart(int nodeId, string pilotNumber);
+        Task<bool> MonitorStartAsync(string pilotNumber);
 
         /// <summary>
-        /// Stop the monitoring on the specified pilot. 
-        /// </summary>
-        /// <param name="nodeId">The pro-acd device number.</param>
-        /// <param name="pilotNumber">The pilot number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <seealso cref="monitorStart(int, string)"/>
-        Task<bool> monitorStop(int nodeId, string pilotNumber);
-
-        /// <summary>
-        /// Start the monitoring on the specified pilot. 
+        /// Stops the monitoring of the specified pilot.
         /// </summary>
         /// <param name="pilotNumber">The pilot number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <seealso cref="monitorStop(string)"/>
-        /// <seealso cref="OnPilotCallCreatedEvent"/>
-        /// <seealso cref="OnPilotCallQueuedEvent"/>
-        /// <seealso cref="OnPilotCallRemovedEvent"/>
-        Task<bool> monitorStart(string pilotNumber);
-
-        /// <summary>
-        /// Stop the monitoring on the specified pilot. 
-        /// </summary>
-        /// <param name="pilotNumber">The pilot number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <seealso cref="monitorStart(string)"/>
-        Task<bool> monitorStop( string pilotNumber);
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>If the pilot is not being monitored, no error is returned.</remarks>
+        /// <seealso cref="MonitorStartAsync(string)"/>
+        Task<bool> MonitorStopAsync(string pilotNumber);
     }
 }

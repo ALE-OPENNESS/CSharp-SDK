@@ -1,0 +1,6 @@
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.csproj.AssemblyReference.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.AssemblyInfoInputs.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.AssemblyInfo.cs
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.csproj.CoreCompileInputs.cache
+C:\Developpement\O2G-REPOSITORY\CSharp-SDK\src\o2g-sdk\obj\Debug\net7.0\o2g-sdk.sourcelink.json

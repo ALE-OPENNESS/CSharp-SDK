@@ -21,6 +21,7 @@ namespace o2g.Types
 {
     /// <summary>
     /// This class represents an Account that open an O2G session.
+    /// </summary>
     /// <para>With version 2.7.4 security has been reinforced. User authentication can be delegated to and external LDAP server. The Account class allow to retrieve the O2G user authenticated when LDAP credential is used.
     /// </para>
     /// <remarks>

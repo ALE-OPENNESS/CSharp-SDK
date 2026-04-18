@@ -26,8 +26,11 @@ using o2g.Types.CallCenterRealtimeNS;
 using o2g.Types.EventSummaryNS;
 using o2g.Types.ManagementNS;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -82,14 +85,49 @@ namespace o2g.Internal.Rest
             return await GetResult<RtiObjects>(response);
         }
 
-
-        public async Task<bool> DeleteContextAsync()
+        private async Task<IReadOnlyList<T>> GetRtiListAsync<T>(
+            string path,
+            Func<RtiObjects, List<T>> selector)
         {
-            Uri uriDelete = uri.Append("ctx");
+            HttpResponseMessage response = await httpClient.GetAsync(uri.Append(path));
 
-            HttpResponseMessage response = await httpClient.DeleteAsync(uriDelete);
-            return await IsSucceeded(response);
+            RtiObjects objects = await GetResult<RtiObjects>(response);
+
+            if (objects == null)
+                return Array.Empty<T>();
+
+            var list = selector(objects);
+            if (list == null)
+                return Array.Empty<T>();
+
+            return list;
         }
+
+        public Task<IReadOnlyList<RtiObjectIdentifier>> GetAgentsAsync()
+        {
+            return GetRtiListAsync("agents", o => o.Agents);
+        }
+
+        public Task<IReadOnlyList<RtiObjectIdentifier>> getPilotsAsync()
+        {
+            return GetRtiListAsync("pilots", o => o.Pilots);
+        }
+
+        public Task<IReadOnlyList<RtiObjectIdentifier>> getQueuesAsync()
+        {
+            return GetRtiListAsync("queues", o => o.Queues);
+        }
+
+        public Task<IReadOnlyList<RtiObjectIdentifier>> getAgentProcessingGroupsAsync()
+        {
+            return GetRtiListAsync("pgAgents", o => o.AgentProcessingGroups);
+        }
+
+        public Task<IReadOnlyList<RtiObjectIdentifier>> getOtherProcessingGroupsAsync()
+        {
+            return GetRtiListAsync("pgOthers", o => o.OtherProcessingGroups);
+        }
+
 
         public async Task<RtiContext> GetContextAsync()
         {
@@ -99,7 +137,15 @@ namespace o2g.Internal.Rest
             return await GetResult<RtiContext>(response);
         }
 
-        public async Task<bool> UpdateContextAsync(RtiContext context)
+        public async Task<bool> DeleteContextAsync()
+        {
+            Uri uriDelete = uri.Append("ctx");
+
+            HttpResponseMessage response = await httpClient.DeleteAsync(uriDelete);
+            return await IsSucceeded(response);
+        }
+
+        public async Task<bool> SetContextAsync(RtiContext context)
         {
             Uri uriPost = uri.Append("ctx");
 
@@ -107,6 +153,13 @@ namespace o2g.Internal.Rest
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await httpClient.PostAsync(uriPost, content);
+            return await IsSucceeded(response);
+        }
+
+        public async Task<bool> StartAsync()
+        {
+            Uri uriPost = uri.Append("snapshot");
+            HttpResponseMessage response = await httpClient.PostAsync(uriPost, null);
             return await IsSucceeded(response);
         }
     }

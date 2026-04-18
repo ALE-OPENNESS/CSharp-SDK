@@ -40,6 +40,6 @@ namespace o2g.Types.AnalyticsNS
         /// <value>
         /// A <see cref="DateTime"/> value that represents the timestamp of this file.
         /// </value>
-        public DateTime Timestamp { get; init; }
+        public DateTime? Timestamp { get; init; }
     }
 }

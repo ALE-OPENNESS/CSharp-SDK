@@ -17,6 +17,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace o2g.Types.TelephonyNS
 {
@@ -27,19 +28,23 @@ namespace o2g.Types.TelephonyNS
     public class HuntingGroups
     {
         /// <summary>
-        /// Give the list of existing hunting groups.
+        /// The list of existing hunting groups the user can join.
         /// </summary>
         /// <value>
-        /// A list of <see langword="string"/> that represents the phone number of each existing hunting group on the OXE node the user is configured.
+        /// A list of <see langword="string"/> representing the phone number of each 
+        /// hunting group available on the OXE node the user is configured on.
         /// </value>
-        public List<string> HgList { get; init; }
+        [JsonPropertyName("hgList")]
+        public IReadOnlyList<string> List { get; init; }
 
         /// <summary>
-        /// This property gives the hunting group which the user is a member. 
+        /// The hunting group the user is currently a member of.
         /// </summary>
         /// <value>
-        /// A <see langword="string"/> that is the phone number of the hunting group which the user is a member, or <see langword="null"/> if the user is not member of any hunting group.
+        /// A <see langword="string"/> that is the phone number of the current hunting group,
+        /// or <see langword="null"/> if the user is not a member of any hunting group.
         /// </value>
-        public string CurrentHg { get; init; }
+        [JsonPropertyName("currentHg")]
+        public string Current { get; init; }
     }
 }

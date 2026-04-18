@@ -19,7 +19,7 @@
 using o2g.Events;
 using o2g.Events.CallCenterAgent;
 using o2g.Events.CallCenterPilot;
-using o2g.Events.CallCenterRsi;
+using o2g.Events.Rsi;
 using o2g.Events.Common;
 using o2g.Events.CommunicationLog;
 using o2g.Events.EventSummary;
@@ -155,7 +155,7 @@ namespace o2g.Internal.Events
             EventRegistrar.RegisterEvent(typeof(OnToneGeneratedStartEvent));
             EventRegistrar.RegisterEvent(typeof(OnToneGeneratedStopEvent));
 
-            EventRegistrar.RegisterEvent(typeof(OnAgentRtiChangedEvent));
+            EventRegistrar.RegisterEvent(typeof(OnComRecordCreatedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordModifiedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordsDeletedEvent));
             EventRegistrar.RegisterEvent(typeof(OnComRecordsAckEvent));
@@ -171,6 +171,16 @@ namespace o2g.Internal.Events
             EventRegistrar.RegisterAdapter(typeof(OnCtiLinkDownEvent), EventAdapters.CtiLinkDownAdapter, typeof(OnInternalStringNodeIdEvent));
             EventRegistrar.RegisterEvent(typeof(OnPbxLoadedEvent));
             EventRegistrar.RegisterAdapter(typeof(OnPbxLoadedEvent), EventAdapters.PbxLoadedAdapter, typeof(OnInternalStringNodeIdEvent));
+            EventRegistrar.RegisterEvent(typeof(OnPbxLinkDownEvent));
+            EventRegistrar.RegisterAdapter(typeof(OnPbxLinkDownEvent), EventAdapters.PbxLinkDownAdapter, typeof(OnInternalStringNodeIdEvent));
+            EventRegistrar.RegisterEvent(typeof(OnPbxLinkUpEvent));
+            EventRegistrar.RegisterAdapter(typeof(OnPbxLinkUpEvent), EventAdapters.PbxLinkUpAdapter, typeof(OnInternalStringNodeIdEvent));
+            EventRegistrar.RegisterEvent(typeof(OnRemoteServerLinkDownEvent));
+            EventRegistrar.RegisterEvent(typeof(OnRemoteServerLinkUpEvent));
+            EventRegistrar.RegisterEvent(typeof(OnServerStartEvent));
+            EventRegistrar.RegisterEvent(typeof(OnLicenseExpirationEvent));
+
+            EventRegistrar.RegisterEvent(typeof(OnAcdStatsProgressEvent));
         }
 
         protected static JsonSerializerOptions serializeOptions = new()

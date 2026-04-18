@@ -68,6 +68,24 @@ namespace o2g.Internal.Rest
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> AcknowledgeVoiceMessageAsync(string mailboxId, string voicemailId, string loginName = null)
+        {
+            Uri uriGet = uri.Append(
+                AssertUtil.NotNullOrEmpty(mailboxId, "mailboxId"),
+                "voicemails",
+                AssertUtil.NotNullOrEmpty(voicemailId, "voicemailId"));
+            if (loginName != null)
+            {
+                uriGet = uriGet.AppendQuery("loginName", loginName);
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, uriGet);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, 1);
+
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<bool> DeleteVoiceMessagesAsync(string mailboxId, string[] msgIds, string loginName)
         {
             Uri uriDelete = uri.Append(AssertUtil.NotNullOrEmpty(mailboxId, "mailboxId"), "voicemails");

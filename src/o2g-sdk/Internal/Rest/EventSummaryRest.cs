@@ -45,7 +45,7 @@ namespace o2g.Internal.Rest
         {
         }
 
-        public async Task<EventSummary> GetAsync(string loginName)
+        public async Task<EventSummary> GetAsync(string loginName = null)
         {
             Uri uriGet = uri;
             if (loginName != null)

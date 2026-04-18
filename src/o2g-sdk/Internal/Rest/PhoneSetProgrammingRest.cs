@@ -17,16 +17,17 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-using o2g.Internal.Types.PhoneSetProgrammable;
+using o2g.Internal.Types.PhoneSetProgramming;
 using o2g.Internal.Utility;
-using o2g.Types.PhoneSetProgrammableNS;
-using o2g.Types.UsersNS;
+using o2g.Types.CommonNS;
+using o2g.Types.PhoneSetProgrammingNS;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 
 namespace o2g.Internal.Rest
 {
@@ -123,7 +124,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<List<SoftKey>> GetSoftKeys(string loginName, string deviceId)
+        public async Task<List<SoftKey>> GetSoftKeysAsync(string loginName, string deviceId)
         {
             Uri uriGet = uri.Append(
                 AssertUtil.NotNullOrEmpty(loginName, "loginName"),

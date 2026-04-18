@@ -1,19 +1,19 @@
-﻿/*
+/*
 * Copyright 2021 ALE International
 *
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this 
-* software and associated documentation files (the "Software"), to deal in the Software 
-* without restriction, including without limitation the rights to use, copy, modify, merge, 
-* publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons 
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this
+* software and associated documentation files (the "Software"), to deal in the Software
+* without restriction, including without limitation the rights to use, copy, modify, merge,
+* publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 * to whom the Software is furnished to do so, subject to the following conditions:
-* 
-* The above copyright notice and this permission notice shall be included in all copies or 
+*
+* The above copyright notice and this permission notice shall be included in all copies or
 * substantial portions of the Software.
-* 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-* BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+* BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -23,7 +23,9 @@ using o2g.Internal.Types;
 using o2g.Internal.Utility;
 using o2g.Types;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace o2g.Internal
@@ -58,21 +60,59 @@ namespace o2g.Internal
 
     class KeepAlive : CancelableTask
     {
-        private readonly int value;
-        private readonly Action action;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public KeepAlive(int keepAliveValue, Action keepAliveAction)
+        private readonly int _intervalSeconds;
+        private readonly Func<Task<bool>> _sendKeepAlive;
+        private readonly SessionMonitoringPolicy _policy;
+        private readonly Action<string> _onSessionLost;
+
+        public KeepAlive(int intervalSeconds, Func<Task<bool>> sendKeepAlive, SessionMonitoringPolicy policy, Action<string> onSessionLost)
         {
-            value = keepAliveValue;
-            action = keepAliveAction;
+            _intervalSeconds = intervalSeconds;
+            _sendKeepAlive = sendKeepAlive;
+            _policy = policy;
+            _onSessionLost = onSessionLost;
         }
 
-        protected async override Task CancelableRun()
+        protected override async Task CancelableRun()
         {
             while (!Token.IsCancellationRequested)
             {
-                await Task.Delay(TimeSpan.FromSeconds(value), Token);
-                action();
+                await Task.Delay(TimeSpan.FromSeconds(_intervalSeconds), Token);
+
+                try
+                {
+                    logger.Trace("Send Keep Alive");
+                    bool ok = await _sendKeepAlive();
+                    if (ok)
+                    {
+                        _policy.OnKeepAliveDone();
+                    }
+                    else
+                    {
+                        logger.Warn("Keep-alive rejected by server");
+                        _policy.OnKeepAliveFatalError();
+                        _onSessionLost("keep-alive rejected by server");
+                        return;
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (HttpRequestException e)
+                {
+                    logger.Error(e, "Keep-alive network error");
+                    var b = _policy.OnKeepAliveFailure(e);
+                    if (b.IsAbort)
+                    {
+                        _onSessionLost("keep-alive network failure: " + e.Message);
+                        return;
+                    }
+                    if (b.DelayMs > 0)
+                        await Task.Delay(b.DelayMs, Token);
+                }
             }
         }
 
@@ -88,12 +128,19 @@ namespace o2g.Internal
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly ServiceFactory serviceFactory;
+        private readonly SessionMonitoringPolicy _policy;
 
         private ChunkEventing chunkEventing = null;
+        private IWebHook _webHook = null;
+        private ChunkEventDispatcher _webHookDispatcher = null;
 
         private KeepAlive keepAlive = null;
 
         private string subscriptionId = null;
+
+        private readonly TaskCompletionSource<string> _sessionLostTcs = new();
+
+        internal Task<string> WaitForLossAsync() => _sessionLostTcs.Task;
 
         internal SessionInfo Info { get; private set; }
 
@@ -117,15 +164,18 @@ namespace o2g.Internal
         public ICallCenterAgent CallCenterAgentService => serviceFactory.GetCallCenterAgentService();
         public ICallCenterPilot CallCenterPilotService => serviceFactory.GetCallCenterPilotService();
         public ICallCenterRealtime CallCenterRealtimeService => serviceFactory.GetCallCenterRealtimeService();
+        public ICallCenterManagement CallCenterManagementService => serviceFactory.GetCallCenterManagementService();
 
         //        public ICallCenterRsi CallCenterRsiService => serviceFactory.GetCallCenterRsiService();
         public IAnalytics AnalyticsService => serviceFactory.GetAnalyticsService();
         public IUserManagement UserManagementService => serviceFactory.GetUserManagementService();
         public IRecording RecordingService => serviceFactory.GetRecordingService();
+        public ICallCenterStatistics CallCenterStatisticsService => serviceFactory.GetCallCenterStatisticsService();
 
-        internal SessionImpl(ServiceFactory serviceFactory, SessionInfo info, string loginName, bool passwordIsGoingToExpire)
+        internal SessionImpl(ServiceFactory serviceFactory, SessionInfo info, string loginName, bool passwordIsGoingToExpire, SessionMonitoringPolicy policy)
         {
             this.serviceFactory = serviceFactory;
+            _policy = policy;
             Info = info;
 
             // From O2G 2.7.4 external login can be used, so application must access real O2G login
@@ -147,14 +197,20 @@ namespace o2g.Internal
             StartKeepAlive();
         }
 
+        private void SignalSessionLost(string reason)
+        {
+            logger.Warn("Session lost: {reason}", reason);
+            _sessionLostTcs.TrySetResult(reason);
+        }
+
         private void StartKeepAlive()
         {
-            keepAlive = new(this.Info.TimeToLive, () =>
-            {
-                logger.Trace("Send Keep Alive");
-                ISessions sessionService = serviceFactory.GetSessionsService();
-                sessionService.SendKeepAlive();
-            });
+            ISessions sessionService = serviceFactory.GetSessionsService();
+            keepAlive = new(
+                Info.TimeToLive,
+                () => sessionService.SendKeepAlive(),
+                _policy,
+                SignalSessionLost);
             keepAlive.Start();
         }
 
@@ -169,11 +225,21 @@ namespace o2g.Internal
 
         private async Task StopEventing()
         {
-            logger.Trace("Stop chunk");
             if (chunkEventing != null)
             {
+                logger.Trace("Stop chunk");
                 await chunkEventing.Stop();
+                chunkEventing = null;
             }
+
+            if (_webHookDispatcher != null)
+            {
+                logger.Trace("Stop webhook dispatcher");
+                await _webHookDispatcher.Stop();
+                _webHookDispatcher = null;
+            }
+
+            _webHook = null;
 
             logger.Trace("Delete Subsription");
             ISubscriptions subscriptionsService = serviceFactory.GetSubscriptionService();
@@ -182,6 +248,32 @@ namespace o2g.Internal
 
             // Subscription is cancelled
             subscriptionId = null;
+        }
+
+        // Stops all local background activity without calling the server.
+        // Used during session recovery when the server is unreachable.
+        internal async Task CloseLocalAsync()
+        {
+            if (chunkEventing != null)
+            {
+                await chunkEventing.Stop();
+                chunkEventing = null;
+            }
+
+            if (_webHookDispatcher != null)
+            {
+                await _webHookDispatcher.Stop();
+                _webHookDispatcher = null;
+            }
+
+            _webHook = null;
+            subscriptionId = null;
+
+            if (keepAlive != null)
+            {
+                await keepAlive.Cancel();
+                keepAlive = null;
+            }
         }
 
         private async Task StartEventing(SubscriptionImpl subscription)
@@ -195,21 +287,37 @@ namespace o2g.Internal
 
                 logger.Trace("Subscription has been accepted.");
 
-                Uri chunkUri;
-                if (serviceFactory.AccessMode == AccessMode.Private)
+                if (subscription.WebHook != null)
                 {
-                    chunkUri = new UriBuilder(subscriptionResult.PrivatePollingUrl).Uri;
+                    // Webhook eventing: queue events from the HTTP handler, dispatch from a background thread
+                    BlockingCollection<O2GEventDescriptor> eventQueue = new();
+
+                    _webHookDispatcher = DependancyResolver.Resolve(new ChunkEventDispatcher(eventQueue, null, _policy));
+                    _webHookDispatcher.Start();
+
+                    subscription.WebHook.ConnectProcessor(new WebHookEventProcessor(eventQueue));
+                    _webHook = subscription.WebHook;
+
+                    logger.Info("Webhook eventing is configured.");
                 }
                 else
                 {
-                    chunkUri = new UriBuilder(subscriptionResult.PublicPollingUrl).Uri;
+                    // Chunk eventing
+                    Uri chunkUri;
+                    if (serviceFactory.AccessMode == AccessMode.Private)
+                    {
+                        chunkUri = new UriBuilder(subscriptionResult.PrivatePollingUrl).Uri;
+                    }
+                    else
+                    {
+                        chunkUri = new UriBuilder(subscriptionResult.PublicPollingUrl).Uri;
+                    }
+
+                    chunkEventing = new(chunkUri, null, _policy, SignalSessionLost);
+                    chunkEventing.Start();
+
+                    logger.Info("Chunk eventing is started.");
                 }
-
-                // The default handler is NOT used.
-                chunkEventing = new(chunkUri, null);
-                chunkEventing.Start();
-
-                logger.Info("Eventing is started.");
             }
             else
             {
@@ -237,6 +345,7 @@ namespace o2g.Internal
             if (keepAlive != null)
             {
                 await keepAlive.Cancel();
+                keepAlive = null;
             }
 
             // Close the session

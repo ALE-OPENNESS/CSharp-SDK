@@ -17,8 +17,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using System.Collections.Generic;
+using Types.Recording;
 
-namespace Types.Recording
+namespace o2g.Types.RecordingNS
 {
     /// <summary>
     /// Represent the global status of recording service.
@@ -32,7 +33,7 @@ namespace Types.Recording
         /// A list of <see cref="RecorderInfo"/> object that represents configured recorders, or <see langword="null"/> in case
         /// of error or if there is no recorder configured.
         /// </value>
-        public List<RecorderInfo> Recorders;
+        public List<RecorderInfo> Recorders { get; init; }
 
         /// <summary>
         /// The list of recorded devices.
@@ -41,6 +42,6 @@ namespace Types.Recording
         /// A list of <see cref="RecordedDevice"/> object that represents recorded devices, or <see langword="null"/> in case
         /// of error or if there is no device recorded.
         /// </value>
-        public List<RecordedDevice> Devices;
+        public List<RecordedDevice> Devices { get; init; }
     }
 }

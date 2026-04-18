@@ -18,218 +18,250 @@
 */
 
 using o2g.Internal.Services;
-using o2g.Types.PhoneSetProgrammableNS;
-using o2g.Types.UsersNS;
+using o2g.Types.CommonNS;
+using o2g.Types.PhoneSetProgrammingNS;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace o2g
 {
     /// <summary>
-    /// <c>IPhoneSetProgramming</c> service allows a user to manage its device states: lock/campon/programmable keys.
+    /// <c>IPhoneSetProgramming</c> allows managing the programmable keys, soft keys, and device settings
+    /// of the phone sets assigned to a user.
     /// Using this service requires having a <b>API_PHONESETPROG</b> license.
     /// </summary>
+    /// <remarks>
+    /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored, but it is mandatory if the session has been opened by an administrator.
+    /// </remarks>
     public interface IPhoneSetProgramming : IService
     {
         /// <summary>
-        /// Get the device of the specified user.
+        /// Gets the list of devices assigned to the specified user.
         /// </summary>
-        /// <param name="loginName">The user login name</param>
+        /// <param name="loginName">The user login name.</param>
         /// <returns>
-        /// A list of <see cref="Device"/> that represents the user's devices.
+        /// A list of <see cref="Device"/> objects representing the user's devices, or <see langword="null"/> in case of error.
         /// </returns>
         Task<List<Device>> GetDevicesAsync(string loginName);
 
         /// <summary>
-        /// Return the specified device.
+        /// Gets the information of a specific device assigned to the specified user.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A <see cref="Device"/> that represents the device with the specified number in case of success, of <see langword="null"/> in case of error of if
-        /// the user does not have a device with this number.
+        /// A <see cref="Device"/> representing the specified device, or <see langword="null"/> in case of error or if the user does not have a device with this number.
         /// </returns>
         Task<Device> GetDeviceAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Get the programmable keys of the specified device.
+        /// Gets all programmable keys of the specified device, including unassigned positions.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A list of <see cref="ProgrammableKey"/> that represents this device programmable keys in case of success, or a <see langword="null"/> value in case of error.
+        /// A list of <see cref="ProgrammableKey"/> representing all key positions on the device, or <see langword="null"/> in case of error.
         /// </returns>
+        /// <remarks>
+        /// Use this method when you need to know the full layout including empty positions.
+        /// To retrieve only the assigned keys, use <see cref="GetProgrammedKeysAsync(string, string)"/>.
+        /// </remarks>
+        /// <seealso cref="GetProgrammedKeysAsync(string, string)"/>
         Task<List<ProgrammableKey>> GetProgrammableKeysAsync(string loginName, string deviceId);
 
 
         /// <summary>
-        /// Get the already programmed keys associated to the specified device.
+        /// Gets only the programmed (assigned) programmable keys of the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A list of <see cref="ProgrammableKey"/> that represents this device already programmed keys in case of success, or a <see langword="null"/> value in case of error.
+        /// A list of assigned <see cref="ProgrammableKey"/> objects, or <see langword="null"/> in case of error.
         /// </returns>
+        /// <remarks>
+        /// Use this method when you only need the keys that have been assigned.
+        /// To retrieve the full layout including unassigned positions, use <see cref="GetProgrammableKeysAsync(string, string)"/>.
+        /// </remarks>
+        /// <seealso cref="GetProgrammableKeysAsync(string, string)"/>
         Task<List<ProgrammableKey>> GetProgrammedKeysAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Set the programmable keys of the specified device.
+        /// Assigns or updates a programmable key on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="key">The programmable key.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <remarks>
-        /// The key position must be configured in the <c>key</c> object.
-        /// </remarks>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="key">The programmable key configuration to set. The position must be configured in the <c>key</c> object.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="DeleteProgrammableKeyAsync(string, string, int)"/>
         Task<bool> SetProgrammableKeyAsync(string loginName, string deviceId, ProgrammableKey key);
 
         /// <summary>
-        /// Delete the programmable keys of the specified device.
+        /// Deletes the programmable key at the specified position on the given device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="position">The programmable key position.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="position">The position of the programmable key to delete.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="SetProgrammableKeyAsync(string, string, ProgrammableKey)"/>
         Task<bool> DeleteProgrammableKeyAsync(string loginName, string deviceId, int position);
 
 
         /// <summary>
-        /// Get the softkeys of the specified device.
+        /// Gets the soft keys of the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A list of <see cref="SoftKey"/> that represents this device softkeys in case of success, or a <see langword="null"/> value in case of error.
+        /// A list of <see cref="SoftKey"/> objects representing the device soft keys, or <see langword="null"/> in case of error.
         /// </returns>
-        Task<List<SoftKey>> GetSoftKeys(string loginName, string deviceId);
+        Task<List<SoftKey>> GetSoftKeysAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Set the softkeys of the specified device.
+        /// Assigns or updates a soft key on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="key">The softkey.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
-        /// <remarks>
-        /// The key position must be configured in the <c>key</c> object.
-        /// </remarks>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="key">The soft key configuration to set. The position must be configured in the <c>key</c> object.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="DeleteSoftKeyAsync(string, string, int)"/>
         Task<bool> SetSoftKeyAsync(string loginName, string deviceId, SoftKey key);
 
         /// <summary>
-        /// Delete the softkeys of the specified device.
+        /// Deletes the soft key at the specified position on the given device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="position">The softkey position.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="position">The position of the soft key to delete.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="SetSoftKeyAsync(string, string, SoftKey)"/>
         Task<bool> DeleteSoftKeyAsync(string loginName, string deviceId, int position);
 
         /// <summary>
-        /// Lock the specified device.
+        /// Locks the specified device, preventing it from being used to place or receive calls.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
-        /// This method does nothing and return <see langword="true"/> if the the device is already locked.
+        /// Returns <see langword="true"/> without any action if the device is already locked.
         /// </remarks>
+        /// <seealso cref="UnLockDeviceAsync(string, string)"/>
         /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         Task<bool> LockDeviceAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// UnLock the specified device.
+        /// Unlocks the specified device, restoring normal call capabilities.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
-        /// This method does nothing and return <see langword="true"/> if the the device is already unlocked.
+        /// Returns <see langword="true"/> without any action if the device is already unlocked.
         /// </remarks>
+        /// <seealso cref="LockDeviceAsync(string, string)"/>
         /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         Task<bool> UnLockDeviceAsync(string loginName, string deviceId);
 
 
         /// <summary>
-        /// Enable the camp on for specified device.
+        /// Enables the camp-on feature on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
-        /// This method does nothing and return <see langword="true"/> f the the camp on is already enabled.
+        /// When camp-on is enabled, the user is automatically connected when a busy destination becomes available.
+        /// Returns <see langword="true"/> without any action if camp-on is already enabled.
         /// </remarks>
+        /// <seealso cref="DisableCamponAsync(string, string)"/>
         /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         Task<bool> EnableCamponAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Disable the camp on for specified device.
+        /// Disables the camp-on feature on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
         /// <remarks>
-        /// This method does nothing and return <see langword="true"/> if the the camp on is already disabled.
+        /// Returns <see langword="true"/> without any action if camp-on is already disabled.
         /// </remarks>
+        /// <seealso cref="EnableCamponAsync(string, string)"/>
         /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         Task<bool> DisableCamponAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Return the PIN code associated to this device.
+        /// Gets the PIN code configuration of the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A <see cref="Pin"/> object that represents the PIN code.
+        /// A <see cref="Pin"/> object representing the PIN code configuration, or <see langword="null"/> in case of error.
         /// </returns>
+        /// <seealso cref="SetPinCodeAsync(string, string, Pin)"/>
         Task<Pin> GetPinCodeAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Set the PIN code for this device.
+        /// Sets the PIN code on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="code">The PIN code.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="code">The PIN configuration to set.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="GetPinCodeAsync(string, string)"/>
         Task<bool> SetPinCodeAsync(string loginName, string deviceId, Pin code);
 
         /// <summary>
-        /// Return the device dynamic state.
+        /// Gets the dynamic state of the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
+        /// <param name="deviceId">The device identifier (phone number).</param>
         /// <returns>
-        /// A <see cref="DynamicState"/> object that represent the device dynamic state.
+        /// A <see cref="DynamicState"/> object representing the device dynamic state, or <see langword="null"/> in case of error.
         /// </returns>
+        /// <remarks>
+        /// The dynamic state reflects runtime settings such as the associated device and remote extension activation status.
+        /// </remarks>
         /// <seealso cref="EnableCamponAsync(string, string)"/>
         /// <seealso cref="LockDeviceAsync(string, string)"/>
         Task<DynamicState> GetDynamicStateAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Set the associate phone number.
+        /// Associates an additional device with the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The device phone number.</param>
-        /// <param name="associate">The associate number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (phone number).</param>
+        /// <param name="associate">The phone number of the device to associate.</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// The associate feature allows calls to ring simultaneously on both devices, which is useful for example
+        /// to have a mobile phone ring alongside a desk phone.
+        /// </remarks>
         /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         Task<bool> SetAssociateAsync(string loginName, string deviceId, string associate);
 
         /// <summary>
-        /// Activate the associated remote extension device.
+        /// Activates the remote extension on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The remote extension phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (remote extension phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// When activated, the device operates as a remote extension, allowing the user to use an off-site phone as if it were connected to the PBX.
+        /// </remarks>
+        /// <seealso cref="DeactivateRemoteExtensionAsync(string, string)"/>
+        /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         /// <seealso cref="IRouting.ActivateRemoteExtensionAsync(string)"/>
         Task<bool> ActivateRemoteExtensionAsync(string loginName, string deviceId);
 
         /// <summary>
-        /// Deactivate the associated remote extension device.
+        /// Deactivates the remote extension on the specified device.
         /// </summary>
         /// <param name="loginName">The user login name.</param>
-        /// <param name="deviceId">The remote extension phone number.</param>
-        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise</returns>
+        /// <param name="deviceId">The device identifier (remote extension phone number).</param>
+        /// <returns><see langword="true"/> in case of success; <see langword="false"/> otherwise.</returns>
+        /// <seealso cref="ActivateRemoteExtensionAsync(string, string)"/>
+        /// <seealso cref="GetDynamicStateAsync(string, string)"/>
         /// <seealso cref="IRouting.DeactivateRemoteExtensionAsync(string)"/>
         Task<bool> DeactivateRemoteExtensionAsync(string loginName, string deviceId);
     }

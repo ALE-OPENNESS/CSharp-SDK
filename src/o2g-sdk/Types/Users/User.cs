@@ -16,7 +16,10 @@
 * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using o2g.Internal.Utility;
+using o2g.Types.CommonNS;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace o2g.Types.UsersNS
 {
@@ -88,11 +91,15 @@ namespace o2g.Types.UsersNS
         public List<Device> Devices { get; init; }
 
         /// <summary>
-        /// This property give the OmniPCX Enterprise node the user belongs to.
+        /// The identifier of the OmniPCX Enterprise node this user belongs to.
         /// </summary>
         /// <value>
-        /// An <see langword="int"/> that is the OXE node number.
+        /// An <see langword="int"/> that identifies the OXE node in the O2G network.
+        /// In a multi-node OmniPCX Enterprise sub-network, each node has a unique
+        /// node id. This value can be used in service calls that require a
+        /// <c>nodeId</c> parameter, such as <see cref="IPbxManagement.GetPbxAsync(int)"/>.
         /// </value>
-        public string NodeId { get; init; }
+        [JsonConverter(typeof(StringToIntConverter))]
+        public int NodeId { get; init; }
     }
 }

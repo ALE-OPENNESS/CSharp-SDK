@@ -20,44 +20,60 @@
 namespace o2g.Types.RoutingNS
 {
     /// <summary>
-    /// <c>Overflow</c> represents an overflow the user has activated.
+    /// Represents the overflow currently configured for a user.
+    /// <para>
+    /// An overflow redirects incoming calls to the user's voice mail when a
+    /// specified condition is met. Unlike a forward, an overflow only applies
+    /// when a forward is not already active. Use
+    /// <see cref="IRouting.OverflowOnVoiceMailAsync(Overflow.OverflowCondition, string)"/>
+    /// to activate an overflow, and <see cref="IRouting.CancelOverflowAsync(string)"/>
+    /// to cancel it.
+    /// </para>
     /// </summary>
     /// <seealso cref="IRouting.GetOverflowAsync(string)"/>
+    /// <seealso cref="IRouting.OverflowOnVoiceMailAsync(Overflow.OverflowCondition, string)"/>
+    /// <seealso cref="IRouting.CancelOverflowAsync(string)"/>
     public class Overflow
     {
         /// <summary>
-        /// <c>OverflowCondition</c> represents the possible condition a user can associate to an overflow.
+        /// Represents the condition under which an overflow is triggered.
         /// </summary>
         public enum OverflowCondition
         {
             /// <summary>
-            /// Incoming calls are redirected on the target if the user is busy.
+            /// Incoming calls are redirected to the target if the user is busy.
             /// </summary>
             Busy,
+
             /// <summary>
-            /// Incoming calls are redirected on the target if the user does not answer the call.
+            /// Incoming calls are redirected to the target if the user does not answer.
             /// </summary>
             NoAnswer,
+
             /// <summary>
-            /// Incoming calls are redirected on the target if the user is busy or if the user does not answer the call.
+            /// Incoming calls are redirected to the target if the user is busy
+            /// or does not answer.
             /// </summary>
             BusyOrNoAnswer
         }
 
         /// <summary>
-        /// Return the destination of this overflow.
+        /// The destination to which calls are redirected on overflow.
         /// </summary>
         /// <value>
-        /// A <see cref="Destination"/> that represent the overflow destination.
+        /// A <see cref="Destination"/> value indicating where calls are redirected.
+        /// <see cref="Destination.None"/> indicates no overflow is configured.
         /// </value>
         public Destination Destination { get; set; }
 
         /// <summary>
-        /// Return the condition associated to this overflow.
+        /// The condition under which this overflow is triggered.
         /// </summary>
         /// <value>
-        /// An optional <see cref="OverflowCondition"/> that represents the associated condition or an unset value when there is no overflow configured. (<c>Destination.Node</c>
+        /// An <see cref="OverflowCondition"/> value, or <see langword="null"/> if
+        /// no overflow is configured (i.e. <see cref="Destination"/> is <see cref="Destination.None"/>).
         /// </value>
         public OverflowCondition? Condition { get; set; }
     }
 }
+

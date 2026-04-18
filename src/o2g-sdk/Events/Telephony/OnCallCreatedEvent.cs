@@ -90,6 +90,6 @@ namespace o2g.Events.Telephony
         /// <value>
         /// A list of <see cref="DeviceCapabilities"/>. 
         /// </value>
-        public List<DeviceCapabilities> DeviceCapabilities { get; init; }
+        public List<Device.Capabilities> DeviceCapabilities { get; init; }
     }
 }

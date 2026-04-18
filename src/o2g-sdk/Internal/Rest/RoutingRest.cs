@@ -70,7 +70,7 @@ namespace o2g.Internal.Rest
 
         }
 
-        public async Task<bool> ActivateDndAsync(string loginName)
+        public async Task<bool> ActivateDndAsync(string loginName = null)
         {
             Uri uriPost = uri.Append("dnd");
             if (loginName != null)
@@ -82,7 +82,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> CancelDndAsync(string loginName)
+        public async Task<bool> CancelDndAsync(string loginName = null)
         {
             Uri uriDelete = uri.Append("dnd");
             if (loginName != null)
@@ -94,7 +94,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> CancelForwardAsync(string loginName)
+        public async Task<bool> CancelForwardAsync(string loginName = null)
         {
             Uri uriDelete = uri.Append("forwardroute");
             if (loginName != null)
@@ -106,7 +106,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> ForwardOnNumberAsync(string number, Forward.ForwardCondition condition, string loginName)
+        public async Task<bool> ForwardOnNumberAsync(string number, Forward.ForwardCondition condition, string loginName = null)
         {
             Uri uriPost = uri.Append("forwardroute");
             if (loginName != null)
@@ -126,12 +126,12 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> ForwardOnVoiceMailAsync(Forward.ForwardCondition condition, string loginName)
+        public async Task<bool> ForwardOnVoiceMailAsync(Forward.ForwardCondition condition, string loginName = null)
         {
             Uri uriPost = uri.Append("forwardroute");
             if (loginName != null)
             {
-                uriPost = uriPost.AppendQuery(loginName);
+                uriPost = uriPost.AppendQuery("loginName", loginName);
             }
 
             O2GObjSetForwardRouteRequest req = new()
@@ -147,7 +147,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<DndState> GetDndStateAsync(string loginName)
+        public async Task<DndState> GetDndStateAsync(string loginName = null)
         {
             Uri uriGet = uri.Append("dnd");
             if (loginName != null)
@@ -160,7 +160,7 @@ namespace o2g.Internal.Rest
         }
 
 
-        public async Task<Forward> GetForwardAsync(string loginName)
+        public async Task<Forward> GetForwardAsync(string loginName = null)
         {
             Uri uriGet = uri.Append("forwardroute");
             if (loginName != null)
@@ -170,6 +170,7 @@ namespace o2g.Internal.Rest
 
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
 
+            // Special treatment to return DestinationNone
             string jsonCode = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
@@ -191,12 +192,14 @@ namespace o2g.Internal.Rest
             }
             else
             {
-                SetLastError(JsonSerializer.Deserialize<RestErrorInfo>(jsonCode, serializeOptions));
+                SetLastError(string.IsNullOrEmpty(jsonCode)
+                            ? null
+                            : JsonSerializer.Deserialize<RestErrorInfo>(jsonCode, serializeOptions));
                 return null;
             }
         }
 
-        public async Task<RoutingCapabilities> GetCapabilitiesAsync(string loginName)
+        public async Task<RoutingCapabilities> GetCapabilitiesAsync(string loginName = null)
         {
             Uri uriGet = uri;
             if (loginName != null)
@@ -208,7 +211,7 @@ namespace o2g.Internal.Rest
             return await GetResult<RoutingCapabilities>(response);
         }
 
-        private async Task<bool> SetRemoteExtensionActivationAsync(bool active, string loginName)
+        private async Task<bool> SetRemoteExtensionActivationAsync(bool active, string loginName = null)
         {
             Uri uriPost = uri;
             if (loginName != null)
@@ -230,16 +233,16 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> ActivateRemoteExtensionAsync(string loginName)
+        public async Task<bool> ActivateRemoteExtensionAsync(string loginName = null)
         {
             return await this.SetRemoteExtensionActivationAsync(true, loginName);
         }
-        public async Task<bool> DeactivateRemoteExtensionAsync(string loginName)
+        public async Task<bool> DeactivateRemoteExtensionAsync(string loginName = null)
         {
             return await this.SetRemoteExtensionActivationAsync(false, loginName);
         }
 
-        public async Task<bool> CancelOverflowAsync(string loginName)
+        public async Task<bool> CancelOverflowAsync(string loginName = null)
         {
             Uri uriDelete = uri.Append("overflowroute");
             if (loginName != null)
@@ -251,7 +254,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<Overflow> GetOverflowAsync(string loginName)
+        public async Task<Overflow> GetOverflowAsync(string loginName = null)
         {
             Uri uriGet = uri.Append("overflowroute");
             if (loginName != null)
@@ -262,6 +265,7 @@ namespace o2g.Internal.Rest
             HttpResponseMessage response = await httpClient.GetAsync(uriGet);
             string jsonCode = await response.Content.ReadAsStringAsync();
 
+            // Special treament to return Destination.None
             if (response.IsSuccessStatusCode)
             {
                 SetLastError(null);
@@ -281,12 +285,14 @@ namespace o2g.Internal.Rest
             }
             else
             {
-                SetLastError(JsonSerializer.Deserialize<RestErrorInfo>(jsonCode, serializeOptions));
+                SetLastError(string.IsNullOrEmpty(jsonCode)
+                            ? null
+                            : JsonSerializer.Deserialize<RestErrorInfo>(jsonCode, serializeOptions));
                 return null;
             }
         }
 
-        public async Task<bool> OverflowOnVoiceMailAsync(Overflow.OverflowCondition condition, string loginName)
+        public async Task<bool> OverflowOnVoiceMailAsync(Overflow.OverflowCondition condition, string loginName = null)
         {
             Uri uriPost = uri.Append("overflowroute");
             if (loginName != null)
@@ -307,7 +313,7 @@ namespace o2g.Internal.Rest
             return await IsSucceeded(response);
         }
 
-        public async Task<bool> OverflowOnAssociateAsync(Overflow.OverflowCondition condition, string loginName)
+        public async Task<bool> OverflowOnAssociateAsync(Overflow.OverflowCondition condition, string loginName = null)
         {
             Uri uriPost = uri.Append("overflowroute");
             if (loginName != null)

@@ -77,89 +77,81 @@ namespace o2g
     public interface IRecording : IService
     {
         /// <summary>
-        /// Get basic information about all devices (administrator only).
+        /// Retrieves the identifiers of all recorded devices (administrator only).
         /// </summary>
-        /// <returns>A list of recorded device.</returns>
+        /// <returns>A list of recorded device phone numbers, or <see langword="null"/> on error.</returns>
         Task<List<string>> GetRecordedDevicesAsync();
 
         /// <summary>
-        /// Get the recording information about a device.
+        /// Retrieves detailed recording information about a specific device.
         /// </summary>
-        /// <param name="deviceId">The device phone number for which the operation is done.</param>
-        /// <param name="loginName">The user login name.</param>
+        /// <param name="deviceId">The phone number of the device.</param>
+        /// <param name="loginName">The user login name, or <see langword="null"/> for the session user.</param>
         /// <returns>
-        /// A <see cref="RecordedDevice"/> that represents the recorded device info in case of success; 
-        /// <see langword="null"/> in case of error.
+        /// A <see cref="DeviceRecordingInfo"/> representing the device recording info on success;
+        /// <see langword="null"/> on error.
         /// </returns>
         /// <remarks>
-        /// <para>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
-        /// </para>
         /// </remarks>
         Task<DeviceRecordingInfo> GetDeviceRecordingInfoAsync(string deviceId, string loginName = null);
 
         /// <summary>
-        /// Start a recording on the specified device
+        /// Starts recording on the specified device.
         /// </summary>
-        /// <param name="deviceId">The device phone number for which the operation is done.</param>
+        /// <param name="deviceId">The phone number of the device.</param>
         /// <param name="callRef">The reference of the call for which the recording is requested.</param>
-        /// <param name="startType">Indicate the recording mode.</param>
-        /// <param name="loginName">The user login name.</param>
+        /// <param name="startType">The recording start mode.</param>
+        /// <param name="loginName">The user login name, or <see langword="null"/> for the session user.</param>
         /// <returns>
-        /// A <see cref="RecordedDevice"/> that represents the recorded device info in case of success; 
-        /// <see langword="null"/> in case of error.
+        /// A <see cref="DeviceRecordingInfo"/> representing the device recording info on success;
+        /// <see langword="null"/> on error.
         /// </returns>
         /// <remarks>
-        /// <para>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
-        /// </para>
         /// </remarks>
         Task<DeviceRecordingInfo> StartRecordingAsync(string deviceId, string callRef, RecordingStartType startType, string loginName = null);
 
         /// <summary>
-        /// Pause a recording on the specified device
+        /// Pauses recording on the specified device.
         /// </summary>
-        /// <param name="deviceId">The device phone number for which the operation is done.</param>
+        /// <param name="deviceId">The phone number of the device.</param>
         /// <param name="callRef">The reference of the call for which the recording pause is requested.</param>
-        /// <param name="loginName">The user login name.</param>
+        /// <param name="loginName">The user login name, or <see langword="null"/> for the session user.</param>
         /// <returns>
-        /// A <see cref="RecordedDevice"/> that represents the recorded device info in case of success; 
-        /// <see langword="null"/> in case of error.
+        /// A <see cref="DeviceRecordingInfo"/> representing the device recording info on success;
+        /// <see langword="null"/> on error.
         /// </returns>
         /// <remarks>
-        /// <para>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
-        /// </para>
         /// </remarks>
         Task<DeviceRecordingInfo> PauseRecordingAsync(string deviceId, string callRef, string loginName = null);
 
         /// <summary>
-        /// Resume a recording on the specified device
+        /// Resumes recording on the specified device.
         /// </summary>
-        /// <param name="deviceId">The device phone number for which the operation is done.</param>
+        /// <param name="deviceId">The phone number of the device.</param>
         /// <param name="callRef">The reference of the call for which the recording resume is requested.</param>
-        /// <param name="loginName">The user login name.</param>
+        /// <param name="loginName">The user login name, or <see langword="null"/> for the session user.</param>
         /// <returns>
-        /// A <see cref="RecordedDevice"/> that represents the recorded device info in case of success; 
-        /// <see langword="null"/> in case of error.
+        /// A <see cref="DeviceRecordingInfo"/> representing the device recording info on success;
+        /// <see langword="null"/> on error.
         /// </returns>
         /// <remarks>
-        /// <para>
-        /// If the session has been opened for a user, the <paramref name="loginName"/> parameter is ignored, 
+        /// If the session has been opened for a user, the <c>loginName</c> parameter is ignored,
         /// but it is mandatory if the session has been opened by an administrator.
-        /// </para>
         /// </remarks>
         Task<DeviceRecordingInfo> ResumeRecordingAsync(string deviceId, string callRef, string loginName = null);
 
         /// <summary>
-        /// Return the status of the recording.
+        /// Retrieves the current status of the recording service.
         /// </summary>
         /// <returns>
-        /// A <see cref="RecordingStatus"/> object that represents the status of the configured recording service, or <see langword="null"/> in case
-        /// of error or if there is no such recording.
+        /// A <see cref="RecordingStatus"/> representing the current status of the configured recording service,
+        /// or <see langword="null"/> on error or if no recording is configured.
         /// </returns>
         Task<RecordingStatus> GetRecordingStatusAsync();
     }

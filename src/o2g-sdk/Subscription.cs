@@ -218,10 +218,15 @@ namespace o2g
         /// </value>
         public abstract EventFilter Filter { get; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        //Webhook is not supported in this version
+        /// <summary>
+        /// Returns the Webhook URL associated with this subscription, or <see langword="null"/> if
+        /// chunk eventing is used instead.
+        /// </summary>
+        /// <value>
+        /// A <see langword="string"/> containing the Webhook URL, or <see langword="null"/> when
+        /// chunk eventing is configured.
+        /// </value>
         public abstract string WebHookUrl { get; }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Return a subscription builder.
@@ -464,6 +469,25 @@ namespace o2g
             /// </returns>
             /// <seealso cref="Subscription.Timeout"/>
             IBuilder SetTimeout(int timeout);
+
+            /// <summary>
+            /// Configure the subscription to use Webhook eventing.
+            /// </summary>
+            /// <param name="webHook">
+            /// The <see cref="IWebHook"/> instance that provides the endpoint URL and receives
+            /// the <see cref="IEventProcessor"/> once the subscription is established.
+            /// </param>
+            /// <returns>
+            /// The <see cref="IBuilder"/> object to chain the build.
+            /// </returns>
+            /// <remarks>
+            /// When a Webhook is configured, the O2G server POSTs events to the URL returned by
+            /// <see cref="IWebHook.Url"/> instead of using chunk eventing. The SDK calls
+            /// <see cref="IWebHook.ConnectProcessor"/> after the subscription is accepted, providing
+            /// an <see cref="IEventProcessor"/> that the application must invoke for each incoming
+            /// POST body.
+            /// </remarks>
+            IBuilder SetWebHook(IWebHook webHook);
 
             /// <summary>
             /// Build a Subscription

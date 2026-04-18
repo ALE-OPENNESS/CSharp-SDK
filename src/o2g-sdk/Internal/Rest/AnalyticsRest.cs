@@ -79,10 +79,10 @@ namespace o2g.Internal.Rest
 
         public ChargingResult ToChargingResult()
         {
-            TimeRange range = null;
+            DateRange range = null;
             if ((FromDate != null) && (ToDate != null))
             {
-                range = new TimeRange(DateTime.ParseExact(FromDate, "yyyyMMdd", CultureInfo.InvariantCulture), DateTime.ParseExact(ToDate, "yyyyMMdd", CultureInfo.InvariantCulture));
+                range = new DateRange(DateTime.ParseExact(FromDate, "yyyyMMdd", CultureInfo.InvariantCulture), DateTime.ParseExact(ToDate, "yyyyMMdd", CultureInfo.InvariantCulture));
             }
 
             return new()
@@ -104,7 +104,7 @@ namespace o2g.Internal.Rest
         {
         }
 
-        public async Task<List<ChargingFile>> GetChargingFilesAsync(int nodeId, TimeRange filter)
+        public async Task<List<ChargingFile>> GetChargingFilesAsync(int nodeId, DateRange filter)
         {
             Uri uriGet = uri
                 .Append("charging", "files")
@@ -128,7 +128,7 @@ namespace o2g.Internal.Rest
             }
         }
 
-        public async Task<ChargingResult> GetChargingsAsync(int nodeId, TimeRange filter, int? topResults, bool all)
+        public async Task<ChargingResult> GetChargingsAsync(int nodeId, DateRange filter, int? topResults, bool all)
         {
             Uri uriGet = uri
                 .Append("charging")

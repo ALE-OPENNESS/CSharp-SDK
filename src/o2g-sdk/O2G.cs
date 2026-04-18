@@ -78,9 +78,6 @@ namespace o2g
         public static string SdkVersion { get; private set; }
 
 
-        private static ConnectionPolicy _connectionPolicy = new DefaultConnectionPolicy();
-
-
         /// <summary>
         /// Class Application represents an O2G application.
         /// <para>
@@ -145,8 +142,16 @@ namespace o2g
 
             private HostManager _hostManager = null;
 
-            private Session _session = null;
+            private SessionImpl _session = null;
             private readonly EventHandlers _eventHandlers = new();
+
+            private SessionMonitoringPolicy _monitoringPolicy = new DefaultSessionMonitoringPolicy();
+            private string _loginName;
+            private string _password;
+            private Subscription _subscription;
+            private Host _activeHost;
+            private readonly CancellationTokenSource _shutdownCts = new();
+            private Task _recoveryLoopTask = Task.CompletedTask;
 
             /// <summary>
             /// Return the application name.
@@ -186,22 +191,33 @@ namespace o2g
             }
 
             /// <summary>
+            /// Overrides the default session monitoring policy.
+            /// </summary>
+            /// <param name="policy">The policy to use. Must not be <see langword="null"/>.</param>
+            /// <remarks>
+            /// Call this before <see cref="LoginAsync"/> so the policy is active for the initial
+            /// connection attempt and all subsequent recovery attempts.
+            /// If not called, the built-in default policy is used.
+            /// </remarks>
+            public void SetSessionMonitoringPolicy(SessionMonitoringPolicy policy)
+                => _monitoringPolicy = policy ?? throw new ArgumentNullException(nameof(policy));
+
+            /// <summary>
             /// Connect the application to the O2G service endpoint, using the specified login and password to authenticate the user.
             /// </summary>
             /// <param name="loginName">The user login name</param>
             /// <param name="password">The user password</param>
             public async Task LoginAsync(string loginName, string password)
             {
-                // First connect to the right service endpoint
-                ServiceEndPoint serviceEndPoint = await Connect();
+                _loginName = loginName;
+                _password = password;
+                _activeHost = null;
 
-                // And open a session
-                _session = await serviceEndPoint.OpenSession(new()
-                {
-                    Login = loginName,
-                    Password = password
-                },
-                ApplicationName);
+                ServiceEndPoint serviceEndPoint = await Connect(_shutdownCts.Token);
+                _session = (SessionImpl)await serviceEndPoint.OpenSession(
+                    new() { Login = loginName, Password = password }, ApplicationName, _monitoringPolicy);
+
+                _recoveryLoopTask = RecoveryLoopAsync(_shutdownCts.Token);
             }
 
             /// <summary>
@@ -210,6 +226,7 @@ namespace o2g
             /// <param name="subscription">The <see cref="Subscription"/> describing the events to receive.</param>
             public async Task SubscribeAsync(Subscription subscription)
             {
+                _subscription = subscription;
                 await _session.ListenEvents(subscription);
             }
 
@@ -218,56 +235,110 @@ namespace o2g
             /// </summary>
             public async Task ShutdownAsync()
             {
-                // session can be null if the login has failed.
+                _shutdownCts.Cancel();
+                try { await _recoveryLoopTask; } catch { }
+
                 if (_session != null)
                 {
                     await _session.Close();
                 }
             }
 
-            // Apply the connection policy and try to connect on provided hosts
-            private async Task<ServiceEndPointImpl> Connect()
+            // Recovery loop — runs in background after LoginAsync, restores session after loss.
+            private async Task RecoveryLoopAsync(CancellationToken ct)
             {
-                for (int connectTry = 0; ; connectTry++)
+                while (!ct.IsCancellationRequested)
                 {
+                    string reason;
+                    try
+                    {
+                        reason = await _session.WaitForLossAsync().WaitAsync(ct);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return; // shutdown requested
+                    }
+
+                    _monitoringPolicy.OnSessionLost(reason);
+
+                    try { await _session.CloseLocalAsync(); }
+                    catch (Exception e) { logger.Error(e, "Error closing local session state during recovery"); }
+
+                    // Reconnect — Connect() handles its own retries via policy callbacks
+                    try
+                    {
+                        ServiceEndPoint serviceEndPoint = await Connect(ct);
+                        _session = (SessionImpl)await serviceEndPoint.OpenSession(
+                            new() { Login = _loginName, Password = _password }, ApplicationName, _monitoringPolicy);
+
+                        if (_subscription != null)
+                            await _session.ListenEvents(_subscription);
+
+                        _monitoringPolicy.OnSessionRecovered();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e, "Session recovery failed — will wait for next loss signal");
+                    }
+                }
+            }
+
+            // Connect to the server, trying both hosts and calling OnConnectFailure on each full failure.
+            // On geographic HA, permanently switches to the secondary host once the primary fails.
+            private async Task<ServiceEndPointImpl> Connect(CancellationToken ct)
+            {
+                for (;;)
+                {
+                    Host hostToTry = _activeHost ?? _hostManager.Host1;
+                    Exception lastException;
+
                     try
                     {
                         ServiceFactory serviceFactory = new(ApiVersion);
-                        ServerInfo serverInfo = await serviceFactory.Bootstrap(_hostManager.Host1);
-
+                        ServerInfo serverInfo = await serviceFactory.Bootstrap(hostToTry);
+                        _activeHost = hostToTry;
                         return new ServiceEndPointImpl(serviceFactory, serverInfo);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        logger.Error("Unable to connect on {address}", _hostManager.Host1);
+                        logger.Error("Unable to connect on {address}", hostToTry);
+                        lastException = e;
+                    }
 
-                        // The connection failed
-                        if (_hostManager.Host2 != null)
+                    // On first failure with Host1 configured, try Host2 (geographic HA)
+                    if (_hostManager.Host2 != null && ReferenceEquals(hostToTry, _hostManager.Host1))
+                    {
+                        try
                         {
-                            try
-                            {
-                                ServiceFactory serviceFactory = new(ApiVersion);
-                                ServerInfo serverInfo = await serviceFactory.Bootstrap(_hostManager.Host2);
-
-                                return new ServiceEndPointImpl(serviceFactory, serverInfo);
-                            }
-                            catch (Exception)
-                            {
-                                logger.Error("Unable to connect on {address}", _hostManager.Host2);
-                            }
+                            ServiceFactory serviceFactory = new(ApiVersion);
+                            ServerInfo serverInfo = await serviceFactory.Bootstrap(_hostManager.Host2);
+                            logger.Info("Permanently switched to secondary host {address}", _hostManager.Host2);
+                            _activeHost = _hostManager.Host2;
+                            return new ServiceEndPointImpl(serviceFactory, serverInfo);
+                        }
+                        catch (Exception e2)
+                        {
+                            logger.Error("Unable to connect on secondary host {address}", _hostManager.Host2);
+                            lastException = e2;
                         }
                     }
 
-                    if ((_connectionPolicy.NbRetry == -1) || (connectTry < _connectionPolicy.NbRetry))
+                    var behavior = _monitoringPolicy.OnConnectFailure(lastException);
+                    if (behavior.IsAbort)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(_connectionPolicy.Interval));
+                        logger.Error("Connection aborted by monitoring policy");
+                        throw new O2GException("Unable to connect: aborted by monitoring policy");
                     }
-                    else
-                    {
-                        logger.Error("Unable to connect: Connection policy : Failed");
-                        throw new O2GException("Unable to connect: Connection policy : Failed");
-                    }
-                }                
+
+                    ct.ThrowIfCancellationRequested();
+
+                    if (behavior.DelayMs > 0)
+                        await Task.Delay(behavior.DelayMs, ct);
+                }
             }
 
             /// <summary>
@@ -377,6 +448,14 @@ namespace o2g
             public ICallCenterPilot CallCenterPilotService => _session.CallCenterPilotService;
 
             /// <summary>
+            /// Return the call center management service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="ICallCenterManagement"/> object that provides call center management services.
+            /// </value>
+            public ICallCenterManagement CallCenterManagementService => _session.CallCenterManagementService;
+
+            /// <summary>
             /// Return the call center pilot service.
             /// </summary>
             /// <value>
@@ -393,12 +472,23 @@ namespace o2g
             public IUserManagement UserManagementService => _session.UserManagementService;
 
             /// <summary>
+            /// Return the call center statistics service.
+            /// </summary>
+            /// <value>
+            /// A <see cref="ICallCenterStatistics"/> object that provides call center statistics services.
+            /// </value>
+            public ICallCenterStatistics CallCenterStatisticsService => _session.CallCenterStatisticsService;
+
+            /*
+             * RECORDING IS NOT AVAILABLE
+            /// <summary>
             /// Return the recording service.
             /// </summary>
             /// <value>
             /// A <see cref="IRecording"/> object that provides recording services.
             /// </value>
             public IRecording RecordingService => _session.RecordingService;
+            */
         }
     }
 }

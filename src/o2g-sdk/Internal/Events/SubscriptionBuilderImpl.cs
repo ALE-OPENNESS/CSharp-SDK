@@ -28,6 +28,7 @@ namespace o2g.Internal.Events
         private int _timeout = 10;
 
         private OnEvent defaultEventHandler;
+        private IWebHook _webHook;
 
         public IBuilder AddCallCenterAgentEvents(string[] ids)
         {
@@ -140,6 +141,12 @@ namespace o2g.Internal.Events
             }
             return this;
         }
+        public IBuilder SetWebHook(IWebHook webHook)
+        {
+            _webHook = webHook;
+            return this;
+        }
+
         public Subscription Build()
         {
             SubscriptionImpl subscription = new();
@@ -147,6 +154,7 @@ namespace o2g.Internal.Events
             subscription.SetFilter(_filter);
             subscription.SetVersion(_version);
             subscription.SetTimeout(_timeout);
+            subscription.SetWebHook(_webHook);
 
             return subscription;
         }

@@ -44,7 +44,7 @@ namespace o2g.Types.CommunicationLogNS
         /// <value>
         /// A <see langword="string"/> value that is the identifier of the call at the origin of this com record.
         /// </value>
-        /// <seealso cref="PbxCall.CallRef"/>
+        /// <seealso cref="Call.CallRef"/>
         [JsonPropertyName("comRef")]
         public string CallRef { get; init; }
 
