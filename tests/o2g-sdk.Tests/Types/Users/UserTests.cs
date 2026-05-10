@@ -34,6 +34,7 @@ namespace o2g.Tests.Types.Users
                 "lastName": "Doe",
                 "loginName": "jdoe",
                 "externalLogin": "john.doe@example.com",
+                "eMailAddress": "john.doe@mycompany.com",
                 "voicemail": {
                     "number": "4000",
                     "type": "VM_4635"
@@ -65,6 +66,7 @@ namespace o2g.Tests.Types.Users
             user.LastName.Should().Be("Doe");
             user.CompanyPhone.Should().Be("3000");
             user.ExternalLogin.Should().Be("john.doe@example.com");
+            user.EmailAddress.Should().Be("john.doe@mycompany.com");
         }
 
         [Fact]

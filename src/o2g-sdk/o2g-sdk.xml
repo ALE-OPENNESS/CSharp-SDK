@@ -6248,6 +6248,17 @@
             <param name="host1">The main O2G <see cref="T:o2g.Types.Host">Host</see></param>
             <param name="host2">The secondary O2G <see cref="T:o2g.Types.Host">Host</see></param>
         </member>
+        <member name="M:o2g.O2G.Application.SetSessionMonitoringPolicy(o2g.SessionMonitoringPolicy)">
+            <summary>
+            Overrides the default session monitoring policy.
+            </summary>
+            <param name="policy">The policy to use. Must not be <see langword="null"/>.</param>
+            <remarks>
+            Call this before <see cref="M:o2g.O2G.Application.LoginAsync(System.String,System.String)"/> so the policy is active for the initial
+            connection attempt and all subsequent recovery attempts.
+            If not called, the built-in default policy is used.
+            </remarks>
+        </member>
         <member name="M:o2g.O2G.Application.LoginAsync(System.String,System.String)">
             <summary>
             Connect the application to the O2G service endpoint, using the specified login and password to authenticate the user.
@@ -6442,6 +6453,141 @@
             </summary>
             <param name="message">The error message that explains the reason for the exception.</param>
             <param name="inner">The exception that is the cause of the current exception, or a <see langword="null"/> reference if no inner exception is specified.</param>
+        </member>
+        <member name="T:o2g.SessionMonitoringPolicy">
+             <summary>
+             Controls how the SDK reacts to connection and session failures, and receives
+             notifications about session lifecycle changes.
+             </summary>
+             <remarks>
+             <para>
+             Override the virtual methods you need to customize. Methods that return a
+             <see cref="T:o2g.SessionMonitoringPolicy.Behavior"/> control whether the SDK retries or aborts after a failure.
+             Notification methods (void) are called to inform the application of state changes.
+             </para>
+             <para>
+             Set an instance on the application before calling
+             <see cref="M:o2g.O2G.Application.LoginAsync(System.String,System.String)"/> via
+             <see cref="M:o2g.O2G.Application.SetSessionMonitoringPolicy(o2g.SessionMonitoringPolicy)"/>.
+             If no policy is set, the built-in default policy is used.
+             </para>
+             </remarks>
+             <example>
+             <code>
+             class MyPolicy : SessionMonitoringPolicy
+             {
+                 public override Behavior OnConnectFailure(Exception e)
+                 {
+                     Console.WriteLine($"Connect failed: {e.Message} — retrying in 10 s");
+                     return Behavior.RetryAfter(10_000);
+                 }
+            
+                 public override void OnSessionLost(string reason)
+                     => Console.WriteLine($"Session lost ({reason}) — SDK is recovering...");
+            
+                 public override void OnSessionRecovered()
+                     => Console.WriteLine("Session recovered.");
+             }
+            
+             app.SetSessionMonitoringPolicy(new MyPolicy());
+             </code>
+             </example>
+        </member>
+        <member name="T:o2g.SessionMonitoringPolicy.Behavior">
+            <summary>
+            Represents the action the SDK should take after a recoverable failure.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.Behavior.Retry">
+            <summary>
+            Retry immediately without waiting.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.Behavior.RetryAfter(System.Int32)">
+            <summary>
+            Retry after the specified delay.
+            </summary>
+            <param name="milliseconds">Delay in milliseconds before the next attempt.</param>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.Behavior.Abort">
+            <summary>
+            Abort the current operation and trigger session recovery.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnConnectFailure(System.Exception)">
+            <summary>
+            Called when an attempt to connect or reconnect to the O2G server fails.
+            </summary>
+            <param name="e">The exception that caused the failure.</param>
+            <returns>
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.RetryAfter(System.Int32)"/> to wait and try again;
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.Abort"/> to stop and throw.
+            </returns>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnChunkChannelFailure(System.Exception)">
+            <summary>
+            Called when the chunk event channel encounters a network error.
+            </summary>
+            <param name="e">The exception that caused the failure.</param>
+            <returns>
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.RetryAfter(System.Int32)"/> to reconnect the chunk channel;
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.Abort"/> to signal session loss and start recovery.
+            </returns>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnKeepAliveFailure(System.Exception)">
+            <summary>
+            Called when the keep-alive request fails with a network error.
+            </summary>
+            <param name="e">The exception that caused the failure.</param>
+            <returns>
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.RetryAfter(System.Int32)"/> to continue keep-alive attempts;
+            <see cref="M:o2g.SessionMonitoringPolicy.Behavior.Abort"/> to signal session loss and start recovery.
+            </returns>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnSessionLost(System.String)">
+            <summary>
+            Called when the session is lost due to a server failure or network outage.
+            </summary>
+            <param name="reason">A short string describing the cause of the loss.</param>
+            <remarks>
+            The SDK starts automatic recovery immediately after this call.
+            </remarks>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnSessionRecovered">
+            <summary>
+            Called when the session has been successfully recovered after a loss.
+            </summary>
+            <remarks>
+            The event subscription (if any) has been re-established at this point.
+            </remarks>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnChunkChannelEstablished">
+            <summary>
+            Called when the chunk event channel is successfully established.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnKeepAliveDone">
+            <summary>
+            Called when a keep-alive request is successfully acknowledged by the server.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnChunkChannelFatalError(System.Int32)">
+            <summary>
+            Called when the chunk channel receives a fatal HTTP error (e.g. 401, 403).
+            </summary>
+            <param name="httpStatus">The HTTP status code returned by the server.</param>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnKeepAliveFatalError">
+            <summary>
+            Called when the server rejects the keep-alive, indicating the session has
+            expired server-side.
+            </summary>
+        </member>
+        <member name="M:o2g.SessionMonitoringPolicy.OnEventException(System.Exception)">
+            <summary>
+            Called when an exception is thrown inside an application event handler.
+            </summary>
+            <param name="e">The exception thrown by the application handler.</param>
         </member>
         <member name="T:o2g.OnEvent">
             <summary>
@@ -15106,7 +15252,15 @@
             External login of the user if set.
             </summary>
             <value>
-            A <see langword="string"/> that represents the user external login.
+            A <see langword="string"/> that represents the user's external login.
+            </value>
+        </member>
+        <member name="P:o2g.Types.UsersNS.User.EmailAddress">
+            <summary>
+            Email address of the user if set.
+            </summary>
+            <value>
+            A <see langword="string"/> that represents the user's email address.
             </value>
         </member>
         <member name="P:o2g.Types.UsersNS.User.Voicemail">

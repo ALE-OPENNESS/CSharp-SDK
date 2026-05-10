@@ -66,6 +66,10 @@ await app.TelephonyService.MakeCallAsync("1234", "5678");
 await app.ShutdownAsync();
 ```
 
+## What's New in 2.0.1
+
+- Add new field `EmailAddress` in object `User`
+
 ## Server Configuration
 
 Use `SetHost` to configure the O2G server topology. Three deployment
@@ -368,10 +372,10 @@ Add an `NLog.config` file to your project to control verbosity:
 This SDK follows the O2G API version it targets:
 
 - **Major**: O2G API major version (currently 2)
-- **Minor**: O2G API patch version (currently 0)
-- **Patch**: SDK release number
+- **Minor**: O2G API patch version (currently 7.5 → 0)
+- **Patch**: SDK release number 
 
-For example, `2.0.0` targets O2G API version 2.7.x.
+For example, `2.0.x` targets O2G API version 2.7.5.
 
 ## License
 

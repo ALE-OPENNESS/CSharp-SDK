@@ -70,9 +70,18 @@ namespace o2g.Types.UsersNS
         /// External login of the user if set.
         /// </summary>
         /// <value>
-        /// A <see langword="string"/> that represents the user external login.
+        /// A <see langword="string"/> that represents the user's external login.
         /// </value>
         public string ExternalLogin { get; init; }
+
+        /// <summary>
+        /// Email address of the user if set.
+        /// </summary>
+        /// <value>
+        /// A <see langword="string"/> that represents the user's email address.
+        /// </value>
+        [JsonPropertyName("eMailAddress")]
+        public string EmailAddress { get; init; }
 
         /// <summary>
         /// The voice mail associated to this user.

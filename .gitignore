@@ -1,5 +1,21 @@
-/bin/
-/obj/
-/.vs/
-/Help/
+# Build output
+**/bin/
+**/obj/
 
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+
+# XML documentation output (generated at build time)
+**/*.xml
+
+# OS
+.DS_Store
+Thumbs.db

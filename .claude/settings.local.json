@@ -13,7 +13,9 @@
       "Bash(find:*)",
       "Bash(npm run:*)",
       "Bash(./gradlew jreleaserDeploy --stacktrace)",
-      "Bash(./gradlew jreleaserDeploy --info)"
+      "Bash(./gradlew jreleaserDeploy --info)",
+      "Bash(dotnet nuget list:*)",
+      "Bash(ls -d \"C:\\\\Developpement\\\\O2G-REPOSITORY\\\\CSharp-Samples\"/*/)"
     ]
   }
 }
